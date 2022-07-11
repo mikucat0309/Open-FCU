@@ -1,11 +1,7 @@
 package at.mikuc.fcuassistant.view
 
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -14,13 +10,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Public
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,28 +21,35 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.hilt.navigation.compose.hiltViewModel
 import at.mikuc.fcuassistant.RedirectViewModel
 import at.mikuc.fcuassistant.UserPreferencesRepository
-import at.mikuc.fcuassistant.model.Service
+import at.mikuc.fcuassistant.model.SSOService
 import at.mikuc.fcuassistant.ui.theme.FCUAssistantTheme
-import org.burnoutcrew.reorderable.ReorderableItem
-import org.burnoutcrew.reorderable.detectReorderAfterLongPress
-import org.burnoutcrew.reorderable.rememberReorderableLazyListState
-import org.burnoutcrew.reorderable.reorderable
 import java.io.File
 
 @Composable
 fun RedirectView(viewModel: RedirectViewModel = hiltViewModel()) {
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .padding(vertical = 16.dp)
             .fillMaxSize()
     ) {
-        RedirectItem(title = "MyFCU", "校務系統", icon = Icons.Outlined.Public) {
-            viewModel.redirect(Service.MYFCU)
-        }
         RedirectItem(title = "iLearn 2.0", "教學管理系統", icon = Icons.Outlined.Public) {
-            viewModel.redirect(Service.ILEARN2)
+            viewModel.redirect(SSOService.ILEARN2)
+        }
+        RedirectItem(title = "MyFCU", "校務系統", icon = Icons.Outlined.Public) {
+            viewModel.redirect(SSOService.MYFCU)
+        }
+        RedirectItem(title = "自主健康管理", icon = Icons.Outlined.Public) {
+            viewModel.redirect(SSOService.MYFCU, "S4301/S430101_temperature_record.aspx")
+        }
+        RedirectItem(title = "空間借用", icon = Icons.Outlined.Public) {
+            viewModel.redirect(SSOService.MYFCU, "webClientMyFcuMain.aspx#/prog/SP9300003")
+        }
+        RedirectItem(title = "學生請假", icon = Icons.Outlined.Public) {
+            viewModel.redirect(SSOService.MYFCU, "S3401/s3401_leave.aspx")
+        }
+        RedirectItem(title = "課程檢索", icon = Icons.Outlined.Public) {
+            viewModel.redirect(SSOService.MYFCU, "coursesearch.aspx?sso")
         }
     }
 }
@@ -61,7 +61,7 @@ fun RedirectPreview() {
         RedirectView(
             RedirectViewModel(
                 UserPreferencesRepository(
-                    PreferenceDataStoreFactory.create() {
+                    PreferenceDataStoreFactory.create {
                         return@create File("")
                     }
                 )
@@ -109,51 +109,5 @@ fun RedirectCardPreview() {
             RedirectItem("MyFCU", icon = Icons.Outlined.Public) {}
             RedirectItem("Add custom target", icon = Icons.Outlined.Add) {}
         }
-    }
-}
-
-@Composable
-fun VerticalReorderList() {
-    val data = remember {
-        mutableStateOf(
-            listOf(
-                Service.MYFCU.name,
-                Service.ILEARN2.name,
-                "Item 3",
-                "Item 4",
-            )
-        )
-    }
-    val state = rememberReorderableLazyListState(onMove = { from, to ->
-        data.value = data.value.toMutableList().apply {
-            add(to.index, removeAt(from.index))
-        }
-    })
-    LazyColumn(
-        state = state.listState,
-        modifier = Modifier
-            .reorderable(state)
-            .detectReorderAfterLongPress(state)
-    ) {
-        items(data.value, { it }) { item ->
-            ReorderableItem(state, key = item) { isDragging ->
-                val elevation = animateDpAsState(if (isDragging) 16.dp else 0.dp)
-                Column(
-                    modifier = Modifier
-                        .shadow(elevation.value)
-                        .background(MaterialTheme.colors.surface)
-                ) {
-                    Text(item)
-                }
-            }
-        }
-    }
-}
-
-//@Preview(showBackground = true)
-@Composable
-fun DragAndDropListPreview() {
-    FCUAssistantTheme {
-        VerticalReorderList()
     }
 }

@@ -8,44 +8,35 @@ import kotlinx.serialization.Serializable
 data class SSORequest(
     @SerialName("Account") val account: String,
     @SerialName("Password") val password: String,
-    @SerialName("RedirectService") val redirectService: Service,
+    @SerialName("RedirectService") val redirectSSOService: SSOService,
 )
 
 @Serializable
 data class SSOResponse(
     @SerialName("Message") val message: String = "",
-    @SerialName("RedirectService") val redirectService: Service,
+    @SerialName("RedirectService") val redirectSSOService: SSOService,
     @SerialName("RedirectUrl") @Serializable(with = UriAsStringSerializer::class) val redirectUri: Uri,
     @SerialName("Success") val success: Boolean,
 )
 
 @Serializable
-enum class Service {
+enum class SSOService {
     @SerialName("MyFCU Information System")
     MYFCU,
 
     @SerialName("iLearn 2.0")
     ILEARN2,
-
-    @SerialName("IC Card")
-    IC_CARD,
     ;
 }
 
-@Serializable
-data class LoginRequest(
-    @SerialName("Account") val account: String,
-    @SerialName("Password") val password: String,
-    @SerialName("DeviceType") val deviceType: String,
-    @SerialName("DeviceName") val deviceName: String,
-    @SerialName("DeviceToken") val deviceToken: String,
-)
-
-@Serializable
-data class Config(
-    val nid: String,
-    val password: String,
-)
+//@Serializable
+//data class LoginRequest(
+//    @SerialName("Account") val account: String,
+//    @SerialName("Password") val password: String,
+//    @SerialName("DeviceType") val deviceType: String,
+//    @SerialName("DeviceName") val deviceName: String,
+//    @SerialName("DeviceToken") val deviceToken: String,
+//)
 
 // TODO v0.2
 //@Serializable

@@ -1,7 +1,6 @@
 package at.mikuc.fcuassistant.view
 
 import android.app.Activity
-import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -17,9 +16,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import at.mikuc.fcuassistant.SettingViewModel
@@ -84,7 +81,7 @@ fun SettingPreview() {
         SettingView(
             SettingViewModel(
                 UserPreferencesRepository(
-                    PreferenceDataStoreFactory.create() {
+                    PreferenceDataStoreFactory.create {
                         return@create File("")
                     }
                 )

@@ -2,7 +2,6 @@ package at.mikuc.fcuassistant
 
 import android.content.Intent
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,7 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import at.mikuc.fcuassistant.model.SSORequest
 import at.mikuc.fcuassistant.model.SSOResponse
-import at.mikuc.fcuassistant.model.Service
+import at.mikuc.fcuassistant.model.SSOService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -80,7 +79,7 @@ class RedirectViewModel @Inject constructor(
         }
     }
 
-    fun redirect(service: Service) {
+    fun redirect(service: SSOService, path: String = "webClientMyFcuMain.aspx#/prog/home") {
         viewModelScope.launch(Dispatchers.IO) {
             val id = pref.get(KEY_ID, "")
             val password = pref.get(KEY_PASSWORD, "")
@@ -92,9 +91,11 @@ class RedirectViewModel @Inject constructor(
                 }.body()
             Log.i(TAG, Json.encodeToString(response))
             if (response.success) {
+                val uri = response.redirectUri.replaceUriParameter("url", path)
+                Log.d(TAG, uri.toString())
                 val intent = Intent().apply {
                     action = Intent.ACTION_VIEW
-                    setData(response.redirectUri)
+                    setData(uri)
                 }
                 redirectIntent.postValue(intent)
             } else {
