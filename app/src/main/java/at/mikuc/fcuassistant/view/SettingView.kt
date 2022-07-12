@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import at.mikuc.fcuassistant.SettingViewModel
-import at.mikuc.fcuassistant.UserPreferencesRepository
+import at.mikuc.fcuassistant.repository.UserPreferencesRepository
 import at.mikuc.fcuassistant.ui.theme.FCUAssistantTheme
+import at.mikuc.fcuassistant.viewmodel.SettingViewModel
 import java.io.File
 
 @Composable

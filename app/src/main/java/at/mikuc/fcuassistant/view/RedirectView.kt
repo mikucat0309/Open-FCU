@@ -19,10 +19,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.hilt.navigation.compose.hiltViewModel
-import at.mikuc.fcuassistant.RedirectViewModel
-import at.mikuc.fcuassistant.UserPreferencesRepository
-import at.mikuc.fcuassistant.model.SSOService
+import at.mikuc.fcuassistant.repository.UserPreferencesRepository
 import at.mikuc.fcuassistant.ui.theme.FCUAssistantTheme
+import at.mikuc.fcuassistant.viewmodel.RedirectViewModel
 import java.io.File
 
 @Composable
@@ -33,23 +32,10 @@ fun RedirectView(viewModel: RedirectViewModel = hiltViewModel()) {
             .padding(vertical = 16.dp)
             .fillMaxSize()
     ) {
-        RedirectItem(title = "iLearn 2.0", "教學管理系統", icon = Icons.Outlined.Public) {
-            viewModel.redirect(SSOService.ILEARN2)
-        }
-        RedirectItem(title = "MyFCU", "校務系統", icon = Icons.Outlined.Public) {
-            viewModel.redirect(SSOService.MYFCU)
-        }
-        RedirectItem(title = "自主健康管理", icon = Icons.Outlined.Public) {
-            viewModel.redirect(SSOService.MYFCU, "S4301/S430101_temperature_record.aspx")
-        }
-        RedirectItem(title = "空間借用", icon = Icons.Outlined.Public) {
-            viewModel.redirect(SSOService.MYFCU, "webClientMyFcuMain.aspx#/prog/SP9300003")
-        }
-        RedirectItem(title = "學生請假", icon = Icons.Outlined.Public) {
-            viewModel.redirect(SSOService.MYFCU, "S3401/s3401_leave.aspx")
-        }
-        RedirectItem(title = "課程檢索", icon = Icons.Outlined.Public) {
-            viewModel.redirect(SSOService.MYFCU, "coursesearch.aspx?sso")
+        viewModel.redirectItems.value?.forEach {
+            RedirectItem(title = it.title, it.subtitle, icon = it.icon) {
+                viewModel.redirect(it.service, it.path)
+            }
         }
     }
 }

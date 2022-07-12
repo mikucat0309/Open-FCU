@@ -12,9 +12,11 @@ import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import at.mikuc.fcuassistant.ui.theme.FCUAssistantTheme
 import at.mikuc.fcuassistant.view.MainView
+import at.mikuc.fcuassistant.viewmodel.RedirectViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
 
+const val TAG = "FCUAssistant"
 
 @HiltAndroidApp
 class MainApplication : Application()
@@ -27,18 +29,17 @@ class MainActivity : ComponentActivity() {
         rvm.redirectIntent.observe(this) {
             if (it != null) {
                 startActivity(it)
-                rvm.redirectIntent.value = null
+                rvm.clearRedirectIntent()
             }
         }
         rvm.toast.observe(this) {
             if (it != null) {
                 Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-                rvm.toast.value = null
+                rvm.clearToast()
             }
         }
         setContent {
             FCUAssistantTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background

@@ -21,10 +21,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import at.mikuc.fcuassistant.RedirectViewModel
-import at.mikuc.fcuassistant.SettingViewModel
-import at.mikuc.fcuassistant.UserPreferencesRepository
+import at.mikuc.fcuassistant.repository.UserPreferencesRepository
 import at.mikuc.fcuassistant.ui.theme.FCUAssistantTheme
+import at.mikuc.fcuassistant.viewmodel.RedirectViewModel
+import at.mikuc.fcuassistant.viewmodel.SettingViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.io.File
@@ -134,13 +134,7 @@ private fun MyTopBar(
 ) {
     TopAppBar(
         title = {
-            Text(
-                text = when (currentRoute) {
-                    Graph.Redirect.route -> Graph.Redirect.displayName
-                    Graph.Setting.route -> Graph.Setting.displayName
-                    else -> "FCU Assistant"
-                }
-            )
+            Text(text = Graph.getGraph(currentRoute)?.displayName ?: "FCU Assistant")
         },
         navigationIcon = {
             IconButton(onClick = {
