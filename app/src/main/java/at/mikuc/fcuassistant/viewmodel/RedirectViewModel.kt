@@ -3,7 +3,7 @@ package at.mikuc.fcuassistant.viewmodel
 import android.content.Intent
 import android.util.Log
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Publish
+import androidx.compose.material.icons.outlined.Public
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -31,12 +31,18 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
-data class RedirectData(
+data class RedirectUiState(
+    val redirectItems: List<RedirectItem>,
+    val intent: Intent? = null,
+    val toastMessage: String? = null,
+)
+
+data class RedirectItem(
     val title: String,
     val subtitle: String = "",
     val service: SSOService,
     val path: String? = null,
-    val icon: ImageVector = Icons.Outlined.Publish
+    val icon: ImageVector = Icons.Outlined.Public
 )
 
 @HiltViewModel
@@ -44,45 +50,43 @@ class RedirectViewModel @Inject constructor(
     private val pref: UserPreferencesRepository
 ) : ViewModel() {
 
-    private val _redirectItems = MutableLiveData(
-        listOf(
-            RedirectData(
-                title = "iLearn 2.0",
-                "教學管理系統",
-                service = SSOService.ILEARN2,
-            ),
-            RedirectData(
-                title = "MyFCU",
-                "校務系統",
-                service = SSOService.MYFCU,
-            ),
-            RedirectData(
-                title = "自主健康管理",
-                service = SSOService.MYFCU,
-                path = "S4301/S430101_temperature_record.aspx",
-            ),
-            RedirectData(
-                title = "空間借用",
-                service = SSOService.MYFCU,
-                path = "webClientMyFcuMain.aspx#/prog/SP9300003",
-            ),
-            RedirectData(
-                title = "學生請假",
-                service = SSOService.MYFCU,
-                path = "S3401/s3401_leave.aspx",
-            ),
-            RedirectData(
-                title = "課程檢索",
-                service = SSOService.MYFCU,
-                path = "coursesearch.aspx?sso",
-            ),
+    private val _state = MutableLiveData(
+        RedirectUiState(
+            listOf(
+                RedirectItem(
+                    title = "iLearn 2.0",
+                    "教學管理系統",
+                    service = SSOService.ILEARN2,
+                ),
+                RedirectItem(
+                    title = "MyFCU",
+                    "校務系統",
+                    service = SSOService.MYFCU,
+                ),
+                RedirectItem(
+                    title = "自主健康管理",
+                    service = SSOService.MYFCU,
+                    path = "S4301/S430101_temperature_record.aspx",
+                ),
+                RedirectItem(
+                    title = "空間借用",
+                    service = SSOService.MYFCU,
+                    path = "webClientMyFcuMain.aspx#/prog/SP9300003",
+                ),
+                RedirectItem(
+                    title = "學生請假",
+                    service = SSOService.MYFCU,
+                    path = "S3401/s3401_leave.aspx",
+                ),
+                RedirectItem(
+                    title = "課程檢索",
+                    service = SSOService.MYFCU,
+                    path = "coursesearch.aspx?sso",
+                ),
+            )
         )
     )
-    val redirectItems: LiveData<List<RedirectData>> = _redirectItems
-    private val _redirectIntent = MutableLiveData<Intent>()
-    val redirectIntent: LiveData<Intent> = _redirectIntent
-    private val _toast = MutableLiveData<String>()
-    val toast: LiveData<String> = _toast
+    val state: LiveData<RedirectUiState> = _state
 
     private val client = HttpClient(CIO) {
         install(ContentNegotiation) {
@@ -113,19 +117,19 @@ class RedirectViewModel @Inject constructor(
                     action = Intent.ACTION_VIEW
                     setData(uri)
                 }
-                _redirectIntent.postValue(intent)
+                _state.postValue(_state.value?.copy(intent = intent))
             } else {
                 Log.w(TAG, response.message)
-                _toast.postValue(response.message)
+                _state.postValue(_state.value?.copy(toastMessage = response.message))
             }
         }
     }
 
     fun clearRedirectIntent() {
-        _redirectIntent.value = null
+        _state.value = _state.value?.copy(intent = null)
     }
 
     fun clearToast() {
-        _toast.value = null
+        _state.value = _state.value?.copy(toastMessage = null)
     }
 }

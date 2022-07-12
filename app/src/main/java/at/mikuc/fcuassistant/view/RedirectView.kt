@@ -32,7 +32,7 @@ fun RedirectView(viewModel: RedirectViewModel = hiltViewModel()) {
             .padding(vertical = 16.dp)
             .fillMaxSize()
     ) {
-        viewModel.redirectItems.value?.forEach {
+        viewModel.state.value?.redirectItems?.forEach {
             RedirectItem(title = it.title, it.subtitle, icon = it.icon) {
                 viewModel.redirect(it.service, it.path)
             }

@@ -34,6 +34,7 @@ class UserPreferencesRepository @Inject constructor(
 ) {
     suspend fun <T> get(key: Preferences.Key<T>, default: T): T =
         dataStore.data.map { it[key] }.firstOrNull() ?: default
+
     suspend fun <T> set(key: Preferences.Key<T>, value: T) = dataStore.edit { it[key] = value }
 
     companion object {

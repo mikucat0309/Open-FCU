@@ -26,15 +26,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val rvm: RedirectViewModel by viewModels()
-        rvm.redirectIntent.observe(this) {
-            if (it != null) {
-                startActivity(it)
+        rvm.state.observe(this) {
+            if (it.intent != null) {
+                startActivity(it.intent)
                 rvm.clearRedirectIntent()
             }
         }
-        rvm.toast.observe(this) {
-            if (it != null) {
-                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+        rvm.state.observe(this) {
+            if (it.toastMessage != null) {
+                Toast.makeText(this, it.toastMessage, Toast.LENGTH_LONG).show()
                 rvm.clearToast()
             }
         }
