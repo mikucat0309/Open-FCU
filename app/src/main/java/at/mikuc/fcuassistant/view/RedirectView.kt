@@ -12,11 +12,11 @@ import androidx.compose.material.icons.outlined.Public
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.hilt.navigation.compose.hiltViewModel
 import at.mikuc.fcuassistant.repository.UserPreferencesRepository
@@ -33,7 +33,7 @@ fun RedirectView(viewModel: RedirectViewModel = hiltViewModel()) {
             .fillMaxSize()
     ) {
         viewModel.state.value?.redirectItems?.forEach {
-            RedirectItem(title = it.title, it.subtitle, icon = it.icon) {
+            RedirectItem(title = it.title, icon = it.icon) {
                 viewModel.redirect(it.service, it.path)
             }
         }
@@ -59,7 +59,6 @@ fun RedirectPreview() {
 @Composable
 fun RedirectItem(
     title: String,
-    subtitle: String = title,
     icon: ImageVector,
     onClick: () -> Unit
 ) {
@@ -79,10 +78,7 @@ fun RedirectItem(
                 .size(40.dp)
         )
         Spacer(modifier = Modifier.width(24.dp))
-        Column {
-            Text(title, style = MaterialTheme.typography.body1)
-            Text(subtitle, style = MaterialTheme.typography.body2, modifier = Modifier.alpha(0.6f))
-        }
+        Text(title, style = MaterialTheme.typography.body1.copy(fontSize = 18.sp))
     }
 }
 

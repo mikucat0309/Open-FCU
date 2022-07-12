@@ -39,7 +39,6 @@ data class RedirectUiState(
 
 data class RedirectItem(
     val title: String,
-    val subtitle: String = "",
     val service: SSOService,
     val path: String? = null,
     val icon: ImageVector = Icons.Outlined.Public
@@ -55,12 +54,10 @@ class RedirectViewModel @Inject constructor(
             listOf(
                 RedirectItem(
                     title = "iLearn 2.0",
-                    "教學管理系統",
                     service = SSOService.ILEARN2,
                 ),
                 RedirectItem(
                     title = "MyFCU",
-                    "校務系統",
                     service = SSOService.MYFCU,
                 ),
                 RedirectItem(
