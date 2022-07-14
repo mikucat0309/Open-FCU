@@ -1,4 +1,4 @@
-package at.mikuc.fcuassistant.view
+package at.mikuc.openfcu.view
 
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
-import at.mikuc.fcuassistant.viewmodel.QrCodeViewModel
+import at.mikuc.openfcu.viewmodel.QrCodeViewModel
 
 @Composable
 fun QRCodeView(viewModel: QrCodeViewModel) {

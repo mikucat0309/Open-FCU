@@ -1,4 +1,4 @@
-package at.mikuc.fcuassistant.view
+package at.mikuc.openfcu.view
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.hilt.navigation.compose.hiltViewModel
-import at.mikuc.fcuassistant.repository.UserPreferencesRepository
-import at.mikuc.fcuassistant.ui.theme.FCUAssistantTheme
-import at.mikuc.fcuassistant.viewmodel.RedirectViewModel
+import at.mikuc.openfcu.repository.UserPreferencesRepository
+import at.mikuc.openfcu.ui.theme.OpenFCUTheme
+import at.mikuc.openfcu.viewmodel.RedirectViewModel
 import java.io.File
 
 @Composable
@@ -43,7 +43,7 @@ fun RedirectView(viewModel: RedirectViewModel = hiltViewModel()) {
 @Preview(showBackground = true)
 @Composable
 fun RedirectPreview() {
-    FCUAssistantTheme {
+    OpenFCUTheme {
         RedirectView(
             RedirectViewModel(
                 UserPreferencesRepository(
@@ -85,7 +85,7 @@ fun RedirectItem(
 @Preview(showBackground = true)
 @Composable
 fun RedirectCardPreview() {
-    FCUAssistantTheme {
+    OpenFCUTheme {
         Column {
             RedirectItem("iLearn 2.0", icon = Icons.Outlined.Public) {}
             RedirectItem("MyFCU", icon = Icons.Outlined.Public) {}

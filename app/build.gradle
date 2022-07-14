@@ -10,7 +10,7 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "at.mikuc.fcuassistant"
+        applicationId "at.mikuc.openfcu"
         minSdk 26
         targetSdk 32
         versionCode 1

@@ -1,4 +1,4 @@
-package at.mikuc.fcuassistant.view
+package at.mikuc.openfcu.view
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Apps

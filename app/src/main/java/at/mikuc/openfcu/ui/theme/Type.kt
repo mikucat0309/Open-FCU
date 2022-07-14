@@ -1,4 +1,4 @@
-package at.mikuc.fcuassistant.ui.theme
+package at.mikuc.openfcu.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

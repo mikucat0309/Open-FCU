@@ -1,4 +1,4 @@
-package at.mikuc.fcuassistant.util
+package at.mikuc.openfcu.util
 
 import android.net.Uri
 import kotlinx.serialization.KSerializer

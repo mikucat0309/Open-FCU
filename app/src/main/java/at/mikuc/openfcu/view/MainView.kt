@@ -1,4 +1,4 @@
-package at.mikuc.fcuassistant.view
+package at.mikuc.openfcu.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,11 +21,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import at.mikuc.fcuassistant.repository.UserPreferencesRepository
-import at.mikuc.fcuassistant.ui.theme.FCUAssistantTheme
-import at.mikuc.fcuassistant.viewmodel.QrCodeViewModel
-import at.mikuc.fcuassistant.viewmodel.RedirectViewModel
-import at.mikuc.fcuassistant.viewmodel.SettingViewModel
+import at.mikuc.openfcu.repository.UserPreferencesRepository
+import at.mikuc.openfcu.ui.theme.OpenFCUTheme
+import at.mikuc.openfcu.viewmodel.QrCodeViewModel
+import at.mikuc.openfcu.viewmodel.RedirectViewModel
+import at.mikuc.openfcu.viewmodel.SettingViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.io.File
@@ -87,7 +87,7 @@ private fun MyDrawer(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "FCU Assistant",
+            text = "Open FCU",
             style = MaterialTheme.typography.h4,
             modifier = Modifier.padding(vertical = 24.dp)
         )
@@ -140,7 +140,7 @@ private fun MyTopBar(
 ) {
     TopAppBar(
         title = {
-            Text(text = Graph.getGraph(currentRoute)?.displayName ?: "FCU Assistant")
+            Text(text = Graph.getGraph(currentRoute)?.displayName ?: "Open FCU")
         },
         navigationIcon = {
             IconButton(onClick = {
@@ -159,7 +159,7 @@ private fun MyTopBar(
 @Preview(showBackground = true)
 @Composable
 fun MainPreview() {
-    FCUAssistantTheme {
+    OpenFCUTheme {
         val pref = UserPreferencesRepository(
             PreferenceDataStoreFactory.create {
                 return@create File("")
@@ -214,7 +214,7 @@ fun DrawerButton(
 @Preview(showBackground = true)
 @Composable
 fun DrawerButtonPreview() {
-    FCUAssistantTheme {
+    OpenFCUTheme {
         Column {
             DrawerButton(text = "Selected", icon = Icons.Outlined.Public, isSelected = true) {}
             DrawerButton(text = "Not selected", icon = Icons.Outlined.Public, isSelected = false) {}

@@ -1,4 +1,4 @@
-# FCU Assistant
+# Open FCU
 
 逢甲人都該裝的 APP
 

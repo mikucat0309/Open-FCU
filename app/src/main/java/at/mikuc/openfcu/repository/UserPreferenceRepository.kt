@@ -1,4 +1,4 @@
-package at.mikuc.fcuassistant.repository
+package at.mikuc.openfcu.repository
 
 import android.content.Context
 import androidx.datastore.core.DataStore

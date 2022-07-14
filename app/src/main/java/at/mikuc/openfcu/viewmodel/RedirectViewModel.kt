@@ -1,4 +1,4 @@
-package at.mikuc.fcuassistant.viewmodel
+package at.mikuc.openfcu.viewmodel
 
 import android.content.Intent
 import android.util.Log
@@ -9,14 +9,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import at.mikuc.fcuassistant.TAG
-import at.mikuc.fcuassistant.data.SSORequest
-import at.mikuc.fcuassistant.data.SSOResponse
-import at.mikuc.fcuassistant.data.SSOService
-import at.mikuc.fcuassistant.repository.UserPreferencesRepository
-import at.mikuc.fcuassistant.repository.UserPreferencesRepository.Companion.KEY_ID
-import at.mikuc.fcuassistant.repository.UserPreferencesRepository.Companion.KEY_PASSWORD
-import at.mikuc.fcuassistant.util.replaceUriParameter
+import at.mikuc.openfcu.TAG
+import at.mikuc.openfcu.data.SSORequest
+import at.mikuc.openfcu.data.SSOResponse
+import at.mikuc.openfcu.data.SSOService
+import at.mikuc.openfcu.repository.UserPreferencesRepository
+import at.mikuc.openfcu.repository.UserPreferencesRepository.Companion.KEY_ID
+import at.mikuc.openfcu.repository.UserPreferencesRepository.Companion.KEY_PASSWORD
+import at.mikuc.openfcu.util.replaceUriParameter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.client.*
 import io.ktor.client.call.*

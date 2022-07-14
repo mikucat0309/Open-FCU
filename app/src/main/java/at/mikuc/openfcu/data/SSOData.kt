@@ -1,7 +1,7 @@
-package at.mikuc.fcuassistant.data
+package at.mikuc.openfcu.data
 
 import android.net.Uri
-import at.mikuc.fcuassistant.util.UriAsStringSerializer
+import at.mikuc.openfcu.util.UriAsStringSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

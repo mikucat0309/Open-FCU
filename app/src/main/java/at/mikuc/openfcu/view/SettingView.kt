@@ -1,4 +1,4 @@
-package at.mikuc.fcuassistant.view
+package at.mikuc.openfcu.view
 
 import android.app.Activity
 import androidx.compose.foundation.layout.*
@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import at.mikuc.fcuassistant.repository.UserPreferencesRepository
-import at.mikuc.fcuassistant.ui.theme.FCUAssistantTheme
-import at.mikuc.fcuassistant.viewmodel.SettingViewModel
+import at.mikuc.openfcu.repository.UserPreferencesRepository
+import at.mikuc.openfcu.ui.theme.OpenFCUTheme
+import at.mikuc.openfcu.viewmodel.SettingViewModel
 import java.io.File
 
 @Composable
@@ -77,7 +77,7 @@ fun SettingView(viewModel: SettingViewModel = hiltViewModel(), navController: Na
 @Preview(showBackground = true)
 @Composable
 fun SettingPreview() {
-    FCUAssistantTheme {
+    OpenFCUTheme {
         SettingView(
             SettingViewModel(
                 UserPreferencesRepository(
