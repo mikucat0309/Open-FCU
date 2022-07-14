@@ -23,6 +23,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import at.mikuc.fcuassistant.repository.UserPreferencesRepository
 import at.mikuc.fcuassistant.ui.theme.FCUAssistantTheme
+import at.mikuc.fcuassistant.viewmodel.QrCodeViewModel
 import at.mikuc.fcuassistant.viewmodel.RedirectViewModel
 import at.mikuc.fcuassistant.viewmodel.SettingViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -33,6 +34,7 @@ import java.io.File
 fun MainView(
     svm: SettingViewModel = hiltViewModel(),
     rvm: RedirectViewModel = hiltViewModel(),
+    qvm: QrCodeViewModel = hiltViewModel(),
 ) {
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
@@ -49,13 +51,16 @@ fun MainView(
         ) {
             NavHost(
                 navController = navController,
-                startDestination = Graph.Redirect.route,
+                startDestination = Graph.QrCode.route,
             ) {
                 composable(Graph.Redirect.route) {
                     RedirectView(rvm)
                 }
                 composable(Graph.Setting.route) {
                     SettingView(svm, navController)
+                }
+                composable(Graph.QrCode.route) {
+                    QRCodeView(qvm)
                 }
             }
         }
@@ -71,6 +76,7 @@ private fun MyDrawer(
 ) {
     val appGraphs = listOf(
         Graph.Redirect,
+        Graph.QrCode,
     )
     val systemGraphs = listOf(
         Graph.Setting,
@@ -161,7 +167,8 @@ fun MainPreview() {
         )
         val svm = SettingViewModel(pref)
         val rvm = RedirectViewModel(pref)
-        MainView(svm, rvm)
+        val qvm = QrCodeViewModel(pref)
+        MainView(svm, rvm, qvm)
     }
 }
 

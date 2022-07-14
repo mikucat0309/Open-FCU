@@ -32,8 +32,8 @@ object DataStoreModule {
 class UserPreferencesRepository @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) {
-    suspend fun <T> get(key: Preferences.Key<T>, default: T): T =
-        dataStore.data.map { it[key] }.firstOrNull() ?: default
+    suspend fun <T> get(key: Preferences.Key<T>): T? = dataStore.data.map { it[key] }.firstOrNull()
+
 
     suspend fun <T> set(key: Preferences.Key<T>, value: T) = dataStore.edit { it[key] = value }
 

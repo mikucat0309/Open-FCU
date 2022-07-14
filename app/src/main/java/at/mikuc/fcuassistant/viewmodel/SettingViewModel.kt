@@ -28,8 +28,8 @@ class SettingViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            id = TextFieldValue(pref.get(KEY_ID, ""))
-            password = TextFieldValue(pref.get(KEY_PASSWORD, ""))
+            id = TextFieldValue(pref.get(KEY_ID) ?: "")
+            password = TextFieldValue(pref.get(KEY_PASSWORD) ?: "")
         }
     }
 

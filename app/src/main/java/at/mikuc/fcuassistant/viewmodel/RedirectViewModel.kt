@@ -25,7 +25,6 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -92,9 +91,9 @@ class RedirectViewModel @Inject constructor(
     }
 
     fun redirect(service: SSOService, path: String? = null) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val id = pref.get(KEY_ID, "")
-            val password = pref.get(KEY_PASSWORD, "")
+        viewModelScope.launch {
+            val id = pref.get(KEY_ID) ?: return@launch
+            val password = pref.get(KEY_PASSWORD) ?: return@launch
             val data = SSORequest(id, password, service)
             val response: SSOResponse =
                 client.post("https://service206-sds.fcu.edu.tw/mobileservice/RedirectService.svc/Redirect") {
@@ -114,10 +113,10 @@ class RedirectViewModel @Inject constructor(
                     action = Intent.ACTION_VIEW
                     setData(uri)
                 }
-                _state.postValue(_state.value?.copy(intent = intent))
+                _state.value = _state.value?.copy(intent = intent)
             } else {
                 Log.w(TAG, response.message)
-                _state.postValue(_state.value?.copy(toastMessage = response.message))
+                _state.value = _state.value?.copy(toastMessage = response.message)
             }
         }
     }
