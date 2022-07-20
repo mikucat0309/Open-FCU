@@ -1,9 +1,11 @@
 package at.mikuc.openfcu.viewmodel
 
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import at.mikuc.openfcu.TAG
@@ -29,16 +31,17 @@ import kotlinx.serialization.json.jsonPrimitive
 import javax.inject.Inject
 
 data class QrCodeUiState(
-    val bitmap: Bitmap? = null
+    val bitmap: Bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888).apply {
+        eraseColor(Color.GRAY)
+    },
 )
 
 @HiltViewModel
 class QrCodeViewModel @Inject constructor(
-    private val pref: UserPreferencesRepository
+    private val pref: UserPreferencesRepository,
 ) : ViewModel() {
 
-    private val _state = MutableLiveData(QrCodeUiState())
-    val state: LiveData<QrCodeUiState> = _state
+    var state by mutableStateOf(QrCodeUiState())
 
     private val client = HttpClient(CIO) {
         install(ContentNegotiation) { json() }
@@ -56,6 +59,8 @@ class QrCodeViewModel @Inject constructor(
         viewModelScope.launch {
             val id = pref.get(KEY_ID) ?: return@launch
             val password = pref.get(KEY_PASSWORD) ?: return@launch
+            Log.d(TAG, id)
+            Log.d(TAG, password)
             val resp1 = client.post("https://service202-sds.fcu.edu.tw/FcucardQrcode/Login.aspx") {
                 contentType(ContentType.Application.FormUrlEncoded)
                 setBody("username=$id&password=$password&appversion=2")
@@ -68,12 +73,12 @@ class QrCodeViewModel @Inject constructor(
                 }.body<JsonElement>()
             Log.d(TAG, resp2.jsonObject.toString())
             val hexString = resp2
-                .jsonObject["d"]!!
-                .jsonObject["hexString"]!!
-                .jsonPrimitive.content
+                .jsonObject["d"]
+                ?.jsonObject?.get("hexString")
+                ?.jsonPrimitive?.content ?: return@launch
             val bitmap =
                 QRCode(hexString).render(margin = DEFAULT_CELL_SIZE).nativeImage() as Bitmap
-            _state.value = _state.value!!.copy(bitmap = bitmap)
+            state = state.copy(bitmap = bitmap)
         }
     }
 }

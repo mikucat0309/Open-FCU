@@ -1,12 +1,13 @@
 package at.mikuc.openfcu.viewmodel
 
-import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Public
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import at.mikuc.openfcu.TAG
@@ -25,6 +26,8 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -32,23 +35,26 @@ import javax.inject.Inject
 
 data class RedirectUiState(
     val redirectItems: List<RedirectItem>,
-    val intent: Intent? = null,
-    val toastMessage: String? = null,
+)
+
+data class RedirectEvent(
+    val uri: Uri? = null,
+    val message: String? = null,
 )
 
 data class RedirectItem(
     val title: String,
     val service: SSOService,
     val path: String? = null,
-    val icon: ImageVector = Icons.Outlined.Public
+    val icon: ImageVector = Icons.Outlined.Public,
 )
 
 @HiltViewModel
 class RedirectViewModel @Inject constructor(
-    private val pref: UserPreferencesRepository
+    private val pref: UserPreferencesRepository,
 ) : ViewModel() {
 
-    private val _state = MutableLiveData(
+    var state by mutableStateOf(
         RedirectUiState(
             listOf(
                 RedirectItem(
@@ -82,7 +88,10 @@ class RedirectViewModel @Inject constructor(
             )
         )
     )
-    val state: LiveData<RedirectUiState> = _state
+        private set
+
+    private val _event = MutableStateFlow(RedirectEvent())
+    val event: StateFlow<RedirectEvent> = _event
 
     private val client = HttpClient(CIO) {
         install(ContentNegotiation) {
@@ -90,11 +99,13 @@ class RedirectViewModel @Inject constructor(
         }
     }
 
-    fun redirect(service: SSOService, path: String? = null) {
+    fun fetchRedirectToken(service: SSOService, path: String? = null) {
         viewModelScope.launch {
             val id = pref.get(KEY_ID) ?: return@launch
             val password = pref.get(KEY_PASSWORD) ?: return@launch
             val data = SSORequest(id, password, service)
+            Log.d(TAG, id)
+            Log.d(TAG, password)
             val response: SSOResponse =
                 client.post("https://service206-sds.fcu.edu.tw/mobileservice/RedirectService.svc/Redirect") {
                     contentType(ContentType.Application.Json)
@@ -109,23 +120,16 @@ class RedirectViewModel @Inject constructor(
                     )
                 } else response.redirectUri
                 Log.d(TAG, uri.toString())
-                val intent = Intent().apply {
-                    action = Intent.ACTION_VIEW
-                    setData(uri)
-                }
-                _state.value = _state.value?.copy(intent = intent)
+                _event.value = event.value.copy(uri = uri)
             } else {
                 Log.w(TAG, response.message)
-                _state.value = _state.value?.copy(toastMessage = response.message)
+                _event.value = event.value.copy(message = response.message)
             }
         }
     }
 
-    fun clearRedirectIntent() {
-        _state.value = _state.value?.copy(intent = null)
+    fun redirectEventDone() {
+        _event.value = RedirectEvent()
     }
 
-    fun clearToast() {
-        _state.value = _state.value?.copy(toastMessage = null)
-    }
 }

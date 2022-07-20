@@ -3,7 +3,6 @@ package at.mikuc.openfcu.viewmodel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import at.mikuc.openfcu.repository.UserPreferencesRepository
@@ -13,23 +12,25 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+data class SettingUiState(
+    val id: String,
+    val password: String,
+)
+
 @HiltViewModel
 class SettingViewModel @Inject constructor(
-    private val pref: UserPreferencesRepository
+    private val pref: UserPreferencesRepository,
 ) : ViewModel() {
 
-    var id by mutableStateOf(TextFieldValue(""))
+    var state by mutableStateOf(SettingUiState("", ""))
         private set
-    var password by mutableStateOf(TextFieldValue(""))
-        private set
-
-    val onIDChange: (TextFieldValue) -> Unit = { id = it }
-    val onPasswordChange: (TextFieldValue) -> Unit = { password = it }
 
     init {
         viewModelScope.launch {
-            id = TextFieldValue(pref.get(KEY_ID) ?: "")
-            password = TextFieldValue(pref.get(KEY_PASSWORD) ?: "")
+            update(SettingUiState(
+                pref.get(KEY_ID) ?: "",
+                pref.get(KEY_PASSWORD) ?: ""
+            ))
         }
     }
 
@@ -38,11 +39,15 @@ class SettingViewModel @Inject constructor(
         super.onCleared()
     }
 
+    fun update(new: SettingUiState) {
+        state = new
+    }
+
     fun saveConfig() {
         // TODO("check ID password")
         viewModelScope.launch {
-            pref.set(KEY_ID, id.text)
-            pref.set(KEY_PASSWORD, password.text)
+            pref.set(KEY_ID, state.id)
+            pref.set(KEY_PASSWORD, state.password)
         }
     }
 }
