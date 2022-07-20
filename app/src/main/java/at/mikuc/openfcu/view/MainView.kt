@@ -1,16 +1,19 @@
 package at.mikuc.openfcu.view
 
+import androidx.compose.material.Scaffold
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import at.mikuc.openfcu.repository.UserPreferencesRepository
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
+import at.mikuc.openfcu.util.currentRoute
 import at.mikuc.openfcu.viewmodel.QrCodeViewModel
 import at.mikuc.openfcu.viewmodel.RedirectViewModel
 import at.mikuc.openfcu.viewmodel.SettingViewModel
@@ -22,33 +25,40 @@ fun MainView(
     rvm: RedirectViewModel = hiltViewModel(),
     qvm: QrCodeViewModel = hiltViewModel(),
 ) {
-    val navController = rememberNavController()
-
-    NavHost(
-        navController = navController,
-        startDestination = Graph.QrCode.route,
+    val ctrl = rememberNavController()
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
+    Scaffold(
+        scaffoldState = scaffoldState,
+        topBar = { MyTopBar(scope, scaffoldState, ctrl.currentRoute()) },
+        drawerContent = { MyDrawer(ctrl, scope, scaffoldState) },
     ) {
-        settingView(navController, svm)
-        redirectView(navController, rvm)
-        qrcodeView(navController, qvm)
+        NavHost(
+            navController = ctrl,
+            startDestination = Graph.QrCode.route,
+        ) {
+            settingView(svm)
+            redirectView(rvm)
+            qrcodeView(qvm)
+        }
     }
 }
 
-private fun NavGraphBuilder.qrcodeView(navController: NavHostController, qvm: QrCodeViewModel) {
+private fun NavGraphBuilder.qrcodeView(qvm: QrCodeViewModel) {
     composable(Graph.QrCode.route) {
-        QRCodeView(navController, qvm)
+        QRCodeView(qvm)
     }
 }
 
-private fun NavGraphBuilder.redirectView(navController: NavHostController, rvm: RedirectViewModel) {
+private fun NavGraphBuilder.redirectView(rvm: RedirectViewModel) {
     composable(Graph.Redirect.route) {
-        RedirectView(navController, rvm)
+        RedirectView(rvm)
     }
 }
 
-private fun NavGraphBuilder.settingView(navController: NavHostController, svm: SettingViewModel) {
+private fun NavGraphBuilder.settingView(svm: SettingViewModel) {
     composable(Graph.Setting.route) {
-        SettingView(navController, svm)
+        SettingView(svm)
     }
 }
 

@@ -1,15 +1,15 @@
 package at.mikuc.openfcu.view
 
-import android.app.Application
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Public
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,33 +19,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import at.mikuc.openfcu.repository.UserPreferencesRepository
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
-import at.mikuc.openfcu.util.currentRoute
 import at.mikuc.openfcu.viewmodel.RedirectViewModel
 import java.io.File
 
 @Composable
-fun RedirectView(ctrl: NavHostController, viewModel: RedirectViewModel = hiltViewModel()) {
-    val scaffoldState = rememberScaffoldState()
-    val scope = rememberCoroutineScope()
+fun RedirectView(viewModel: RedirectViewModel = hiltViewModel()) {
     val state = viewModel.state
-    Scaffold(
-        scaffoldState = scaffoldState,
-        topBar = { MyTopBar(scope, scaffoldState, ctrl.currentRoute()) },
-        drawerContent = { MyDrawer(ctrl, scope, scaffoldState) },
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .padding(vertical = 16.dp)
+            .fillMaxSize()
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(vertical = 16.dp)
-                .fillMaxSize()
-        ) {
-            state.redirectItems.forEach {
-                RedirectItem(title = it.title, icon = it.icon) {
-                    viewModel.fetchRedirectToken(it.service, it.path)
-                }
+        state.redirectItems.forEach {
+            RedirectItem(title = it.title, icon = it.icon) {
+                viewModel.fetchRedirectToken(it.service, it.path)
             }
         }
     }
@@ -56,7 +46,6 @@ fun RedirectView(ctrl: NavHostController, viewModel: RedirectViewModel = hiltVie
 fun RedirectPreview() {
     OpenFCUTheme {
         RedirectView(
-            NavHostController(Application()),
             RedirectViewModel(
                 UserPreferencesRepository(
                     PreferenceDataStoreFactory.create {
