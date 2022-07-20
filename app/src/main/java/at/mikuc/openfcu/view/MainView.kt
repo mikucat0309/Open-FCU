@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import at.mikuc.openfcu.repository.UserPreferencesRepository
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
 import at.mikuc.openfcu.util.currentRoute
+import at.mikuc.openfcu.viewmodel.CourseSearchViewModel
 import at.mikuc.openfcu.viewmodel.QrCodeViewModel
 import at.mikuc.openfcu.viewmodel.RedirectViewModel
 import at.mikuc.openfcu.viewmodel.SettingViewModel
@@ -24,6 +25,7 @@ fun MainView(
     svm: SettingViewModel = hiltViewModel(),
     rvm: RedirectViewModel = hiltViewModel(),
     qvm: QrCodeViewModel = hiltViewModel(),
+    csvm: CourseSearchViewModel = hiltViewModel(),
 ) {
     val ctrl = rememberNavController()
     val scaffoldState = rememberScaffoldState()
@@ -40,6 +42,7 @@ fun MainView(
             settingView(svm)
             redirectView(rvm)
             qrcodeView(qvm)
+            courseGraph(csvm)
         }
     }
 }
