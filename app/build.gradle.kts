@@ -48,8 +48,6 @@ android {
         jvmTarget = "1.8"
         freeCompilerArgs = freeCompilerArgs + listOf(
             "-opt-in=kotlin.RequiresOptIn",
-            "-P",
-            "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true",
         )
     }
     buildFeatures {
