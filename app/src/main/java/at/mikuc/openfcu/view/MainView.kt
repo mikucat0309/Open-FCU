@@ -34,10 +34,15 @@ fun MainView(
         scaffoldState = scaffoldState,
         topBar = { MyTopBar(scope, scaffoldState, ctrl.currentRoute()) },
         drawerContent = { MyDrawer(ctrl, scope, scaffoldState) },
+        floatingActionButton = {
+            when (ctrl.currentRoute()) {
+                CourseGraph.Search.route -> CourseSearchFAB(ctrl, csvm)
+            }
+        }
     ) {
         NavHost(
             navController = ctrl,
-            startDestination = Graph.QrCode.route,
+            startDestination = Graph.Course.route,
         ) {
             settingView(svm)
             redirectView(rvm)

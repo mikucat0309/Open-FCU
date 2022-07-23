@@ -23,9 +23,9 @@ data class Opener(
     val name: String,
     val academyId: String,
     val departId: String,
-    val idk: Int,
-    val grade: Int,
-    val clazz: Int,
+    val idk: Char,
+    val grade: Char,
+    val clazz: Char,
 )
 
 data class Period(

@@ -27,6 +27,7 @@ fun MyDrawer(
     val appGraphs = listOf(
         Graph.Redirect,
         Graph.QrCode,
+        Graph.Course,
     )
     val systemGraphs = listOf(
         Graph.Setting,

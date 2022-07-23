@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
+import androidx.navigation.NavHostController
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
 import at.mikuc.openfcu.viewmodel.CourseSearchViewModel
 
@@ -95,25 +96,10 @@ fun CourseSearchView(viewModel: CourseSearchViewModel) {
             )
         }
         Row {
-            MyTextField(
-                label = "開課單位名稱",
-                value = state.openerName,
-                update = { viewModel.update(state.copy(openerName = it)) },
-                modifier = Modifier.weight(2f)
-            )
-            MyNumberField(
-                label = "開放修課人數",
-                value = state.openNum,
-                update = { if (it in 0..999) viewModel.update(state.copy(openNum = it)) },
-                modifier = Modifier.weight(1f)
-            )
-        }
-
-        Row {
             MyNumberField(
                 "選課代碼",
                 value = state.code,
-                update = { if (it in 1..9999) viewModel.update(state.copy(openNum = it)) },
+                update = { if (it == null || it in 1..9999) viewModel.update(state.copy(code = it)) },
                 modifier = Modifier.weight(2f)
             )
             MyOptionalDropdownMenu(
@@ -124,15 +110,27 @@ fun CourseSearchView(viewModel: CourseSearchViewModel) {
                 Modifier.weight(1f)
             )
         }
-
+        Row {
+            MyTextField(
+                label = "開課單位名稱",
+                value = state.openerName,
+                update = { viewModel.update(state.copy(openerName = it)) },
+                modifier = Modifier.weight(2f)
+            )
+            MyNumberField(
+                label = "開放修課人數",
+                value = state.openNum,
+                update = { if (it == null || it in 0..999) viewModel.update(state.copy(openNum = it)) },
+                modifier = Modifier.weight(1f)
+            )
+        }
         Row {
             MyTextField(
                 "上課地點",
-                state.place,
-                update = { viewModel.update(state.copy(place = it)) },
+                state.location,
+                update = { viewModel.update(state.copy(location = it)) },
                 Modifier.weight(2f)
             )
-
             MyOptionalDropdownMenu(
                 "星期",
                 map = days,
@@ -141,7 +139,6 @@ fun CourseSearchView(viewModel: CourseSearchViewModel) {
                 modifier = Modifier.weight(1f),
             )
         }
-
         Text("節數")
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -172,6 +169,7 @@ fun CourseSearchView(viewModel: CourseSearchViewModel) {
                 }
             }
         }
+
     }
 
 }
@@ -199,13 +197,13 @@ private fun MyTextField(
 private fun MyNumberField(
     label: String,
     value: Int?,
-    update: (Int) -> Unit,
+    update: (Int?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     MyTextField(
         label = label,
-        value = value?.toString() ?: "",
-        update = { if (it.isDigitsOnly()) update(it.toInt()) },
+        value = value?.toString(10) ?: "",
+        update = { if (it.isDigitsOnly()) update(it.toIntOrNull()) },
         modifier = modifier
     )
 }
@@ -237,8 +235,7 @@ fun MyOptionalDropdownMenu(
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                 },
                 colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-
-                )
+            )
             ExposedDropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
@@ -351,8 +348,13 @@ fun SectionButton(
 }
 
 @Composable
-fun CourseSearchFAB(viewModel: CourseSearchViewModel) {
-    FloatingActionButton(onClick = { viewModel.search() }) {
+fun CourseSearchFAB(ctrl: NavHostController, viewModel: CourseSearchViewModel) {
+    FloatingActionButton(onClick = {
+        viewModel.search()
+        ctrl.navigate(CourseGraph.Result.route) {
+            popUpTo(CourseGraph.Search.route)
+        }
+    }) {
         Icon(Icons.Outlined.Search, "Search")
     }
 }
