@@ -24,61 +24,69 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import javax.inject.Inject
 
-data class QrCodeUiState(
+data class QrcodeUiState(
     val bitmap: Bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888).apply {
         eraseColor(Color.GRAY)
     },
 )
 
+const val QRCODE_LOGIN_URL = "https://service202-sds.fcu.edu.tw/FcucardQrcode/Login.aspx"
+const val QRCODE_DATA_URL =
+    "https://service202-sds.fcu.edu.tw/FcucardQrcode/FcuCard.aspx/GetEncryptData"
+
 @HiltViewModel
-class QrCodeViewModel @Inject constructor(
+class QrcodeViewModel @Inject constructor(
     private val pref: UserPreferencesRepository,
 ) : ViewModel() {
 
-    var state by mutableStateOf(QrCodeUiState())
+    var state by mutableStateOf(QrcodeUiState())
 
     private val client = HttpClient(CIO) {
+        followRedirects = false
         install(ContentNegotiation) { json() }
         install(HttpCookies)
     }
 
     init {
-        fetchQrCodeData()
+        fetchQrcode()
     }
 
-    @Serializable
-    class Empty
-
-    fun fetchQrCodeData() {
+    fun fetchQrcode() {
         viewModelScope.launch {
             val id = pref.get(KEY_ID) ?: return@launch
             val password = pref.get(KEY_PASSWORD) ?: return@launch
             Log.d(TAG, id)
-            Log.d(TAG, password)
-            val resp1 = client.post("https://service202-sds.fcu.edu.tw/FcucardQrcode/Login.aspx") {
-                contentType(ContentType.Application.FormUrlEncoded)
-                setBody("username=$id&password=$password&appversion=2")
-            }.body<String>()
-            Log.d(TAG, resp1)
-            val resp2 =
-                client.post("https://service202-sds.fcu.edu.tw/FcucardQrcode/FcuCard.aspx/GetEncryptData") {
-                    contentType(ContentType.Application.Json)
-                    setBody(Empty())
-                }.body<JsonElement>()
-            Log.d(TAG, resp2.jsonObject.toString())
-            val hexString = resp2
-                .jsonObject["d"]
-                ?.jsonObject?.get("hexString")
-                ?.jsonPrimitive?.content ?: return@launch
-            val bitmap =
-                QRCode(hexString).render(margin = DEFAULT_CELL_SIZE).nativeImage() as Bitmap
+            if (!loginQrcode(id, password)) return@launch
+            val hexStr = fetchQrcodeData() ?: return@launch
+            val bitmap = QRCode(hexStr).render(margin = DEFAULT_CELL_SIZE).nativeImage() as Bitmap
             state = state.copy(bitmap = bitmap)
         }
+    }
+
+    private suspend fun loginQrcode(id: String, password: String): Boolean {
+        val resp = client.post(QRCODE_LOGIN_URL) {
+            contentType(ContentType.Application.FormUrlEncoded)
+            setBody("username=$id&password=$password&appversion=2")
+        }
+        Log.d(TAG, resp.body())
+        return resp.status == HttpStatusCode.Found
+    }
+
+    private suspend fun fetchQrcodeData(): String? {
+        val resp = client.post(QRCODE_DATA_URL) {
+            contentType(ContentType.Application.Json)
+            setBody(buildJsonObject {})
+        }.body<JsonElement>()
+        Log.d(TAG, resp.jsonObject.toString())
+        return resp
+            .jsonObject["d"]
+            ?.jsonObject?.get("hexString")
+            ?.jsonPrimitive?.content
     }
 }

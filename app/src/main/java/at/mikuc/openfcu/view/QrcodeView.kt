@@ -16,11 +16,11 @@ import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import at.mikuc.openfcu.repository.UserPreferencesRepository
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
-import at.mikuc.openfcu.viewmodel.QrCodeViewModel
+import at.mikuc.openfcu.viewmodel.QrcodeViewModel
 import java.io.File
 
 @Composable
-fun QRCodeView(viewModel: QrCodeViewModel) {
+fun QRCodeView(viewModel: QrcodeViewModel) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -32,7 +32,7 @@ fun QRCodeView(viewModel: QrCodeViewModel) {
             contentDescription = "QRCode",
             modifier = Modifier.size(250.dp)
         )
-        Button(onClick = { viewModel.fetchQrCodeData() }) {
+        Button(onClick = { viewModel.fetchQrcode() }) {
             Text("Refresh")
         }
     }
@@ -43,7 +43,7 @@ fun QRCodeView(viewModel: QrCodeViewModel) {
 fun QRCodePreview() {
     OpenFCUTheme {
         QRCodeView(
-            QrCodeViewModel(
+            QrcodeViewModel(
                 UserPreferencesRepository(
                     PreferenceDataStoreFactory.create {
                         return@create File("")

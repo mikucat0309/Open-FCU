@@ -15,7 +15,7 @@ import at.mikuc.openfcu.repository.UserPreferencesRepository
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
 import at.mikuc.openfcu.util.currentRoute
 import at.mikuc.openfcu.viewmodel.CourseSearchViewModel
-import at.mikuc.openfcu.viewmodel.QrCodeViewModel
+import at.mikuc.openfcu.viewmodel.QrcodeViewModel
 import at.mikuc.openfcu.viewmodel.RedirectViewModel
 import at.mikuc.openfcu.viewmodel.SettingViewModel
 import java.io.File
@@ -24,7 +24,7 @@ import java.io.File
 fun MainView(
     svm: SettingViewModel = hiltViewModel(),
     rvm: RedirectViewModel = hiltViewModel(),
-    qvm: QrCodeViewModel = hiltViewModel(),
+    qvm: QrcodeViewModel = hiltViewModel(),
     csvm: CourseSearchViewModel = hiltViewModel(),
 ) {
     val ctrl = rememberNavController()
@@ -52,7 +52,7 @@ fun MainView(
     }
 }
 
-private fun NavGraphBuilder.qrcodeView(qvm: QrCodeViewModel) {
+private fun NavGraphBuilder.qrcodeView(qvm: QrcodeViewModel) {
     composable(Graph.QrCode.route) {
         QRCodeView(qvm)
     }
@@ -81,7 +81,7 @@ fun MainPreview() {
         )
         val svm = SettingViewModel(pref)
         val rvm = RedirectViewModel(pref)
-        val qvm = QrCodeViewModel(pref)
+        val qvm = QrcodeViewModel(pref)
         MainView(svm, rvm, qvm)
     }
 }
