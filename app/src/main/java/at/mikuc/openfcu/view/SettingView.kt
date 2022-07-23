@@ -33,7 +33,7 @@ fun SettingView(viewModel: SettingViewModel = hiltViewModel()) {
         var passwordVisible by remember { mutableStateOf(false) }
         TextField(
             value = viewModel.state.id,
-            onValueChange = { viewModel.update(viewModel.state.copy(id = it)) },
+            onValueChange = { viewModel.state = viewModel.state.copy(id = it) },
             placeholder = { Text("NID") },
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -44,7 +44,7 @@ fun SettingView(viewModel: SettingViewModel = hiltViewModel()) {
         )
         TextField(
             value = viewModel.state.password,
-            onValueChange = { viewModel.update(viewModel.state.copy(password = it)) },
+            onValueChange = { viewModel.state = viewModel.state.copy(password = it) },
             placeholder = { Text("Password") },
             singleLine = true,
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),

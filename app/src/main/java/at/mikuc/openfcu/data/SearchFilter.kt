@@ -1,7 +1,9 @@
 package at.mikuc.openfcu.data
 
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.*
 
+@Serializable
 data class SearchFilter(
     val year: Int,
     val semester: Int,

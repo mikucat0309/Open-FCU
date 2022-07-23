@@ -8,15 +8,11 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlin.math.roundToInt
 
-private val json = Json { prettyPrint = true }
-
 @Serializable
-data class RawCoursesDTO(
-    val d: String,
-) {
+data class RawCoursesDTO(val d: String) {
     fun toCourses(): List<Course> {
-        val dto = Json.decodeFromString<CoursesDTO>(this.d)
-        Log.d(TAG, json.encodeToString(dto))
+        val dto = Json.decodeFromString<CoursesDTO>(d)
+        Log.d(TAG, Json.encodeToString(dto))
         return dto.items.map { courseDTO ->
             courseDTO.run {
                 var periods = Regex("""\((.)\)(\d{2}) +([^\s]+)""")

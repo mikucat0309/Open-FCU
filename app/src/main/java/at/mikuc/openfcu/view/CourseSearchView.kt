@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavHostController
+import at.mikuc.openfcu.repository.FcuCourseSearchRepository
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
 import at.mikuc.openfcu.viewmodel.CourseSearchViewModel
 
@@ -62,7 +63,7 @@ fun CourseSearchView(viewModel: CourseSearchViewModel) {
                 label = "學年度",
                 map = yearOptions,
                 value = state.year,
-                update = { viewModel.update(state.copy(year = it)) },
+                update = { viewModel.state = state.copy(year = it) },
                 modifier = Modifier.weight(1f)
             )
 
@@ -70,7 +71,7 @@ fun CourseSearchView(viewModel: CourseSearchViewModel) {
                 label = "學期",
                 map = semesterOptions,
                 value = state.semester,
-                update = { viewModel.update(state.copy(semester = it)) },
+                update = { viewModel.state = state.copy(semester = it) },
                 modifier = Modifier.weight(1f)
             )
         }
@@ -85,13 +86,13 @@ fun CourseSearchView(viewModel: CourseSearchViewModel) {
             MyTextField(
                 label = "科目名稱",
                 value = state.name,
-                update = { viewModel.update(state.copy(name = it)) },
+                update = { viewModel.state = state.copy(name = it) },
                 modifier = Modifier.weight(1f)
             )
             MyTextField(
                 label = "教師名稱",
                 value = state.teacher,
-                update = { viewModel.update(state.copy(teacher = it)) },
+                update = { viewModel.state = state.copy(teacher = it) },
                 modifier = Modifier.weight(1f)
             )
         }
@@ -99,14 +100,16 @@ fun CourseSearchView(viewModel: CourseSearchViewModel) {
             MyNumberField(
                 "選課代碼",
                 value = state.code,
-                update = { if (it == null || it in 1..9999) viewModel.update(state.copy(code = it)) },
+                update = {
+                    if (it == null || it in 1..9999) viewModel.state = state.copy(code = it)
+                },
                 modifier = Modifier.weight(2f)
             )
             MyOptionalDropdownMenu(
                 label = "學分數",
                 map = creditOptions,
                 value = state.credit,
-                update = { viewModel.update(state.copy(credit = it)) },
+                update = { viewModel.state = state.copy(credit = it) },
                 Modifier.weight(1f)
             )
         }
@@ -114,13 +117,15 @@ fun CourseSearchView(viewModel: CourseSearchViewModel) {
             MyTextField(
                 label = "開課單位名稱",
                 value = state.openerName,
-                update = { viewModel.update(state.copy(openerName = it)) },
+                update = { viewModel.state = state.copy(openerName = it) },
                 modifier = Modifier.weight(2f)
             )
             MyNumberField(
                 label = "開放修課人數",
                 value = state.openNum,
-                update = { if (it == null || it in 0..999) viewModel.update(state.copy(openNum = it)) },
+                update = {
+                    if (it == null || it in 0..999) viewModel.state = state.copy(openNum = it)
+                },
                 modifier = Modifier.weight(1f)
             )
         }
@@ -128,14 +133,14 @@ fun CourseSearchView(viewModel: CourseSearchViewModel) {
             MyTextField(
                 "上課地點",
                 state.location,
-                update = { viewModel.update(state.copy(location = it)) },
+                update = { viewModel.state = state.copy(location = it) },
                 Modifier.weight(2f)
             )
             MyOptionalDropdownMenu(
                 "星期",
                 map = days,
                 value = state.day,
-                update = { viewModel.update(state.copy(day = it)) },
+                update = { viewModel.state = state.copy(day = it) },
                 modifier = Modifier.weight(1f),
             )
         }
@@ -153,7 +158,7 @@ fun CourseSearchView(viewModel: CourseSearchViewModel) {
                     SectionButton(
                         index = index,
                         value = state.sections,
-                        update = { new -> viewModel.update(state.copy(sections = new)) },
+                        update = { viewModel.state = state.copy(sections = it) },
                         Modifier.weight(1f)
                     )
                 }
@@ -163,7 +168,7 @@ fun CourseSearchView(viewModel: CourseSearchViewModel) {
                     SectionButton(
                         index = index,
                         value = state.sections,
-                        update = { new -> viewModel.update(state.copy(sections = new)) },
+                        update = { viewModel.state = state.copy(sections = it) },
                         Modifier.weight(1f)
                     )
                 }
@@ -313,7 +318,9 @@ fun MyDropdownMenu(
 @Preview(showBackground = true)
 @Composable
 fun CourseSearchPreview() {
-    val csvm = CourseSearchViewModel()
+    val csvm = CourseSearchViewModel(
+        FcuCourseSearchRepository()
+    )
     OpenFCUTheme {
         CourseSearchView(csvm)
     }

@@ -11,6 +11,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import at.mikuc.openfcu.repository.FcuQrcodeRepository
+import at.mikuc.openfcu.repository.FcuSsoRepository
 import at.mikuc.openfcu.repository.UserPreferencesRepository
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
 import at.mikuc.openfcu.util.currentRoute
@@ -42,7 +44,7 @@ fun MainView(
     ) {
         NavHost(
             navController = ctrl,
-            startDestination = Graph.Course.route,
+            startDestination = Graph.Setting.route,
         ) {
             settingView(svm)
             redirectView(rvm)
@@ -80,8 +82,8 @@ fun MainPreview() {
             }
         )
         val svm = SettingViewModel(pref)
-        val rvm = RedirectViewModel(pref)
-        val qvm = QrcodeViewModel(pref)
+        val rvm = RedirectViewModel(pref, FcuSsoRepository())
+        val qvm = QrcodeViewModel(pref, FcuQrcodeRepository())
         MainView(svm, rvm, qvm)
     }
 }

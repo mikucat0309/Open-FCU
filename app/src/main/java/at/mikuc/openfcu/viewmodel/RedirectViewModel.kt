@@ -12,25 +12,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import at.mikuc.openfcu.TAG
 import at.mikuc.openfcu.data.SSORequest
-import at.mikuc.openfcu.data.SSOResponse
 import at.mikuc.openfcu.data.SSOService
+import at.mikuc.openfcu.repository.FcuSsoRepository
 import at.mikuc.openfcu.repository.UserPreferencesRepository
 import at.mikuc.openfcu.repository.UserPreferencesRepository.Companion.KEY_ID
 import at.mikuc.openfcu.repository.UserPreferencesRepository.Companion.KEY_PASSWORD
 import at.mikuc.openfcu.util.replaceUriParameter
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.request.*
-import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 data class RedirectUiState(
@@ -52,6 +43,7 @@ data class RedirectItem(
 @HiltViewModel
 class RedirectViewModel @Inject constructor(
     private val pref: UserPreferencesRepository,
+    private val repo: FcuSsoRepository,
 ) : ViewModel() {
 
     var state by mutableStateOf(
@@ -93,25 +85,11 @@ class RedirectViewModel @Inject constructor(
     private val _event = MutableStateFlow(RedirectEvent())
     val event: StateFlow<RedirectEvent> = _event
 
-    private val client = HttpClient(CIO) {
-        install(ContentNegotiation) {
-            json(Json { coerceInputValues = true })
-        }
-    }
-
     fun fetchRedirectToken(service: SSOService, path: String? = null) {
         viewModelScope.launch {
             val id = pref.get(KEY_ID) ?: return@launch
             val password = pref.get(KEY_PASSWORD) ?: return@launch
-            val data = SSORequest(id, password, service)
-            Log.d(TAG, id)
-            Log.d(TAG, password)
-            val response: SSOResponse =
-                client.post("https://service206-sds.fcu.edu.tw/mobileservice/RedirectService.svc/Redirect") {
-                    contentType(ContentType.Application.Json)
-                    setBody(data)
-                }.body()
-            Log.d(TAG, Json.encodeToString(response))
+            val response = repo.singleSignOn(SSORequest(id, password, service))
             if (response.success) {
                 val uri = if (service == SSOService.MYFCU) {
                     response.redirectUri.replaceUriParameter(
@@ -119,7 +97,7 @@ class RedirectViewModel @Inject constructor(
                         path ?: "webClientMyFcuMain.aspx#/prog/home"
                     )
                 } else response.redirectUri
-                Log.d(TAG, uri.toString())
+                Log.i(TAG, uri.toString())
                 _event.value = event.value.copy(uri = uri)
             } else {
                 Log.w(TAG, response.message)
@@ -129,7 +107,7 @@ class RedirectViewModel @Inject constructor(
     }
 
     fun redirectEventDone() {
-        _event.value = RedirectEvent()
+        _event.value = RedirectEvent(null, null)
     }
 
 }

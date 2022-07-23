@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import at.mikuc.openfcu.repository.FcuQrcodeRepository
 import at.mikuc.openfcu.repository.UserPreferencesRepository
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
 import at.mikuc.openfcu.viewmodel.QrcodeViewModel
@@ -42,14 +43,13 @@ fun QRCodeView(viewModel: QrcodeViewModel) {
 @Composable
 fun QRCodePreview() {
     OpenFCUTheme {
+        val pref = UserPreferencesRepository(
+            PreferenceDataStoreFactory.create {
+                return@create File("")
+            }
+        )
         QRCodeView(
-            QrcodeViewModel(
-                UserPreferencesRepository(
-                    PreferenceDataStoreFactory.create {
-                        return@create File("")
-                    }
-                )
-            )
+            QrcodeViewModel(pref, FcuQrcodeRepository())
         )
     }
 }

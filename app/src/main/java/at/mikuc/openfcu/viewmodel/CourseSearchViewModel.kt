@@ -8,51 +8,28 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import at.mikuc.openfcu.TAG
 import at.mikuc.openfcu.data.Course
-import at.mikuc.openfcu.data.RawCoursesDTO
 import at.mikuc.openfcu.data.SearchFilter
+import at.mikuc.openfcu.repository.FcuCourseSearchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.request.*
-import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 @HiltViewModel
-class CourseSearchViewModel @Inject constructor() : ViewModel() {
-
-    private val client = HttpClient(CIO) {
-        install(ContentNegotiation) {
-            json(Json { coerceInputValues = true })
-        }
-    }
+class CourseSearchViewModel @Inject constructor(
+    private val repo: FcuCourseSearchRepository,
+) : ViewModel() {
 
     var state by mutableStateOf(SearchFilter(111, 1))
-        private set
     var result: List<Course> by mutableStateOf(emptyList())
         private set
 
-    fun update(new: SearchFilter) {
-        state = new
-    }
-
     fun search() {
         val filter = state.copy()
-        val preFilter = filter.toDTO()
-        Log.d(TAG, Json.encodeToString(preFilter))
+        Log.d(TAG, Json.encodeToString(filter))
         viewModelScope.launch {
-            val response: RawCoursesDTO =
-                client.post("https://coursesearch04.fcu.edu.tw/Service/Search.asmx/GetType2Result") {
-                    contentType(ContentType.Application.Json)
-                    setBody(preFilter)
-                }.body()
-            result = response.toCourses()
-                .postFilter(filter)
+            result = repo.search(filter).postFilter(filter)
         }
     }
 

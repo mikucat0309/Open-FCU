@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.hilt.navigation.compose.hiltViewModel
+import at.mikuc.openfcu.repository.FcuSsoRepository
 import at.mikuc.openfcu.repository.UserPreferencesRepository
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
 import at.mikuc.openfcu.viewmodel.RedirectViewModel
@@ -45,14 +46,13 @@ fun RedirectView(viewModel: RedirectViewModel = hiltViewModel()) {
 @Composable
 fun RedirectPreview() {
     OpenFCUTheme {
+        val pref = UserPreferencesRepository(
+            PreferenceDataStoreFactory.create {
+                return@create File("")
+            }
+        )
         RedirectView(
-            RedirectViewModel(
-                UserPreferencesRepository(
-                    PreferenceDataStoreFactory.create {
-                        return@create File("")
-                    }
-                )
-            )
+            RedirectViewModel(pref, FcuSsoRepository())
         )
     }
 }

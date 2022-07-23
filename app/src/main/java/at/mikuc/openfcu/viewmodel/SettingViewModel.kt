@@ -23,24 +23,19 @@ class SettingViewModel @Inject constructor(
 ) : ViewModel() {
 
     var state by mutableStateOf(SettingUiState("", ""))
-        private set
 
     init {
         viewModelScope.launch {
-            update(SettingUiState(
+            state = SettingUiState(
                 pref.get(KEY_ID) ?: "",
                 pref.get(KEY_PASSWORD) ?: ""
-            ))
+            )
         }
     }
 
     override fun onCleared() {
         saveConfig()
         super.onCleared()
-    }
-
-    fun update(new: SettingUiState) {
-        state = new
     }
 
     fun saveConfig() {
