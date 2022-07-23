@@ -4,6 +4,8 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    id("de.mannodermaus.android-junit5")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -64,6 +66,16 @@ android {
     }
 }
 
+kotlin {
+    sourceSets {
+        val test by getting {
+            dependencies {
+                implementation("io.mockative:mockative:1.2.3")
+            }
+        }
+    }
+}
+
 hilt {
     enableAggregatingTask = true
 }
@@ -106,6 +118,14 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+
+    configurations
+        .filter { it.name.startsWith("ksp") && it.name.contains("Test") }
+        .forEach {
+            add(it.name, "io.mockative:mockative-processor:1.2.3")
+        }
 
 //    testImplementation("junit:junit:4.13.2")
 //    androidTestImplementation("androidx.test.ext:junit:1.1.3")
