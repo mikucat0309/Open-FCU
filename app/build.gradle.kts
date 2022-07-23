@@ -6,11 +6,6 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-val composeVersion = "1.2.0-rc01"
-val ktorVersion = "2.0.2"
-val lifecycleVersion = "2.5.0"
-val navVersion = "2.5.0"
-
 android {
     compileSdk = 32
 
@@ -69,6 +64,16 @@ android {
     }
 }
 
+hilt {
+    enableAggregatingTask = true
+}
+
+val composeVersion = "1.2.0-rc01"
+val ktorVersion = "2.0.2"
+val lifecycleVersion = "2.5.0"
+val navVersion = "2.5.0"
+val hiltVersion = "2.43"
+
 dependencies {
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.compose.ui:ui:$composeVersion")
@@ -84,8 +89,8 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$navVersion")
     api("androidx.navigation:navigation-fragment-ktx:$navVersion")
 
-    implementation("com.google.dagger:hilt-android:2.38.1")
-    kapt("com.google.dagger:hilt-compiler:2.38.1")
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
+    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     implementation("androidx.datastore:datastore-preferences:1.0.0")
@@ -101,10 +106,11 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
-    debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
+
+//    testImplementation("junit:junit:4.13.2")
+//    androidTestImplementation("androidx.test.ext:junit:1.1.3")
+//    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+//    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
+//    debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
+//    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
 }
