@@ -46,13 +46,17 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-        freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
+        freeCompilerArgs = freeCompilerArgs + listOf(
+            "-opt-in=kotlin.RequiresOptIn",
+            "-P",
+            "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true",
+        )
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = composeVersion
+        kotlinCompilerExtensionVersion = "1.3.0-beta01"
     }
     packagingOptions {
         resources {
@@ -80,7 +84,7 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.2.0-rc01"
+val composeVersion = "1.3.0-alpha01"
 val ktorVersion = "2.0.2"
 val lifecycleVersion = "2.5.0"
 val navVersion = "2.5.0"
