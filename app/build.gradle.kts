@@ -83,7 +83,7 @@ hilt {
 }
 
 val composeVersion = "1.3.0-alpha01"
-val ktorVersion = "2.0.2"
+val ktorVersion = "2.0.3"
 val lifecycleVersion = "2.5.0"
 val navVersion = "2.5.0"
 val hiltVersion = "2.43"
@@ -113,7 +113,7 @@ dependencies {
 
     implementation("io.github.g0dkar:qrcode-kotlin-android:3.1.0")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
