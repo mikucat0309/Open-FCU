@@ -1,5 +1,6 @@
 package at.mikuc.openfcu.viewmodel
 
+import android.net.Uri
 import android.util.Log
 import at.mikuc.openfcu.data.SSOResponse
 import at.mikuc.openfcu.repository.FcuSsoRepository
@@ -46,22 +47,33 @@ internal class ViewModelTest : BehaviorSpec() {
         coroutineTestScope = true
 
         // unit tests
-        Given("wrong ID or password") {
+        Given("ID and password") {
             val pref = mockk<UserPreferencesRepository>()
-            coEvery { pref.get<String>(any()) } returns "wrong"
+            coEvery { pref.get<String>(any()) } returns "mock"
 
-            When("Single Sign-On") {
-                val failedMsg = "Login Failed"
-
-                val resp = SSOResponse(failedMsg, mockk(), mockk(), false)
+            When("single sign-on") {
                 val sso = mockk<FcuSsoRepository>()
-                coEvery { sso.singleSignOn(any()) } returns resp
+                val msg = "mock"
+                val uri = mockk<Uri>()
 
-                val vm = RedirectViewModel(pref, sso)
-                vm.fetchRedirectToken(mockk())
-                testCoroutineScheduler.advanceUntilIdle()
+                Then("login failed") {
+                    val resp = SSOResponse(msg, mockk(), uri, false)
+                    coEvery { sso.singleSignOn(any()) } returns resp
+                    val vm = RedirectViewModel(pref, sso)
+                    vm.fetchRedirectToken(mockk())
+                    testCoroutineScheduler.advanceUntilIdle()
 
-                vm.event.value.message shouldBe failedMsg
+                    vm.event.value.message shouldBe msg
+                }
+                Then("login succeed") {
+                    val resp = SSOResponse(msg, mockk(), uri, true)
+                    coEvery { sso.singleSignOn(any()) } returns resp
+                    val vm = RedirectViewModel(pref, sso)
+                    vm.fetchRedirectToken(mockk())
+                    testCoroutineScheduler.advanceUntilIdle()
+
+                    vm.event.value.uri shouldBe uri
+                }
             }
         }
     }
