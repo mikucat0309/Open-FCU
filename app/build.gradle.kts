@@ -116,6 +116,7 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.10")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineVersion")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")

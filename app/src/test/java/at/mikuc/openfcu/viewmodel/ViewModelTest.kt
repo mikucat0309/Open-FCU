@@ -2,20 +2,18 @@ package at.mikuc.openfcu.viewmodel
 
 import android.net.Uri
 import android.util.Log
-import at.mikuc.openfcu.data.SSOResponse
+import at.mikuc.openfcu.data.*
+import at.mikuc.openfcu.repository.FcuCourseSearchRepository
 import at.mikuc.openfcu.repository.FcuQrcodeRepository
 import at.mikuc.openfcu.repository.FcuSsoRepository
 import at.mikuc.openfcu.repository.UserPreferencesRepository
+import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.core.test.TestCase
 import io.kotest.core.test.TestResult
 import io.kotest.core.test.testCoroutineScheduler
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
-import io.mockk.coEvery
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.mockkStatic
+import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -47,6 +45,7 @@ internal class ViewModelTest : BehaviorSpec() {
     init {
         // config
         coroutineTestScope = true
+        isolationMode = IsolationMode.InstancePerLeaf
 
         // unit tests
         Given("ID and password") {
@@ -54,11 +53,11 @@ internal class ViewModelTest : BehaviorSpec() {
             coEvery { pref.get<String>(any()) } returns "mock"
 
             When("single sign-on") {
-                val sso = mockk<FcuSsoRepository>()
                 val mockMsg = "mock"
                 val mockUri = mockk<Uri>()
 
                 Then("failed") {
+                    val sso = mockk<FcuSsoRepository>()
                     val resp = SSOResponse(mockMsg, mockk(), mockUri, false)
                     coEvery { sso.singleSignOn(any()) } returns resp
                     val vm = RedirectViewModel(pref, sso)
@@ -68,6 +67,7 @@ internal class ViewModelTest : BehaviorSpec() {
                     vm.event.value.message shouldBe mockMsg
                 }
                 Then("succeed") {
+                    val sso = mockk<FcuSsoRepository>()
                     val resp = SSOResponse(mockMsg, mockk(), mockUri, true)
                     coEvery { sso.singleSignOn(any()) } returns resp
                     val vm = RedirectViewModel(pref, sso)
@@ -79,28 +79,80 @@ internal class ViewModelTest : BehaviorSpec() {
             }
             When("login QRCode system") {
                 val qrcodeRepo = mockk<FcuQrcodeRepository>()
+                val vm = QrcodeViewModel(pref, qrcodeRepo)
+                val initialHexStr = vm.state.hexStr
+                initialHexStr shouldBe null
                 Then("failed") {
+                    unmockkObject(qrcodeRepo)
                     coEvery { qrcodeRepo.fetchQrcode(any(), any()) } returns null
-                    val vm = QrcodeViewModel(pref, qrcodeRepo)
-                    val initialHexStr = vm.state.hexStr
-                    initialHexStr shouldBe null
-                    vm.fetchQrcode(dispatcher)
+                    vm.fetchQrcode()
                     testCoroutineScheduler.advanceUntilIdle()
-
+                    coVerify(exactly = 1) { qrcodeRepo.fetchQrcode(any(), any()) }
                     vm.state.hexStr shouldBe initialHexStr
                 }
                 Then("succeed") {
+                    unmockkObject(qrcodeRepo)
                     val mockHexStr = "1234567890"
                     coEvery { qrcodeRepo.fetchQrcode(any(), any()) } returns mockHexStr
-                    val vm = QrcodeViewModel(pref, qrcodeRepo)
-                    val initialHexStr = vm.state.hexStr
-                    initialHexStr shouldBe null
-                    vm.fetchQrcode(dispatcher)
+                    vm.fetchQrcode()
                     testCoroutineScheduler.advanceUntilIdle()
-
-                    vm.state.hexStr shouldNotBe initialHexStr
+                    coVerify(exactly = 1) { qrcodeRepo.fetchQrcode(any(), any()) }
                     vm.state.hexStr shouldBe mockHexStr
                 }
+            }
+        }
+        Given("two different and fake courses") {
+            val course1 = Course(
+                name = "Course1",
+                id = "ABC0001",
+                code = 1,
+                teacher = "Teacher1",
+                periods = listOf(
+                    Period(1, (10..14), "B1"),
+                    Period(2, (1..2), "B2")
+                ),
+                credit = 5,
+                opener = Opener("CSIE", "Academy1", "Depart1", 'A', 'B', 'C'),
+                openNum = 80,
+                acceptNum = 79,
+                remark = "Remark1",
+            )
+            val course2 = Course(
+                name = "Course2",
+                id = "ABC0002",
+                code = 2,
+                teacher = "Teacher2",
+                periods = listOf(
+                    Period(1, (10..12), "3F"),
+                    Period(2, (1..3), "4F")
+                ),
+                credit = 6,
+                opener = Opener("CSIE", "Academy2", "Depart2", 'A', 'B', 'C'),
+                openNum = 30,
+                acceptNum = 10,
+                remark = "Remark2",
+            )
+            And("a filter set year 111, 1st semester, monday, section 12 and 13rd") {
+                val filter = SearchFilter(
+                    year = 111,
+                    semester = 1,
+                    day = 1,
+                    sections = setOf(12, 13),
+                )
+
+                When("search course") {
+                    val csRepo = mockk<FcuCourseSearchRepository>()
+                    coEvery { csRepo.search(any()) } returns listOf(course1, course1, course2)
+                    Then("get course1") {
+                        val vm = CourseSearchViewModel(csRepo)
+                        vm.state = filter
+                        vm.search()
+                        testCoroutineScheduler.advanceUntilIdle()
+                        coVerify(exactly = 1) { csRepo.search(any()) }
+                        vm.result shouldBe listOf(course1)
+                    }
+                }
+
             }
         }
     }
