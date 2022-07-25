@@ -27,10 +27,6 @@ class QrcodeViewModel @Inject constructor(
 
     var state by mutableStateOf(QrcodeUiState())
 
-    init {
-        fetchQrcode()
-    }
-
     fun fetchQrcode(dispatcher: CoroutineDispatcher = Dispatchers.IO) {
         viewModelScope.launch(dispatcher) {
             val id = pref.get(KEY_ID) ?: return@launch

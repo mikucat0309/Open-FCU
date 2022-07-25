@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
@@ -31,6 +32,9 @@ fun QRCodeView(viewModel: QrcodeViewModel) {
             .padding(16.dp)
             .fillMaxSize()
     ) {
+        LaunchedEffect(Unit) {
+            viewModel.fetchQrcode()
+        }
         val hexStr = viewModel.state.hexStr
         val bitmap = if (hexStr != null)
             QRCode(hexStr).render(margin = QRCode.DEFAULT_CELL_SIZE).nativeImage() as Bitmap
