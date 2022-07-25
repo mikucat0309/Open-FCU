@@ -1,5 +1,7 @@
 package at.mikuc.openfcu.view
 
+import android.graphics.Bitmap
+import android.graphics.Color
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +20,7 @@ import at.mikuc.openfcu.repository.FcuQrcodeRepository
 import at.mikuc.openfcu.repository.UserPreferencesRepository
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
 import at.mikuc.openfcu.viewmodel.QrcodeViewModel
+import io.github.g0dkar.qrcode.QRCode
 import java.io.File
 
 @Composable
@@ -28,8 +31,12 @@ fun QRCodeView(viewModel: QrcodeViewModel) {
             .padding(16.dp)
             .fillMaxSize()
     ) {
+        val hexStr = viewModel.state.hexStr
+        val bitmap = if (hexStr != null)
+            QRCode(hexStr).render(margin = QRCode.DEFAULT_CELL_SIZE).nativeImage() as Bitmap
+        else Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888).apply { eraseColor(Color.GRAY) }
         Image(
-            bitmap = (viewModel.state.bitmap).asImageBitmap(),
+            bitmap = bitmap.asImageBitmap(),
             contentDescription = "QRCode",
             modifier = Modifier.size(250.dp)
         )

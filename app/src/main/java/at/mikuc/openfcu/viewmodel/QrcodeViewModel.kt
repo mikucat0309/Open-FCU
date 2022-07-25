@@ -1,7 +1,5 @@
 package at.mikuc.openfcu.viewmodel
 
-import android.graphics.Bitmap
-import android.graphics.Color
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,17 +10,13 @@ import at.mikuc.openfcu.repository.UserPreferencesRepository
 import at.mikuc.openfcu.repository.UserPreferencesRepository.Companion.KEY_ID
 import at.mikuc.openfcu.repository.UserPreferencesRepository.Companion.KEY_PASSWORD
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.g0dkar.qrcode.QRCode
-import io.github.g0dkar.qrcode.QRCode.Companion.DEFAULT_CELL_SIZE
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class QrcodeUiState(
-    val bitmap: Bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888).apply {
-        eraseColor(Color.GRAY)
-    },
+    val hexStr: String? = null,
 )
 
 @HiltViewModel
@@ -42,8 +36,7 @@ class QrcodeViewModel @Inject constructor(
             val id = pref.get(KEY_ID) ?: return@launch
             val password = pref.get(KEY_PASSWORD) ?: return@launch
             val hexStr = repo.fetchQrcode(id, password) ?: return@launch
-            val bitmap = QRCode(hexStr).render(margin = DEFAULT_CELL_SIZE).nativeImage() as Bitmap
-            state = state.copy(bitmap = bitmap)
+            state = state.copy(hexStr = hexStr)
         }
     }
 }
