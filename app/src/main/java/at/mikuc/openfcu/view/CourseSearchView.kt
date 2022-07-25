@@ -3,6 +3,7 @@ package at.mikuc.openfcu.view
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
@@ -11,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -51,132 +53,177 @@ fun CourseSearchView(viewModel: CourseSearchViewModel) {
         6 to "六",
         7 to "日",
     )
-    Column(
-        horizontalAlignment = Alignment.Start,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-    ) {
-        Row {
-            MyDropdownMenu(
-                label = "學年度",
-                map = yearOptions,
-                value = state.year,
-                update = { viewModel.state = state.copy(year = it) },
-                modifier = Modifier.weight(1f)
-            )
-
-            MyDropdownMenu(
-                label = "學期",
-                map = semesterOptions,
-                value = state.semester,
-                update = { viewModel.state = state.copy(semester = it) },
-                modifier = Modifier.weight(1f)
-            )
-        }
-
-        Divider(
-            Modifier
-                .fillMaxWidth()
-                .height(8.dp)
-        )
-
-        Row {
-            MyTextField(
-                label = "科目名稱",
-                value = state.name,
-                update = { viewModel.state = state.copy(name = it) },
-                modifier = Modifier.weight(1f)
-            )
-            MyTextField(
-                label = "教師名稱",
-                value = state.teacher,
-                update = { viewModel.state = state.copy(teacher = it) },
-                modifier = Modifier.weight(1f)
-            )
-        }
-        Row {
-            MyNumberField(
-                "選課代碼",
-                value = state.code,
-                update = {
-                    if (it == null || it in 1..9999) viewModel.state = state.copy(code = it)
-                },
-                modifier = Modifier.weight(2f)
-            )
-            MyOptionalDropdownMenu(
-                label = "學分數",
-                map = creditOptions,
-                value = state.credit,
-                update = { viewModel.state = state.copy(credit = it) },
-                Modifier.weight(1f)
-            )
-        }
-        Row {
-            MyTextField(
-                label = "開課單位名稱",
-                value = state.openerName,
-                update = { viewModel.state = state.copy(openerName = it) },
-                modifier = Modifier.weight(2f)
-            )
-            MyNumberField(
-                label = "開放修課人數",
-                value = state.openNum,
-                update = {
-                    if (it == null || it in 0..999) viewModel.state = state.copy(openNum = it)
-                },
-                modifier = Modifier.weight(1f)
-            )
-        }
-        Row {
-            MyTextField(
-                "上課地點",
-                state.location,
-                update = { viewModel.state = state.copy(location = it) },
-                Modifier.weight(2f)
-            )
-            MyOptionalDropdownMenu(
-                "星期",
-                map = days,
-                value = state.day,
-                update = { viewModel.state = state.copy(day = it) },
-                modifier = Modifier.weight(1f),
-            )
-        }
-        Text("節數")
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+    Column {
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(4.dp))
-                .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
-                .background(MaterialTheme.colors.surface)
+                .background(Color.Yellow.copy(alpha = 0.4f))
+                .padding(4.dp)
         ) {
-            Row {
-                (1..7).forEach { index ->
-                    SectionButton(
-                        index = index,
-                        value = state.sections,
-                        update = { viewModel.state = state.copy(sections = it) },
-                        Modifier.weight(1f)
-                    )
-                }
+            Text(
+                text = "此功能資料來源為學校課程檢索 API，故科目名稱、教師名稱、選課代碼、星期、節次必須至少選擇一項",
+                style = MaterialTheme.typography.body1
+            )
+        }
+        Column(
+            horizontalAlignment = Alignment.Start,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
+        ) {
+            Row(
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                MyDropdownMenu(
+                    label = "學年度",
+                    map = yearOptions,
+                    value = state.year,
+                    update = { viewModel.state = state.copy(year = it) },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 4.dp)
+                )
+
+                MyDropdownMenu(
+                    label = "學期",
+                    map = semesterOptions,
+                    value = state.semester,
+                    update = { viewModel.state = state.copy(semester = it) },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 4.dp)
+                )
             }
-            Row {
-                (8..14).forEach { index ->
-                    SectionButton(
-                        index = index,
-                        value = state.sections,
-                        update = { viewModel.state = state.copy(sections = it) },
-                        Modifier.weight(1f)
-                    )
+            Divider(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            )
+            Row(
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                MyTextField(
+                    label = "科目名稱",
+                    value = state.name,
+                    update = { viewModel.state = state.copy(name = it) },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 4.dp)
+                )
+                MyTextField(
+                    label = "教師名稱",
+                    value = state.teacher,
+                    update = { viewModel.state = state.copy(teacher = it) },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 4.dp)
+                )
+            }
+            Row(
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                MyNumberField(
+                    "選課代碼",
+                    value = state.code,
+                    update = {
+                        if (it == null || it in 1..9999) viewModel.state = state.copy(code = it)
+                    },
+                    modifier = Modifier
+                        .weight(2f)
+                        .padding(horizontal = 4.dp)
+                )
+                MyOptionalDropdownMenu(
+                    label = "學分數",
+                    map = creditOptions,
+                    value = state.credit,
+                    update = { viewModel.state = state.copy(credit = it) },
+                    Modifier
+                        .weight(1f)
+                        .padding(horizontal = 4.dp)
+                )
+            }
+            Row(
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                MyTextField(
+                    label = "開課單位名稱",
+                    value = state.openerName,
+                    update = { viewModel.state = state.copy(openerName = it) },
+                    modifier = Modifier
+                        .weight(2f)
+                        .padding(horizontal = 4.dp)
+                )
+                MyNumberField(
+                    label = "開放修課人數",
+                    value = state.openNum,
+                    update = {
+                        if (it == null || it in 0..999) viewModel.state = state.copy(openNum = it)
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 4.dp)
+                )
+            }
+            Row(
+                modifier = Modifier.padding(top = 8.dp)
+            ) {
+                MyTextField(
+                    "上課地點",
+                    state.location,
+                    update = { viewModel.state = state.copy(location = it) },
+                    modifier = Modifier
+                        .weight(2f)
+                        .padding(horizontal = 4.dp)
+                )
+                MyOptionalDropdownMenu(
+                    "星期",
+                    map = days,
+                    value = state.day,
+                    update = { viewModel.state = state.copy(day = it) },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 4.dp)
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .padding(horizontal = 4.dp)
+            ) {
+                Text("節數")
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(4.dp))
+                        .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
+                        .background(MaterialTheme.colors.surface)
+                ) {
+                    Row {
+                        (1..7).forEach { index ->
+                            SectionButton(
+                                index = index,
+                                value = state.sections,
+                                update = { viewModel.state = state.copy(sections = it) },
+                                Modifier.weight(1f)
+                            )
+                        }
+                    }
+                    Row {
+                        (8..14).forEach { index ->
+                            SectionButton(
+                                index = index,
+                                value = state.sections,
+                                update = { viewModel.state = state.copy(sections = it) },
+                                Modifier.weight(1f)
+                            )
+                        }
+                    }
                 }
             }
         }
-
     }
-
 }
 
 @Composable
@@ -184,6 +231,7 @@ private fun MyTextField(
     label: String,
     value: String?,
     update: (String) -> Unit,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -194,6 +242,7 @@ private fun MyTextField(
             value = value ?: "",
             onValueChange = { update(it) },
             singleLine = true,
+            keyboardOptions = keyboardOptions,
         )
     }
 }
@@ -209,6 +258,7 @@ private fun MyNumberField(
         label = label,
         value = value?.toString(10) ?: "",
         update = { if (it.isDigitsOnly()) update(it.toIntOrNull()) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         modifier = modifier
     )
 }
@@ -341,10 +391,10 @@ fun SectionButton(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .background(buttonColor)
-            .padding(4.dp)
             .clickable(onClick = {
                 update(if (index in value) value.minusElement(index) else value.plusElement(index))
             })
+            .padding(4.dp)
     ) {
         Text(
             text = index.toString(),
