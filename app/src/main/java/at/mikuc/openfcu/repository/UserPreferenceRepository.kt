@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
+import at.mikuc.openfcu.data.Credential
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,6 +35,12 @@ class UserPreferencesRepository @Inject constructor(
 ) {
     suspend fun <T> get(key: Preferences.Key<T>): T? = dataStore.data.map { it[key] }.firstOrNull()
     suspend fun <T> set(key: Preferences.Key<T>, value: T) = dataStore.edit { it[key] = value }
+
+    suspend fun getCredential(): Credential? {
+        val id = get(KEY_ID) ?: return null
+        val password = get(KEY_PASSWORD) ?: return null
+        return Credential(id, password)
+    }
 
     companion object {
         val KEY_ID = stringPreferencesKey("ID")
