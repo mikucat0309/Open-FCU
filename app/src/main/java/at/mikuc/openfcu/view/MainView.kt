@@ -1,9 +1,13 @@
 package at.mikuc.openfcu.view
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -16,10 +20,7 @@ import at.mikuc.openfcu.repository.FcuSsoRepository
 import at.mikuc.openfcu.repository.UserPreferencesRepository
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
 import at.mikuc.openfcu.util.currentRoute
-import at.mikuc.openfcu.viewmodel.CourseSearchViewModel
-import at.mikuc.openfcu.viewmodel.QrcodeViewModel
-import at.mikuc.openfcu.viewmodel.RedirectViewModel
-import at.mikuc.openfcu.viewmodel.SettingViewModel
+import at.mikuc.openfcu.viewmodel.*
 import java.io.File
 
 @Composable
@@ -28,6 +29,7 @@ fun MainView(
     rvm: RedirectViewModel = hiltViewModel(),
     qvm: QrcodeViewModel = hiltViewModel(),
     csvm: CourseSearchViewModel = hiltViewModel(),
+    ttvm: TimetableViewModel = hiltViewModel(),
 ) {
     val ctrl = rememberNavController()
     val scaffoldState = rememberScaffoldState()
@@ -42,14 +44,21 @@ fun MainView(
             }
         }
     ) {
-        NavHost(
-            navController = ctrl,
-            startDestination = Graph.Setting.route,
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
         ) {
-            settingView(svm)
-            redirectView(rvm)
-            qrcodeView(qvm)
-            courseGraph(csvm)
+            NavHost(
+                navController = ctrl,
+                startDestination = Graph.Setting.route,
+            ) {
+                settingView(svm)
+                redirectView(rvm)
+                qrcodeView(qvm)
+                courseGraph(csvm)
+                timetableView(ttvm)
+            }
         }
     }
 }
@@ -69,6 +78,12 @@ private fun NavGraphBuilder.redirectView(rvm: RedirectViewModel) {
 private fun NavGraphBuilder.settingView(svm: SettingViewModel) {
     composable(Graph.Setting.route) {
         SettingView(svm)
+    }
+}
+
+private fun NavGraphBuilder.timetableView(ttvm: TimetableViewModel) {
+    composable(Graph.Timetable.route) {
+        TimetableView(ttvm)
     }
 }
 

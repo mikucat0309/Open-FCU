@@ -1,10 +1,7 @@
 package at.mikuc.openfcu.view
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Apps
-import androidx.compose.material.icons.outlined.QrCode
-import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Graph(val route: String, val displayName: String, val icon: ImageVector) {
@@ -12,12 +9,14 @@ sealed class Graph(val route: String, val displayName: String, val icon: ImageVe
     object Setting : Graph("setting", "設定", Icons.Outlined.Settings)
     object QrCode : Graph("qrcode", "數位 IC 卡 (QRCode)", Icons.Outlined.QrCode)
     object Course : Graph("course_search", "課程檢索", Icons.Outlined.Search)
+    object Timetable : Graph("timetable", "課表", Icons.Outlined.CalendarMonth)
     companion object {
         fun getGraph(route: String?): Graph? = when (route) {
             Redirect.route -> Redirect
             Setting.route -> Setting
             QrCode.route -> QrCode
             Course.route -> Course
+            Timetable.route -> Timetable
             else -> null
         }
     }
