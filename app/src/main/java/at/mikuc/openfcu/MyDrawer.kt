@@ -52,13 +52,13 @@ fun MyDrawer(
             DrawerButton(
                 text = graph.displayName,
                 icon = graph.icon,
-                isSelected = graph.route == ctrl.currentRoute()
+                isSelected = ctrl.currentRoute()?.startsWith(graph.route) ?: false
             ) {
                 scope.launch {
                     scaffoldState.drawerState.close()
                 }
                 ctrl.navigate(graph.route) {
-                    popUpTo(Graph.Redirect.route)
+                    popUpTo(Graph.Setting.route)
                 }
             }
         }
@@ -71,10 +71,10 @@ fun MyDrawer(
             DrawerButton(
                 text = graph.displayName,
                 icon = graph.icon,
-                isSelected = graph.route == ctrl.currentRoute()
+                isSelected = ctrl.currentRoute()?.startsWith(graph.route) ?: false
             ) {
                 ctrl.navigate(graph.route) {
-                    popUpTo(Graph.Redirect.route)
+                    popUpTo(Graph.Setting.route)
                 }
                 scope.launch {
                     scaffoldState.drawerState.close()
