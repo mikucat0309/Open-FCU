@@ -14,9 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import at.mikuc.openfcu.redirect.RedirectViewModel
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
-import at.mikuc.openfcu.view.MainView
-import at.mikuc.openfcu.viewmodel.RedirectViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.launch
