@@ -33,23 +33,32 @@ class FcuQrcodeRepository @Inject constructor() {
     }
 
     private suspend fun loginQrcode(id: String, password: String): Boolean {
-        val resp = client.post(QRCODE_LOGIN_URL) {
-            contentType(ContentType.Application.FormUrlEncoded)
-            setBody("username=$id&password=$password&appversion=2")
+        val resp = try {
+            client.post(QRCODE_LOGIN_URL) {
+                contentType(ContentType.Application.FormUrlEncoded)
+                setBody("username=$id&password=$password&appversion=2")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, e.message ?: "Unknown error")
+            return false
         }
         Log.d(TAG, resp.status.value.toString())
         return resp.status == HttpStatusCode.Found
     }
 
     private suspend fun fetchQrcodeData(): String? {
-        val resp = client.post(QRCODE_DATA_URL) {
-            contentType(ContentType.Application.Json)
-            setBody(buildJsonObject {})
-        }.body<JsonElement>()
-        Log.d(TAG, resp.jsonObject.toString())
-        return resp
-            .jsonObject["d"]
-            ?.jsonObject?.get("hexString")
-            ?.jsonPrimitive?.content
+        return try {
+            val resp = client.post(QRCODE_DATA_URL) {
+                contentType(ContentType.Application.Json)
+                setBody(buildJsonObject {})
+            }.body<JsonElement>()
+            Log.d(TAG, resp.jsonObject.toString())
+            resp.jsonObject["d"]
+                ?.jsonObject?.get("hexString")
+                ?.jsonPrimitive?.content
+        } catch (e: Exception) {
+            Log.e(TAG, e.message ?: "Unknown error")
+            null
+        }
     }
 }

@@ -1,5 +1,7 @@
 package at.mikuc.openfcu.timetable
 
+import android.util.Log
+import at.mikuc.openfcu.TAG
 import at.mikuc.openfcu.setting.Credential
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -22,11 +24,16 @@ class FcuTimetableRepository @Inject constructor() {
     }
 
     suspend fun fetchTimetable(credential: Credential): List<Section>? {
-        val resp = client.post(TIMETABLE_DATA_URL) {
-            contentType(ContentType.Application.Json)
-            setBody(credential)
-        }.body<TimetableResponseDTO>()
-        return resp.timeTableTw?.map { it.toSection() }?.toList()
+        return try {
+            val resp = client.post(TIMETABLE_DATA_URL) {
+                contentType(ContentType.Application.Json)
+                setBody(credential)
+            }.body<TimetableResponseDTO>()
+            resp.timeTableTw?.map { it.toSection() }?.toList()
+        } catch (e: Exception) {
+            Log.e(TAG, e.message ?: "Unknown error")
+            null
+        }
     }
 
 }

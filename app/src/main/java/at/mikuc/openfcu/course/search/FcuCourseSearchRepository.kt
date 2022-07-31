@@ -1,5 +1,7 @@
 package at.mikuc.openfcu.course.search
 
+import android.util.Log
+import at.mikuc.openfcu.TAG
 import at.mikuc.openfcu.course.Course
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -21,10 +23,15 @@ class FcuCourseSearchRepository @Inject constructor() {
         }
     }
 
-    suspend fun search(filter: SearchFilter): List<Course> {
-        return client.post(COURSE_SEARCH_URL) {
-            contentType(ContentType.Application.Json)
-            setBody(filter.toDTO())
-        }.body<RawCoursesDTO>().toCourses()
+    suspend fun search(filter: SearchFilter): List<Course>? {
+        return try {
+            client.post(COURSE_SEARCH_URL) {
+                contentType(ContentType.Application.Json)
+                setBody(filter.toDTO())
+            }.body<RawCoursesDTO>().toCourses()
+        } catch (e: Exception) {
+            Log.e(TAG, e.message ?: "Unknown error")
+            emptyList()
+        }
     }
 }

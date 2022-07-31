@@ -27,7 +27,7 @@ class CourseSearchViewModel @Inject constructor(
         val filter = state.copy()
         Log.d(TAG, Json.encodeToString(filter))
         viewModelScope.launch {
-            result = repo.search(filter).postFilter(filter)
+            repo.search(filter)?.let { result = it.postFilter(filter) }
         }
     }
 

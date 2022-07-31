@@ -66,7 +66,7 @@ class RedirectViewModel @Inject constructor(
         viewModelScope.launch {
             val id = pref.get(KEY_ID) ?: return@launch
             val password = pref.get(KEY_PASSWORD) ?: return@launch
-            val response = repo.singleSignOn(SSORequest(id, password, service))
+            val response = repo.singleSignOn(SSORequest(id, password, service)) ?: return@launch
             if (response.success) {
                 val uri = if (service == SsoService.MYFCU) {
                     response.redirectUri.replaceUriParameter(

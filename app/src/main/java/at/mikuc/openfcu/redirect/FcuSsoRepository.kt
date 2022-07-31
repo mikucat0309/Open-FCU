@@ -1,5 +1,7 @@
 package at.mikuc.openfcu.redirect
 
+import android.util.Log
+import at.mikuc.openfcu.TAG
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
@@ -20,11 +22,16 @@ class FcuSsoRepository @Inject constructor() {
         }
     }
 
-    suspend fun singleSignOn(request: SSORequest): SSOResponse {
-        return client.post(SSO_URL) {
-            contentType(ContentType.Application.Json)
-            setBody(request)
-        }.body()
+    suspend fun singleSignOn(request: SSORequest): SSOResponse? {
+        return try {
+            client.post(SSO_URL) {
+                contentType(ContentType.Application.Json)
+                setBody(request)
+            }.body()
+        } catch (e: Exception) {
+            Log.e(TAG, e.message ?: "Unknown error")
+            null
+        }
     }
 
 }
