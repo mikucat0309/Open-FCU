@@ -75,12 +75,14 @@ hilt {
     enableAggregatingTask = true
 }
 
-val composeVersion = "1.3.0-alpha01"
+val composeVersion = "1.3.0-alpha02"
 val ktorVersion = "2.0.3"
-val lifecycleVersion = "2.5.0"
-val navVersion = "2.5.0"
-val hiltVersion = "2.43"
+val lifecycleVersion = "2.5.1"
+val navVersion = "2.5.1"
+val hiltVersion = "2.43.1"
 val coroutineVersion = "1.6.4"
+val kotestVersion = "5.4.1"
+val mockkVersion = "1.12.5"
 
 dependencies {
     implementation("androidx.core:core-ktx:1.8.0")
@@ -92,14 +94,12 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
-    implementation("androidx.activity:activity-compose:1.5.0")
+    implementation("androidx.activity:activity-compose:1.5.1")
 
     implementation("androidx.navigation:navigation-compose:$navVersion")
     api("androidx.navigation:navigation-fragment-ktx:$navVersion")
 
     implementation("com.google.dagger:hilt-android:$hiltVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("org.junit.jupiter:junit-jupiter")
     kapt("com.google.dagger:hilt-compiler:$hiltVersion")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
@@ -119,19 +119,17 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.10")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineVersion")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
 
-    testImplementation("io.kotest:kotest-runner-junit5:5.3.2")
-    testImplementation("io.kotest:kotest-assertions-core:5.3.2")
-
-    testImplementation("io.mockk:mockk:1.12.4")
-    testImplementation("io.mockk:mockk-agent-jvm:1.12.4")
+    testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("io.mockk:mockk-agent-jvm:$mockkVersion")
 
 //    testImplementation("junit:junit:4.13.2")
 //    androidTestImplementation("androidx.test.ext:junit:1.1.3")
 //    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
 //    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
+
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
 }
