@@ -14,10 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class QrcodeUiState(
-    val hexStr: String? = null,
-)
-
 @HiltViewModel
 class QrcodeViewModel @Inject constructor(
     private val pref: UserPreferencesRepository,

@@ -4,6 +4,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import at.mikuc.openfcu.Graph
+import at.mikuc.openfcu.course.search.CourseSearchResultView
+import at.mikuc.openfcu.course.search.CourseSearchView
+import at.mikuc.openfcu.course.search.CourseSearchViewModel
 
 sealed class CourseGraph(val route: String) {
     object Search : CourseGraph("search")

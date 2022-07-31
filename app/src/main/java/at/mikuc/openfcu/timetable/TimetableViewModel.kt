@@ -13,10 +13,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-data class TimetableUiState(
-    val sections: List<Section>,
-)
-
 @HiltViewModel
 class TimetableViewModel @Inject constructor(
     private val pref: UserPreferencesRepository,

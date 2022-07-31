@@ -1,4 +1,4 @@
-package at.mikuc.openfcu.course
+package at.mikuc.openfcu.course.search
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import at.mikuc.openfcu.TAG
+import at.mikuc.openfcu.course.Course
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString

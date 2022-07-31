@@ -8,7 +8,7 @@ sealed class Graph(val route: String, val displayName: String, val icon: ImageVe
     object Redirect : Graph("redirect", "快速跳轉", Icons.Outlined.Apps)
     object Setting : Graph("setting", "設定", Icons.Outlined.Settings)
     object QrCode : Graph("qrcode", "數位 IC 卡 (QRCode)", Icons.Outlined.QrCode)
-    object Course : Graph("course_search", "課程檢索", Icons.Outlined.Search)
+    object Course : Graph("course", "課程檢索", Icons.Outlined.Search)
     object Timetable : Graph("timetable", "課表", Icons.Outlined.CalendarMonth)
     companion object {
         fun getGraph(route: String?): Graph? = when (route) {

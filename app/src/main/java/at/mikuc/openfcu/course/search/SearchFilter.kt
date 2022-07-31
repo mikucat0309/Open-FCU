@@ -1,4 +1,4 @@
-package at.mikuc.openfcu.course
+package at.mikuc.openfcu.course.search
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.*

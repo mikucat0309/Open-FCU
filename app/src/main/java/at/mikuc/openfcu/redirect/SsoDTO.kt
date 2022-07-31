@@ -9,19 +9,19 @@ import kotlinx.serialization.Serializable
 data class SSORequest(
     @SerialName("Account") val account: String,
     @SerialName("Password") val password: String,
-    @SerialName("RedirectService") val redirectSSOService: SSOService,
+    @SerialName("RedirectService") val redirectSsoService: SsoService,
 )
 
 @Serializable
 data class SSOResponse(
     @SerialName("Message") val message: String = "",
-    @SerialName("RedirectService") val redirectSSOService: SSOService,
+    @SerialName("RedirectService") val redirectSsoService: SsoService,
     @SerialName("RedirectUrl") @Serializable(with = UriAsStringSerializer::class) val redirectUri: Uri,
     @SerialName("Success") val success: Boolean,
 )
 
 @Serializable
-enum class SSOService {
+enum class SsoService {
     @SerialName("MyFCU Information System")
     MYFCU,
 

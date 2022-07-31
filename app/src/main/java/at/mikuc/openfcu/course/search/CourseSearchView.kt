@@ -1,4 +1,4 @@
-package at.mikuc.openfcu.course
+package at.mikuc.openfcu.course.search
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavHostController
+import at.mikuc.openfcu.course.CourseGraph
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
 
 @Composable

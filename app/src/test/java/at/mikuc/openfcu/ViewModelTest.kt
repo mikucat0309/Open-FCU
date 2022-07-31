@@ -2,7 +2,12 @@ package at.mikuc.openfcu
 
 import android.net.Uri
 import android.util.Log
-import at.mikuc.openfcu.course.*
+import at.mikuc.openfcu.course.Course
+import at.mikuc.openfcu.course.Opener
+import at.mikuc.openfcu.course.Period
+import at.mikuc.openfcu.course.search.CourseSearchViewModel
+import at.mikuc.openfcu.course.search.FcuCourseSearchRepository
+import at.mikuc.openfcu.course.search.SearchFilter
 import at.mikuc.openfcu.qrcode.FcuQrcodeRepository
 import at.mikuc.openfcu.qrcode.QrcodeViewModel
 import at.mikuc.openfcu.redirect.FcuSsoRepository

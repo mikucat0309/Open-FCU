@@ -11,11 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class SettingUiState(
-    val id: String,
-    val password: String,
-)
-
 @HiltViewModel
 class SettingViewModel @Inject constructor(
     private val pref: UserPreferencesRepository,

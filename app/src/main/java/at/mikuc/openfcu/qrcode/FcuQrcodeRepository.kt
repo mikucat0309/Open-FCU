@@ -1,8 +1,6 @@
 package at.mikuc.openfcu.qrcode
 
 import android.util.Log
-import at.mikuc.openfcu.QRCODE_DATA_URL
-import at.mikuc.openfcu.QRCODE_LOGIN_URL
 import at.mikuc.openfcu.TAG
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -17,6 +15,10 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import javax.inject.Inject
+
+const val QRCODE_LOGIN_URL = "https://service202-sds.fcu.edu.tw/FcucardQrcode/Login.aspx"
+const val QRCODE_DATA_URL =
+    "https://service202-sds.fcu.edu.tw/FcucardQrcode/FcuCard.aspx/GetEncryptData"
 
 class FcuQrcodeRepository @Inject constructor() {
     private val client = HttpClient(CIO) {

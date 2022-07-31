@@ -1,6 +1,5 @@
 package at.mikuc.openfcu.timetable
 
-import at.mikuc.openfcu.TIMETABLE_DATA_URL
 import at.mikuc.openfcu.setting.Credential
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -11,6 +10,9 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import javax.inject.Inject
+
+const val TIMETABLE_DATA_URL =
+    "https://service206-sds.fcu.edu.tw/mobileservice/CourseService.svc/Timetable2"
 
 class FcuTimetableRepository @Inject constructor() {
     private val client = HttpClient(CIO) {
