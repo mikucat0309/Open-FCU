@@ -65,11 +65,6 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    configurations {
-        all {
-            exclude("com.android.tools.lint", "lint-gradle")
-        }
-    }
 }
 
 hilt {
@@ -108,7 +103,7 @@ dependencies {
 
     implementation("org.burnoutcrew.composereorderable:reorderable:0.9.2")
 
-    implementation("io.github.g0dkar:qrcode-kotlin-android:3.1.0")
+    implementation("io.github.g0dkar:qrcode-kotlin-android:3.2.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
