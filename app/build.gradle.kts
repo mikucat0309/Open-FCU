@@ -8,6 +8,7 @@ plugins {
 
 android {
     compileSdk = 32
+    namespace = "at.mikuc.openfcu"
 
     defaultConfig {
         applicationId = "at.mikuc.openfcu"
