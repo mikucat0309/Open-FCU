@@ -4,4 +4,3 @@ data class SettingUiState(
     val id: String,
     val password: String,
 )
-

@@ -12,7 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class TimetableViewModel @Inject constructor(
     private val pref: UserPreferencesRepository,

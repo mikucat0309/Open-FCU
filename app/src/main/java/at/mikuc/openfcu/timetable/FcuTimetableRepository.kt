@@ -35,5 +35,4 @@ class FcuTimetableRepository @Inject constructor() {
             null
         }
     }
-
 }

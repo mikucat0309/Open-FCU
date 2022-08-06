@@ -9,4 +9,3 @@ data class Section(
     val day: Int,
     val name: String,
 )
-

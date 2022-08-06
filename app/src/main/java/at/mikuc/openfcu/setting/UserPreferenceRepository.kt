@@ -22,7 +22,9 @@ import javax.inject.Singleton
 object DataStoreModule {
     @Singleton
     @Provides
-    fun providePreferencesDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
+    fun providePreferencesDataStore(
+        @ApplicationContext appContext: Context
+    ): DataStore<Preferences> {
         return PreferenceDataStoreFactory.create(
             produceFile = { appContext.preferencesDataStoreFile("settings") }
         )
@@ -46,5 +48,3 @@ class UserPreferencesRepository @Inject constructor(
         val KEY_PASSWORD = stringPreferencesKey("Password")
     }
 }
-
-

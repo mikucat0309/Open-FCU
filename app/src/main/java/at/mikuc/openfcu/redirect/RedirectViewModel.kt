@@ -86,5 +86,4 @@ class RedirectViewModel @Inject constructor(
     fun redirectEventDone() {
         _event.value = RedirectEvent(null, null)
     }
-
 }

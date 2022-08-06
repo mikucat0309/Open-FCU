@@ -1,6 +1,5 @@
 package at.mikuc.openfcu.course
 
-
 data class Course(
     val name: String,
     val id: String,

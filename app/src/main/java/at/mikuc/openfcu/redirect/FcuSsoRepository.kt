@@ -33,5 +33,4 @@ class FcuSsoRepository @Inject constructor() {
             null
         }
     }
-
 }

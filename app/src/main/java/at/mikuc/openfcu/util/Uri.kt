@@ -30,5 +30,4 @@ object UriAsStringSerializer : KSerializer<Uri> {
         val string = decoder.decodeString()
         return Uri.parse(string)
     }
-
 }

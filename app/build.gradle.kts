@@ -1,9 +1,12 @@
+import org.jlleitschuh.gradle.ktlint.KtlintExtension
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.serialization")
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 android {
@@ -69,6 +72,11 @@ android {
 
 hilt {
     enableAggregatingTask = true
+}
+
+configure<KtlintExtension> {
+    android.set(true)
+    disabledRules.set(setOf("no-wildcard-imports"))
 }
 
 val composeVersion = "1.3.0-alpha02"

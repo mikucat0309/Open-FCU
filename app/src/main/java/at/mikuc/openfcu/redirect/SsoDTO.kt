@@ -16,7 +16,9 @@ data class SSORequest(
 data class SSOResponse(
     @SerialName("Message") val message: String = "",
     @SerialName("RedirectService") val redirectSsoService: SsoService,
-    @SerialName("RedirectUrl") @Serializable(with = UriAsStringSerializer::class) val redirectUri: Uri,
+    @SerialName("RedirectUrl")
+    @Serializable(with = UriAsStringSerializer::class)
+    val redirectUri: Uri,
     @SerialName("Success") val success: Boolean,
 )
 
@@ -24,7 +26,6 @@ data class SSOResponse(
 enum class SsoService {
     @SerialName("MyFCU Information System")
     MYFCU,
-
     @SerialName("iLearn 2.0")
     ILEARN2,
     ;
