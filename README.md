@@ -1,3 +1,8 @@
+[![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://developer.android.com/)
+[![Kotlin](https://img.shields.io/badge/kotlin-%230095D5.svg?style=for-the-badge&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
+[![ktlint](https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg?style=for-the-badge&logoColor=white)](https://ktlint.github.io/)
+[![License](https://img.shields.io/github/license/g0dkar/qrcode-kotlin?style=for-the-badge&logoColor=white)](LICENSE)
+
 # Open FCU
 
 比行動逢甲更好用的行動 APP  
@@ -32,7 +37,7 @@ PASS 等開學再看情況實作
 ### 0.3
 
 - [x] 課表
-  - ~~[ ] 日模式~~
+  - [ ] ~~日模式~~
   - [x] 周模式
 
 將日模式課表移至未來規劃
@@ -45,7 +50,7 @@ PASS 等開學再看情況實作
 
 ### 0.5
 
-- [ ] 小工具 Widget
+- [ ] 捷徑 (Shortcut)
 
 按一下輕鬆開啟指定功能
 
