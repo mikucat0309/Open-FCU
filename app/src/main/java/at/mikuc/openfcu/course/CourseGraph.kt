@@ -9,9 +9,9 @@ import at.mikuc.openfcu.course.search.CourseSearchView
 import at.mikuc.openfcu.course.search.CourseSearchViewModel
 
 sealed class CourseGraph(val route: String) {
-    object Search : CourseGraph(Graph.Course.route + ".search")
-    object Result : CourseGraph(Graph.Course.route + ".result")
-    object Detail : CourseGraph(Graph.Course.route + ".detail")
+    object Search : CourseGraph(Graph.Course.route + "/search")
+    object Result : CourseGraph(Graph.Course.route + "/result")
+    object Detail : CourseGraph(Graph.Course.route + "/detail")
 }
 
 fun NavGraphBuilder.courseGraph(viewModel: CourseSearchViewModel) {

@@ -8,6 +8,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
+import at.mikuc.openfcu.util.rootRoute
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -19,7 +20,7 @@ fun MyTopBar(
 ) {
     TopAppBar(
         title = {
-            Text(text = Graph.getGraph(currentRoute)?.displayName ?: "Open FCU")
+            Text(text = Graph.getGraph(currentRoute?.rootRoute())?.displayName ?: "Open FCU")
         },
         navigationIcon = {
             IconButton(onClick = {
