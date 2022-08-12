@@ -1,0 +1,30 @@
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="ilearn2"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:shortcutShortLabel="@string/redirect_ilearn2_short_label">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="at.mikuc.openfcu"
+            android:targetClass="at.mikuc.openfcu.MainActivity">
+            <extra
+                android:name="redirect_service"
+                android:value="ILEARN2" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:shortcutId="myfcu"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:shortcutShortLabel="@string/redirect_myfcu_short_label">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="at.mikuc.openfcu"
+            android:targetClass="at.mikuc.openfcu.MainActivity">
+            <extra
+                android:name="redirect_service"
+                android:value="MYFCU" />
+        </intent>
+    </shortcut>
+</shortcuts>

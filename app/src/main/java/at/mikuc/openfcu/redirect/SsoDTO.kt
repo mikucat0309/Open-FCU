@@ -26,7 +26,19 @@ data class SSOResponse(
 enum class SsoService {
     @SerialName("MyFCU Information System")
     MYFCU,
+
     @SerialName("iLearn 2.0")
     ILEARN2,
     ;
+
+    companion object {
+        fun valueOf2(value: String?): SsoService? {
+            if (value == null) return null
+            return try {
+                valueOf(value)
+            } catch (_: IllegalArgumentException) {
+                null
+            }
+        }
+    }
 }

@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Open FCU</string>
+    <string name="redirect_myfcu_short_label">MyFCU</string>
+    <string name="redirect_ilearn2_short_label">iLearn2.0</string>
+    <string name="redirect_health_short_label">自主健康管理</string>
+    <string name="redirect_borrow_short_label">空間借用</string>
+    <string name="redirect_leave_short_label">學生請假</string>
+    <string name="redirect_course_search_short_label">課程檢索</string>
 </resources>

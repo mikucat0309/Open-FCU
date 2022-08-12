@@ -15,6 +15,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import at.mikuc.openfcu.redirect.RedirectViewModel
+import at.mikuc.openfcu.redirect.SsoService
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
@@ -47,13 +48,19 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        val service = SsoService.valueOf2(intent.getStringExtra("redirect_service"))
+        val startDest = if (service != null) Graph.Redirect.route else Graph.Setting.route
+        if (service != null) {
+            val path = intent.getStringExtra("myfcu_path")
+            rvm.fetchRedirectToken(service, path)
+        }
         setContent {
             OpenFCUTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    MainView(rvm = rvm)
+                    MainView(rvm = rvm, startDest = startDest)
                 }
             }
         }

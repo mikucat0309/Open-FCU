@@ -41,6 +41,7 @@ fun MainView(
     qvm: QrcodeViewModel = hiltViewModel(),
     csvm: CourseSearchViewModel = hiltViewModel(),
     ttvm: TimetableViewModel = hiltViewModel(),
+    startDest: String,
 ) {
     val ctrl = rememberNavController()
     val scaffoldState = rememberScaffoldState()
@@ -62,7 +63,7 @@ fun MainView(
         ) {
             NavHost(
                 navController = ctrl,
-                startDestination = Graph.Setting.route,
+                startDestination = startDest,
             ) {
                 settingView(svm)
                 redirectView(rvm)
@@ -110,6 +111,6 @@ fun MainPreview() {
         val svm = SettingViewModel(pref)
         val rvm = RedirectViewModel(pref, FcuSsoRepository())
         val qvm = QrcodeViewModel(pref, FcuQrcodeRepository())
-        MainView(svm, rvm, qvm)
+        MainView(svm, rvm, qvm, startDest = Graph.Setting.route)
     }
 }
