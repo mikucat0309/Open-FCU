@@ -13,7 +13,11 @@ import at.mikuc.openfcu.qrcode.QrcodeViewModel
 import at.mikuc.openfcu.redirect.FcuSsoRepository
 import at.mikuc.openfcu.redirect.RedirectViewModel
 import at.mikuc.openfcu.redirect.SSOResponse
+import at.mikuc.openfcu.setting.Credential
 import at.mikuc.openfcu.setting.UserPreferencesRepository
+import at.mikuc.openfcu.timetable.FcuTimetableRepository
+import at.mikuc.openfcu.timetable.Section
+import at.mikuc.openfcu.timetable.TimetableViewModel
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.core.test.TestCase
@@ -63,6 +67,7 @@ internal class ViewModelTest : BehaviorSpec() {
         Given("ID and password") {
             val pref = mockk<UserPreferencesRepository>()
             coEvery { pref.get<String>(any()) } returns "mock"
+            coEvery { pref.getCredential() } returns Credential("mock", "mock")
 
             When("single sign-on") {
                 val mockMsg = "mock"
@@ -99,6 +104,7 @@ internal class ViewModelTest : BehaviorSpec() {
                     coEvery { qrcodeRepo.fetchQrcode(any(), any()) } returns null
                     vm.fetchQrcode()
                     testCoroutineScheduler.advanceUntilIdle()
+
                     coVerify(exactly = 1) { qrcodeRepo.fetchQrcode(any(), any()) }
                     vm.state.hexStr shouldBe initialHexStr
                 }
@@ -108,8 +114,43 @@ internal class ViewModelTest : BehaviorSpec() {
                     coEvery { qrcodeRepo.fetchQrcode(any(), any()) } returns mockHexStr
                     vm.fetchQrcode()
                     testCoroutineScheduler.advanceUntilIdle()
+
                     coVerify(exactly = 1) { qrcodeRepo.fetchQrcode(any(), any()) }
                     vm.state.hexStr shouldBe mockHexStr
+                }
+            }
+            When("fetch timetable") {
+                val ttRepo = mockk<FcuTimetableRepository>()
+                val vm = TimetableViewModel(pref, ttRepo)
+                Then("login failed") {
+                    unmockkObject(ttRepo)
+                    coEvery { ttRepo.fetchTimetable(any()) } returns null
+                    val initialState = vm.state
+                    vm.fetchTimetable(dispatcher)
+                    testCoroutineScheduler.advanceUntilIdle()
+
+                    coVerify(exactly = 1) { ttRepo.fetchTimetable(any()) }
+                    vm.state shouldBe initialState
+                }
+                Then("login succeed and received timetable") {
+                    unmockkObject(ttRepo)
+                    val expectedSections = listOf(
+                        Section(
+                            method = 4,
+                            memo = "memo",
+                            time = "09:10-10:00",
+                            location = "資電館234資電館234資電館234",
+                            section = 2,
+                            day = 2,
+                            name = "我是課程名稱我是課程名稱我是課程名稱",
+                        )
+                    )
+                    coEvery { ttRepo.fetchTimetable(any()) } returns expectedSections
+                    vm.fetchTimetable(dispatcher)
+                    testCoroutineScheduler.advanceUntilIdle()
+
+                    coVerify(exactly = 1) { ttRepo.fetchTimetable(any()) }
+                    vm.state.sections shouldBe expectedSections
                 }
             }
         }
@@ -160,6 +201,7 @@ internal class ViewModelTest : BehaviorSpec() {
                         vm.state = filter
                         vm.search()
                         testCoroutineScheduler.advanceUntilIdle()
+
                         coVerify(exactly = 1) { csRepo.search(any()) }
                         vm.result shouldBe listOf(course1)
                     }
