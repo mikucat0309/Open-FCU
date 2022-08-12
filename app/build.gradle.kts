@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
@@ -10,15 +12,15 @@ plugins {
 }
 
 android {
-    compileSdk = 32
+    compileSdk = 33
     namespace = "at.mikuc.openfcu"
 
     defaultConfig {
         applicationId = "at.mikuc.openfcu"
         minSdk = 26
-        targetSdk = 32
+        targetSdk = 33
         versionCode = 1
-        versionName = "0.1.0"
+        versionName = "0.5.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
