@@ -2,7 +2,7 @@
     <shortcut
         android:shortcutId="ilearn2"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@mipmap/ic_redirect"
         android:shortcutShortLabel="@string/redirect_ilearn2_short_label">
         <intent
             android:action="android.intent.action.VIEW"
@@ -16,7 +16,7 @@
     <shortcut
         android:shortcutId="myfcu"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@mipmap/ic_redirect"
         android:shortcutShortLabel="@string/redirect_myfcu_short_label">
         <intent
             android:action="android.intent.action.VIEW"
