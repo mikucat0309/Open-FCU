@@ -105,29 +105,40 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$navVersion")
     api("androidx.navigation:navigation-fragment-ktx:$navVersion")
 
+    // DI
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     kapt("com.google.dagger:hilt-compiler:$hiltVersion")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
+    // Preference
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     implementation("org.burnoutcrew.composereorderable:reorderable:0.9.2")
 
+    // QRCode Generator
     implementation("io.github.g0dkar:qrcode-kotlin-android:3.2.0")
 
+    // Coroutine
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion")
+
+    // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+
+    // HTTP Client
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 
+    // Test
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.10")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineVersion")
 
+    // Unit Test
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
 
+    // Mock
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.mockk:mockk-agent-jvm:$mockkVersion")
 
