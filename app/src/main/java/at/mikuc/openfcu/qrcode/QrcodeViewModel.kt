@@ -9,10 +9,10 @@ import at.mikuc.openfcu.setting.UserPreferencesRepository
 import at.mikuc.openfcu.setting.UserPreferencesRepository.Companion.KEY_ID
 import at.mikuc.openfcu.setting.UserPreferencesRepository.Companion.KEY_PASSWORD
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class QrcodeViewModel @Inject constructor(

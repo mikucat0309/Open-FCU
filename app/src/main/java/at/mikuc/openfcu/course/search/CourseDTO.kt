@@ -5,12 +5,12 @@ import at.mikuc.openfcu.TAG
 import at.mikuc.openfcu.course.Course
 import at.mikuc.openfcu.course.Opener
 import at.mikuc.openfcu.course.Period
+import kotlin.math.roundToInt
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import kotlin.math.roundToInt
 
 @Serializable
 data class RawCoursesDTO(val d: String) {

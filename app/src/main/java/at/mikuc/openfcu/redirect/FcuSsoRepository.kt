@@ -9,8 +9,8 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-import kotlinx.serialization.json.Json
 import javax.inject.Inject
+import kotlinx.serialization.json.Json
 
 const val SSO_URL = "https://service206-sds.fcu.edu.tw/mobileservice/RedirectService.svc/Redirect"
 

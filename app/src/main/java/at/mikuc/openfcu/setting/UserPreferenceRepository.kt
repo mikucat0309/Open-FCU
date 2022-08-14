@@ -12,10 +12,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 
 @InstallIn(SingletonComponent::class)
 @Module

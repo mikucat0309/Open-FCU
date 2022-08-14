@@ -12,10 +12,10 @@ import at.mikuc.openfcu.setting.UserPreferencesRepository.Companion.KEY_ID
 import at.mikuc.openfcu.setting.UserPreferencesRepository.Companion.KEY_PASSWORD
 import at.mikuc.openfcu.util.replaceUriParameter
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class RedirectViewModel @Inject constructor(

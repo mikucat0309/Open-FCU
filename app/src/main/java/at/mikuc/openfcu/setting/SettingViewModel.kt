@@ -8,8 +8,8 @@ import androidx.lifecycle.viewModelScope
 import at.mikuc.openfcu.setting.UserPreferencesRepository.Companion.KEY_ID
 import at.mikuc.openfcu.setting.UserPreferencesRepository.Companion.KEY_PASSWORD
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(

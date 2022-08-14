@@ -10,8 +10,8 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-import kotlinx.serialization.json.Json
 import javax.inject.Inject
+import kotlinx.serialization.json.Json
 
 const val COURSE_SEARCH_URL = "https://coursesearch04.fcu.edu.tw/Service/Search.asmx/GetType2Result"
 
