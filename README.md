@@ -1,7 +1,7 @@
 [![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://developer.android.com/)
 [![Kotlin](https://img.shields.io/badge/kotlin-%230095D5.svg?style=for-the-badge&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
 [![ktlint](https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg?style=for-the-badge&logoColor=white)](https://ktlint.github.io/)
-[![License](https://img.shields.io/github/license/g0dkar/qrcode-kotlin?style=for-the-badge&logoColor=white)](LICENSE)
+[![License](https://img.shields.io/github/license/mikucat0309/Open-FCU?style=for-the-badge&logoColor=white)](LICENSE)
 
 # Open FCU
 
