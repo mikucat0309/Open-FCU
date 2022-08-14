@@ -12,6 +12,10 @@
 歡迎許願、提 issue 或 PR  
 也歡迎找我聊天（前提是遇得到我）
 
+## Preview
+
+![](img/redirect.png) ![](img/course_search.png)
+
 ## Feature Planning
 
 ### 0.1
@@ -52,15 +56,18 @@ PASS 等開學再看情況決定是否實裝
 
 - [x] 捷徑 (Shortcut)
 
-按一下輕鬆開啟 MyFCU 或 iLearn 2.0
+按一下開啟 MyFCU 或 iLearn 2.0
 
 ### 1.0
 
-- 完善 UI/UX
+- [ ] 完善 UI/UX
 
 ## Todolist
 
-- 圖示
+- 新的 icon
+- 首頁
+  - MyFCU 通知
+  - 動態橫幅
 - 自訂快速跳轉捷徑
 - 快速簽到
 - 點選檢索結果顯示課程詳細資訊
