@@ -14,7 +14,12 @@
 
 ## Preview
 
-![](img/redirect.png) ![](img/course_search.png)
+<p float="left">
+  <img src="img/redirect.png" width="200" />
+  <img src="img/course_search.png" width="200" />
+  <img src="img/timetable.png" width="200" />
+  <img src="img/qrcode.png" width="200" />
+</p>
 
 ## Feature Planning
 
