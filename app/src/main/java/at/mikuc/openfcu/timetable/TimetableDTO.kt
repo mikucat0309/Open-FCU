@@ -27,7 +27,7 @@ data class SectionDTO(
     @SerialName("SctPeriod") val section: Int,
     @SerialName("SctWeek") val day: Int,
     @SerialName("SubId") val subId: String,
-    @SerialName("SubName") val subName: String,
+    @SerialName("SubName") val subName: String?,
     @SerialName("TchLink") val tchLink: String,
     @SerialName("YmsSmester") val semester: Int,
     @SerialName("YmsYear") val year: Int,
@@ -40,7 +40,7 @@ data class SectionDTO(
             location = roomName,
             section = section,
             day = day,
-            name = subName,
+            name = subName ?: "",
         )
     }
 }
