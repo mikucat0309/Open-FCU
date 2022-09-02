@@ -14,7 +14,7 @@
 
 ## Preview
 
-<p float="left">
+<p>
   <img src="img/redirect.png" width="200" />
   <img src="img/course_search.png" width="200" />
   <img src="img/timetable.png" width="200" />
@@ -41,7 +41,8 @@
 - [x] 顯示 QRCode
 
 暑假沒課讓我簽到，沒法模擬  
-PASS 等開學再看情況決定是否實裝
+~~PASS 等開學再看情況決定是否實裝~~
+看來學校執迷不悟，預計在 6.0 實裝
 
 ### 0.3
 
@@ -66,6 +67,9 @@ PASS 等開學再看情況決定是否實裝
 ### 1.0
 
 - [ ] 完善 UI/UX
+  - [ ] 帳號密碼已儲存提醒
+  - [ ] 檢索防呆設計
+  - [ ] 課程檢索結果的課程資訊重新排版
 
 ## Todolist
 
