@@ -1,7 +1,6 @@
 package at.mikuc.openfcu.redirect
 
-import android.util.Log
-import at.mikuc.openfcu.TAG
+import at.mikuc.openfcu.util.logStackTrace
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
@@ -29,7 +28,7 @@ class FcuSsoRepository @Inject constructor() {
                 setBody(request)
             }.body()
         } catch (e: Exception) {
-            Log.e(TAG, e.message ?: "Unknown error")
+            e.logStackTrace()
             null
         }
     }
