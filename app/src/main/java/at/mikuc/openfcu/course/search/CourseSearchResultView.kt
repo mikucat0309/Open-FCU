@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -30,12 +31,14 @@ fun CourseSearchResultView(viewModel: CourseSearchViewModel) {
 
 @Composable
 private fun CourseLazyColumnView(courses: List<Course>) {
-    LazyColumn(
-        modifier = Modifier
-            .background(MaterialTheme.colors.background)
-            .padding(16.dp)
-    ) {
-        items(courses) { CourseRow(it) }
+    SelectionContainer {
+        LazyColumn(
+            modifier = Modifier
+                .background(MaterialTheme.colors.background)
+                .padding(16.dp)
+        ) {
+            items(courses) { CourseRow(it) }
+        }
     }
 }
 
