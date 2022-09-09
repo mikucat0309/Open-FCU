@@ -113,8 +113,6 @@ dependencies {
     // Preference
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
-    implementation("org.burnoutcrew.composereorderable:reorderable:0.9.2")
-
     // QRCode Generator
     implementation("io.github.g0dkar:qrcode-kotlin-android:3.2.0")
 
@@ -129,6 +127,9 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+
+    // SLF4J Binding
+    implementation("org.slf4j:slf4j-android:1.7.36")
 
     // Test
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.10")
