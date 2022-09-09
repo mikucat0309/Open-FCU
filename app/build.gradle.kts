@@ -81,14 +81,14 @@ configure<KtlintExtension> {
     disabledRules.set(setOf("no-wildcard-imports"))
 }
 
-val composeVersion = "1.3.0-alpha02"
-val ktorVersion = "2.0.3"
+val composeVersion = "1.3.0-beta02"
+val ktorVersion = "2.1.1"
 val lifecycleVersion = "2.5.1"
-val navVersion = "2.5.1"
-val hiltVersion = "2.43.1"
+val navVersion = "2.5.2"
+val hiltVersion = "2.43.2"
 val coroutineVersion = "1.6.4"
-val kotestVersion = "5.4.1"
-val mockkVersion = "1.12.5"
+val kotestVersion = "5.4.2"
+val mockkVersion = "1.12.7"
 
 dependencies {
     implementation("androidx.core:core-ktx:1.8.0")
@@ -120,7 +120,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion")
 
     // Serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
 
     // HTTP Client
     implementation("io.ktor:ktor-client-core:$ktorVersion")
