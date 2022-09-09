@@ -6,16 +6,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material.Card
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import at.mikuc.openfcu.course.Course
 import at.mikuc.openfcu.course.Opener
 import at.mikuc.openfcu.course.Period
+import at.mikuc.openfcu.ui.theme.OpenFCUTheme
 
 @Composable
 fun CourseSearchResultView(viewModel: CourseSearchViewModel) {
@@ -44,21 +46,76 @@ private fun CourseLazyColumnView(courses: List<Course>) {
 
 @Composable
 private fun CourseRow(course: Course) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+    Card(
+        elevation = 2.dp,
         modifier = Modifier
-            .fillMaxWidth()
-            .height(64.dp)
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(vertical = 4.dp)
     ) {
-        CourseNameField(course, Modifier.weight(2f, fill = true))
-        Spacer(Modifier.width(8.dp))
-        TeacherField(course, Modifier.weight(1f, fill = true))
-        Spacer(Modifier.width(8.dp))
-        PeriodField(course, modifier = Modifier.weight(1f))
+        Column(
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                CodeField(course = course)
+                Spacer(Modifier.padding(4.dp))
+                CreditField(course = course)
+                Spacer(Modifier.padding(4.dp))
+                OpenerField(course = course)
+            }
+            Divider(Modifier.padding(vertical = 4.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                CourseNameField(course, Modifier.weight(4f, fill = true))
+                Spacer(Modifier.width(8.dp))
+                TeacherField(course, Modifier.weight(3f, fill = true))
+                Spacer(Modifier.width(8.dp))
+                PeriodField(course, modifier = Modifier.weight(3f))
+            }
+        }
     }
 }
 
+@Composable
+private fun CodeField(course: Course, modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+    ) {
+        Text(
+            text = course.code.toString().padStart(4, '0'),
+            maxLines = 1,
+            style = MaterialTheme.typography.subtitle1,
+        )
+    }
+}
+
+@Composable
+private fun OpenerField(course: Course, modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+    ) {
+        Text(
+            text = course.opener.name,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            style = MaterialTheme.typography.subtitle1,
+        )
+    }
+}
+
+@Composable
+private fun CreditField(course: Course, modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+    ) {
+        Text(
+            text = "${course.credit} 學分",
+            maxLines = 1,
+            style = MaterialTheme.typography.subtitle1,
+        )
+    }
+}
 @Composable
 private fun CourseNameField(course: Course, modifier: Modifier = Modifier) {
     Box(
@@ -82,7 +139,7 @@ private fun TeacherField(course: Course, modifier: Modifier = Modifier) {
             text = course.teacher,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.subtitle1,
         )
     }
 }
@@ -103,40 +160,77 @@ private fun PeriodLine(period: Period) {
         text = "(${day2str[period.day] ?: "N/A"}) $rangeStr",
         maxLines = 1,
         softWrap = false,
-        overflow = TextOverflow.Clip,
-        style = MaterialTheme.typography.body1
+        overflow = TextOverflow.Ellipsis,
+        style = MaterialTheme.typography.subtitle1
     )
 }
 
-@Preview(showBackground = true, widthDp = 400)
+@Preview(showBackground = true, widthDp = 380)
 @Composable
 fun CourseSearchResultPreview() {
-    CourseLazyColumnView(
-        courses = listOf(
-            Course(
-                name = "中文思辨與表達中文思辨與表達(一)",
-                id = "ID",
-                code = 1,
-                teacher = "王小明、王中明",
-                periods = listOf(
-                    Period(4, (9..14), "布宜諾斯艾利斯是個很長的地名"),
-                    Period(5, (12..14), "躲貓貓社辦")
-                ),
-                credit = 3,
-                opener = Opener(
-                    "OP_NAME",
-                    "acaID",
-                    "DEPART_ID",
-                    'A',
-                    'B',
-                    'C'
-                ),
-                openNum = 70,
-                acceptNum = 70,
-                remark = "This is a REMARK This is a REMARK This is a REMARK This is a REMARK"
-            )
-        )
+    val c = Course(
+        name = "中文思辨與表達中文思辨與表達(一)",
+        id = "ID",
+        code = 1,
+        teacher = "王小明、王中明",
+        periods = listOf(
+            Period(4, (9..14), "布宜諾斯艾利斯是個很長的地名"),
+            Period(5, (12..14), "躲貓貓社辦")
+        ),
+        credit = 3,
+        opener = Opener(
+            "美國加州舊金山州立大學",
+            "acaID",
+            "DEPART_ID",
+            'A',
+            'B',
+            'C'
+        ),
+        openNum = 70,
+        acceptNum = 70,
+        remark = "This is a REMARK This is a REMARK This is a REMARK"
     )
+    OpenFCUTheme {
+        Surface {
+            CourseLazyColumnView(
+                courses = listOf(c, c)
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 380)
+@Composable
+fun CourseSearchResultDarkPreview() {
+    val c = Course(
+        name = "中文思辨與表達中文思辨與表達(一)",
+        id = "ID",
+        code = 1,
+        teacher = "王小明、王中明",
+        periods = listOf(
+            Period(4, (9..14), "布宜諾斯艾利斯是個很長的地名"),
+            Period(5, (12..14), "躲貓貓社辦")
+        ),
+        credit = 3,
+        opener = Opener(
+            "美國加州舊金山州立大學資訊工程雙學士學位學程",
+            "acaID",
+            "DEPART_ID",
+            'A',
+            'B',
+            'C'
+        ),
+        openNum = 70,
+        acceptNum = 70,
+        remark = "This is a REMARK This is a REMARK This is a REMARK"
+    )
+    OpenFCUTheme(darkTheme = true) {
+        Surface {
+            CourseLazyColumnView(
+                courses = listOf(c, c)
+            )
+        }
+    }
 }
 
 val day2str = mapOf(
