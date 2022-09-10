@@ -32,7 +32,7 @@ enum class SsoService {
     ;
 
     companion object {
-        fun valueOf2(value: String?): SsoService? {
+        fun optionalValueOf(value: String?): SsoService? {
             if (value == null) return null
             return try {
                 valueOf(value)

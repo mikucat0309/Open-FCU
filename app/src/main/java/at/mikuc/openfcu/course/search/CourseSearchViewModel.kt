@@ -25,9 +25,22 @@ class CourseSearchViewModel @Inject constructor(
 
     fun search() {
         val filter = state.copy()
+        if (!isValidFilter(filter)) {
+            return
+        }
         Log.d(TAG, Json.encodeToString(filter))
         viewModelScope.launch {
             repo.search(filter)?.let { result = it.postFilter(filter) }
+        }
+    }
+
+    private fun isValidFilter(filter: SearchFilter): Boolean {
+        return filter.run {
+            name.isNotBlank()
+                    || teacher.isNotBlank()
+                    || code != null
+                    || day != null
+                    || sections.isNotEmpty()
         }
     }
 

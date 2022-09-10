@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
@@ -19,20 +18,16 @@ import at.mikuc.openfcu.course.CourseGraph
 import at.mikuc.openfcu.course.courseGraph
 import at.mikuc.openfcu.course.search.CourseSearchFAB
 import at.mikuc.openfcu.course.search.CourseSearchViewModel
-import at.mikuc.openfcu.qrcode.FcuQrcodeRepository
 import at.mikuc.openfcu.qrcode.QRCodeView
 import at.mikuc.openfcu.qrcode.QrcodeViewModel
-import at.mikuc.openfcu.redirect.FcuSsoRepository
 import at.mikuc.openfcu.redirect.RedirectView
 import at.mikuc.openfcu.redirect.RedirectViewModel
 import at.mikuc.openfcu.setting.SettingView
 import at.mikuc.openfcu.setting.SettingViewModel
-import at.mikuc.openfcu.setting.UserPreferencesRepository
 import at.mikuc.openfcu.timetable.TimetableView
 import at.mikuc.openfcu.timetable.TimetableViewModel
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
 import at.mikuc.openfcu.util.currentRoute
-import java.io.File
 
 @Composable
 fun MainView(
@@ -103,14 +98,6 @@ private fun NavGraphBuilder.timetableView(ttvm: TimetableViewModel) {
 @Composable
 fun MainPreview() {
     OpenFCUTheme {
-        val pref = UserPreferencesRepository(
-            PreferenceDataStoreFactory.create {
-                return@create File("")
-            }
-        )
-        val svm = SettingViewModel(pref)
-        val rvm = RedirectViewModel(pref, FcuSsoRepository())
-        val qvm = QrcodeViewModel(pref, FcuQrcodeRepository())
-        MainView(svm, rvm, qvm, startDest = Graph.Setting.route)
+        MainView(startDest = Graph.Redirect.route)
     }
 }

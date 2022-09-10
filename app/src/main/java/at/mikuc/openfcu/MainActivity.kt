@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import at.mikuc.openfcu.redirect.RedirectViewModel
 import at.mikuc.openfcu.redirect.SsoService
+import at.mikuc.openfcu.setting.SettingViewModel
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
@@ -30,6 +31,22 @@ class MainApplication : Application()
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val svm: SettingViewModel by viewModels()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                svm.event.collect {
+                    if (it.toastMessage != null) {
+                        Toast.makeText(
+                            this@MainActivity,
+                            it.toastMessage,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    svm.eventDone()
+                }
+            }
+        }
         val rvm: RedirectViewModel by viewModels()
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -44,13 +61,15 @@ class MainActivity : ComponentActivity() {
                     if (it.message != null) {
                         Toast.makeText(this@MainActivity, it.message, Toast.LENGTH_LONG).show()
                     }
-                    rvm.redirectEventDone()
+                    rvm.eventDone()
                 }
             }
         }
-        val service = SsoService.valueOf2(intent.getStringExtra("redirect_service"))
-        val startDest = if (service != null) Graph.Redirect.route else Graph.Setting.route
-        if (service != null) {
+
+        val hasStoredCredential = svm.state.id.isNotBlank() && svm.state.password.isNotBlank()
+        val startDest = if (hasStoredCredential) Graph.Redirect.route else Graph.Setting.route
+        val service = SsoService.optionalValueOf(intent.getStringExtra("redirect_service"))
+        if (service != null && hasStoredCredential) {
             val path = intent.getStringExtra("myfcu_path")
             rvm.fetchRedirectToken(service, path)
         }
@@ -60,7 +79,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    MainView(rvm = rvm, startDest = startDest)
+                    MainView(startDest = startDest)
                 }
             }
         }
