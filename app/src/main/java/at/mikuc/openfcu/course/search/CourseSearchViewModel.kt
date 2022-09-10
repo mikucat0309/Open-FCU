@@ -36,11 +36,11 @@ class CourseSearchViewModel @Inject constructor(
 
     private fun isValidFilter(filter: SearchFilter): Boolean {
         return filter.run {
-            name.isNotBlank()
-                    || teacher.isNotBlank()
-                    || code != null
-                    || day != null
-                    || sections.isNotEmpty()
+            name.isNotBlank() ||
+                teacher.isNotBlank() ||
+                code != null ||
+                day != null ||
+                sections.isNotEmpty()
         }
     }
 

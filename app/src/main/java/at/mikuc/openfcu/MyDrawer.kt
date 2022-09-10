@@ -43,6 +43,7 @@ fun MyDrawer(
         Graph.QrCode,
         Graph.Course,
         Graph.Timetable,
+        Graph.Pass,
     )
     val systemGraphs = listOf(
         Graph.Setting,

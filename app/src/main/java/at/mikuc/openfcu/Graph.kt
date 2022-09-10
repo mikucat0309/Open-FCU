@@ -10,6 +10,7 @@ sealed class Graph(val route: String, val displayName: String, val icon: ImageVe
     object QrCode : Graph("qrcode", "數位 IC 卡 (QRCode)", Icons.Outlined.QrCode)
     object Course : Graph("course", "課程檢索", Icons.Outlined.Search)
     object Timetable : Graph("timetable", "課表", Icons.Outlined.CalendarMonth)
+    object Pass : Graph("pass", "自主健康管理", Icons.Outlined.HealthAndSafety)
     companion object {
         fun getGraph(route: String?): Graph? = when (route) {
             Redirect.route -> Redirect
@@ -17,6 +18,7 @@ sealed class Graph(val route: String, val displayName: String, val icon: ImageVe
             QrCode.route -> QrCode
             Course.route -> Course
             Timetable.route -> Timetable
+            Pass.route -> Pass
             else -> null
         }
     }
