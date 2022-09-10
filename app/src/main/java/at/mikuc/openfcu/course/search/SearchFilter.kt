@@ -62,7 +62,7 @@ data class SearchFilter(
         if (day != null || sections.isNotEmpty()) putJsonObject("weekPeriod") {
             put("enabled", true)
             put("week", day?.toString() ?: "*")
-            put("period", if (sections.size == 1) sections.first().toString() else "*")
+            put("period", if (sections.isNotEmpty()) sections.first().toString() else "*")
         }
     }
 }
