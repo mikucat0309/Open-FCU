@@ -129,7 +129,7 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 
     // SLF4J Binding
-    implementation("org.slf4j:slf4j-android:1.7.36")
+//    implementation("org.slf4j:slf4j-android:1.7.36")
 
     // Test
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.10")
