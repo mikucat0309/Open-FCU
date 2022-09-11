@@ -6,12 +6,12 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.serialization")
+    kotlin("android")
+    kotlin("plugin.serialization") version "1.7.10"
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
-    id("org.jlleitschuh.gradle.ktlint")
-    id("io.gitlab.arturbosch.detekt")
+    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+    id("io.gitlab.arturbosch.detekt") version "1.21.0"
 }
 
 android {
