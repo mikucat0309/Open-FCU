@@ -1,5 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
+import io.gitlab.arturbosch.detekt.Detekt
+import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
@@ -9,6 +11,7 @@ plugins {
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
     id("org.jlleitschuh.gradle.ktlint")
+    id("io.gitlab.arturbosch.detekt")
 }
 
 android {
@@ -79,6 +82,30 @@ hilt {
 configure<KtlintExtension> {
     android.set(true)
     disabledRules.set(setOf("no-wildcard-imports"))
+}
+
+detekt {
+    buildUponDefaultConfig = true // preconfigure defaults
+    allRules = false // activate all available (even unstable) rules.
+    // point to your custom config defining rules to run, overwriting default behavior
+//    config = files("$projectDir/config/detekt.yml")
+    // a way of suppressing issues before introducing detekt
+//    baseline = file("$projectDir/config/baseline.xml")
+}
+
+tasks.withType<Detekt>().configureEach {
+    reports {
+        // observe findings in your browser with structure and code snippets
+        html.required.set(true)
+        // support integrations with Github Code Scanning
+        sarif.required.set(true)
+        md.required.set(true) // simple Markdown format
+    }
+    jvmTarget = "1.8"
+}
+
+tasks.withType<DetektCreateBaselineTask>().configureEach {
+    jvmTarget = "1.8"
 }
 
 val composeVersion = "1.3.0-beta02"
