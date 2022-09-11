@@ -88,19 +88,12 @@ detekt {
     buildUponDefaultConfig = true // preconfigure defaults
     allRules = false // activate all available (even unstable) rules.
     // point to your custom config defining rules to run, overwriting default behavior
-//    config = files("$projectDir/config/detekt.yml")
+    config = files("$projectDir/config/detekt.yml")
     // a way of suppressing issues before introducing detekt
 //    baseline = file("$projectDir/config/baseline.xml")
 }
 
 tasks.withType<Detekt>().configureEach {
-    reports {
-        // observe findings in your browser with structure and code snippets
-        html.required.set(true)
-        // support integrations with Github Code Scanning
-        sarif.required.set(true)
-        md.required.set(true) // simple Markdown format
-    }
     jvmTarget = "1.8"
 }
 
