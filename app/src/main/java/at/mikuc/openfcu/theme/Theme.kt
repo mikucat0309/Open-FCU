@@ -1,4 +1,4 @@
-package at.mikuc.openfcu.ui.theme
+package at.mikuc.openfcu.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme

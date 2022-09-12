@@ -1,4 +1,4 @@
-package at.mikuc.openfcu.ui.theme
+package at.mikuc.openfcu.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

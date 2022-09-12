@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.hilt.navigation.compose.hiltViewModel
 import at.mikuc.openfcu.setting.UserPreferencesRepository
-import at.mikuc.openfcu.ui.theme.OpenFCUTheme
+import at.mikuc.openfcu.theme.OpenFCUTheme
 import java.io.File
 
 @Composable

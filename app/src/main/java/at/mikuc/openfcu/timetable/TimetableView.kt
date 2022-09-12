@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import at.mikuc.openfcu.ui.theme.OpenFCUTheme
+import at.mikuc.openfcu.theme.OpenFCUTheme
 
 private val SECTION_HEIGHT = 90.dp
 private val SECTION_WIDTH = 120.dp

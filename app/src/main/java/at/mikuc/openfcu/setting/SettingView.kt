@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.hilt.navigation.compose.hiltViewModel
-import at.mikuc.openfcu.ui.theme.OpenFCUTheme
+import at.mikuc.openfcu.theme.OpenFCUTheme
 import java.io.File
 
 @Composable

@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import at.mikuc.openfcu.RootGraph
-import at.mikuc.openfcu.ui.theme.OpenFCUTheme
+import at.mikuc.openfcu.main.RootGraph
+import at.mikuc.openfcu.theme.OpenFCUTheme
 import java.time.ZoneId
 import java.time.ZonedDateTime
 

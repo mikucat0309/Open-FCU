@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavHostController
 import at.mikuc.openfcu.course.CourseGraph
-import at.mikuc.openfcu.ui.theme.OpenFCUTheme
+import at.mikuc.openfcu.theme.OpenFCUTheme
 
 @Composable
 fun CourseSearchView(viewModel: CourseSearchViewModel) {

@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import at.mikuc.openfcu.course.Course
 import at.mikuc.openfcu.course.Opener
 import at.mikuc.openfcu.course.Period
-import at.mikuc.openfcu.ui.theme.OpenFCUTheme
+import at.mikuc.openfcu.theme.OpenFCUTheme
 
 @Composable
 fun CourseSearchResultView(viewModel: CourseSearchViewModel) {

@@ -1,4 +1,4 @@
-package at.mikuc.openfcu
+package at.mikuc.openfcu.main
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable

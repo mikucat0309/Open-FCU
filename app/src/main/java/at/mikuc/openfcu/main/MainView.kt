@@ -16,6 +16,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import at.mikuc.openfcu.course.courseGraph
 import at.mikuc.openfcu.course.search.CourseSearchViewModel
+import at.mikuc.openfcu.main.MyDrawer
+import at.mikuc.openfcu.main.MyFAB
+import at.mikuc.openfcu.main.MyTopBar
+import at.mikuc.openfcu.main.RootGraph
 import at.mikuc.openfcu.pass.passView
 import at.mikuc.openfcu.qrcode.QRCodeView
 import at.mikuc.openfcu.qrcode.QrcodeViewModel
@@ -25,7 +29,7 @@ import at.mikuc.openfcu.setting.SettingView
 import at.mikuc.openfcu.setting.SettingViewModel
 import at.mikuc.openfcu.timetable.TimetableView
 import at.mikuc.openfcu.timetable.TimetableViewModel
-import at.mikuc.openfcu.ui.theme.OpenFCUTheme
+import at.mikuc.openfcu.theme.OpenFCUTheme
 
 @Composable
 fun MainView(

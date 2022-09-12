@@ -1,4 +1,4 @@
-package at.mikuc.openfcu
+package at.mikuc.openfcu.main
 
 import at.mikuc.openfcu.course.CourseGraph
 import at.mikuc.openfcu.util.Route
