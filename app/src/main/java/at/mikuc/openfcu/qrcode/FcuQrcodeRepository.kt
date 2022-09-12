@@ -2,7 +2,7 @@ package at.mikuc.openfcu.qrcode
 
 import android.util.Log
 import at.mikuc.openfcu.TAG
-import at.mikuc.openfcu.util.logStackTrace
+import at.mikuc.openfcu.util.catchNetworkException
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
@@ -34,21 +34,18 @@ class FcuQrcodeRepository @Inject constructor() {
     }
 
     private suspend fun loginQrcode(id: String, password: String): Boolean {
-        val resp = try {
+        val resp = catchNetworkException {
             client.post(QRCODE_LOGIN_URL) {
                 contentType(ContentType.Application.FormUrlEncoded)
                 setBody("username=$id&password=$password&appversion=2")
             }
-        } catch (e: Exception) {
-            e.logStackTrace()
-            return false
-        }
+        } ?: return false
         Log.d(TAG, resp.status.value.toString())
         return resp.status == HttpStatusCode.Found
     }
 
     private suspend fun fetchQrcodeData(): String? {
-        return try {
+        return catchNetworkException {
             val resp = client.post(QRCODE_DATA_URL) {
                 contentType(ContentType.Application.Json)
                 setBody(buildJsonObject {})
@@ -57,9 +54,6 @@ class FcuQrcodeRepository @Inject constructor() {
             resp.jsonObject["d"]
                 ?.jsonObject?.get("hexString")
                 ?.jsonPrimitive?.content
-        } catch (e: Exception) {
-            e.logStackTrace()
-            null
         }
     }
 }

@@ -1,7 +1,7 @@
 package at.mikuc.openfcu.course.search
 
 import at.mikuc.openfcu.course.Course
-import at.mikuc.openfcu.util.logStackTrace
+import at.mikuc.openfcu.util.catchNetworkException
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
@@ -23,14 +23,11 @@ class FcuCourseSearchRepository @Inject constructor() {
     }
 
     suspend fun search(filter: SearchFilter): List<Course>? {
-        return try {
+        return catchNetworkException {
             client.post(COURSE_SEARCH_URL) {
                 contentType(ContentType.Application.Json)
                 setBody(filter.toDTO())
             }.body<RawCoursesDTO>().toCourses()
-        } catch (e: Exception) {
-            e.logStackTrace()
-            emptyList()
         }
     }
 }

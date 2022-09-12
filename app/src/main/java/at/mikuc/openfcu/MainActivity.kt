@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import at.mikuc.openfcu.main.MainView
 import at.mikuc.openfcu.main.RootGraph
 import at.mikuc.openfcu.redirect.RedirectViewModel
 import at.mikuc.openfcu.redirect.SsoService

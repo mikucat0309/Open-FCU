@@ -18,13 +18,9 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuBox
 import androidx.compose.material.ExposedDropdownMenuDefaults
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,40 +36,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
-import androidx.navigation.NavHostController
-import at.mikuc.openfcu.course.CourseGraph
 import at.mikuc.openfcu.theme.OpenFCUTheme
+import at.mikuc.openfcu.util.day2str
+
+private val yearOptions = (105..111).associateWith { it.toString() }
+private val semesterOptions = mapOf(
+    1 to "上學期",
+    2 to "下學期",
+    3 to "暑修上",
+    4 to "暑修下",
+)
+private val creditOptions = (0..9).associateWith { it.toString() }
 
 @Composable
 fun CourseSearchView(viewModel: CourseSearchViewModel) {
     val state = viewModel.state
-    val yearOptions = (105..111).associateWith { it.toString() }
-    val semesterOptions = mapOf(
-        1 to "上學期",
-        2 to "下學期",
-        3 to "暑修上",
-        4 to "暑修下",
-    )
-    val creditOptions = mapOf(
-        0 to "0",
-        1 to "1",
-        2 to "2",
-        3 to "3",
-        4 to "4",
-        5 to "5",
-        6 to "6",
-        7 to "7",
-        8 to "8",
-    )
-    val days = mapOf(
-        1 to "一",
-        2 to "二",
-        3 to "三",
-        4 to "四",
-        5 to "五",
-        6 to "六",
-        7 to "日",
-    )
     Column {
         Box(
             modifier = Modifier
@@ -93,154 +70,69 @@ fun CourseSearchView(viewModel: CourseSearchViewModel) {
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
-            Row(
-                modifier = Modifier.padding(top = 8.dp)
-            ) {
-                MyDropdownMenu(
-                    label = "學年度",
-                    map = yearOptions,
-                    value = state.year,
-                    update = { viewModel.state = state.copy(year = it) },
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 4.dp)
-                )
+            Row(modifier = Modifier.padding(top = 8.dp)) {
+                YearInputField(state, viewModel, Modifier.weight(1f))
+                SemesterInputField(state, viewModel, Modifier.weight(1f))
+            }
+            Divider(Modifier.fillMaxWidth().padding(top = 16.dp))
+            Row(modifier = Modifier.padding(top = 8.dp)) {
+                CourseNameInputField(state, viewModel, Modifier.weight(1f))
+                TeacherNameInputField(state, viewModel, Modifier.weight(1f))
+            }
+            Row(modifier = Modifier.padding(top = 8.dp)) {
+                CodeInputField(state, viewModel, Modifier.weight(2f))
+                CreditInputField(state, viewModel, Modifier.weight(1f))
+            }
+            Row(modifier = Modifier.padding(top = 8.dp)) {
+                OpenerNameInputField(state, viewModel, Modifier.weight(2f))
+                AcceptStudentInputField(state, viewModel, Modifier.weight(1f))
+            }
+            Row(modifier = Modifier.padding(top = 8.dp)) {
+                LocationInputField(state, viewModel, Modifier.weight(2f))
+                DayOfWeekInputField(state, viewModel, Modifier.weight(1f))
+            }
+            SectionInputField(state, viewModel)
+        }
+    }
+}
 
-                MyDropdownMenu(
-                    label = "學期",
-                    map = semesterOptions,
-                    value = state.semester,
-                    update = { viewModel.state = state.copy(semester = it) },
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 4.dp)
-                )
+@Composable
+private fun SectionInputField(
+    state: SearchFilter,
+    viewModel: CourseSearchViewModel
+) {
+    Column(
+        modifier = Modifier
+            .padding(top = 8.dp)
+            .padding(horizontal = 4.dp)
+    ) {
+        Text("節數")
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(4.dp))
+                .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
+                .background(MaterialTheme.colors.surface)
+        ) {
+            Row {
+                for (index in 1..7) {
+                    SectionButton(
+                        index = index,
+                        value = state.sections,
+                        update = { viewModel.state = state.copy(sections = it) },
+                        Modifier.weight(1f)
+                    )
+                }
             }
-            Divider(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            )
-            Row(
-                modifier = Modifier.padding(top = 8.dp)
-            ) {
-                MyTextField(
-                    label = "科目名稱",
-                    value = state.name,
-                    update = { viewModel.state = state.copy(name = it) },
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 4.dp)
-                )
-                MyTextField(
-                    label = "教師名稱",
-                    value = state.teacher,
-                    update = { viewModel.state = state.copy(teacher = it) },
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 4.dp)
-                )
-            }
-            Row(
-                modifier = Modifier.padding(top = 8.dp)
-            ) {
-                MyNumberField(
-                    "選課代碼",
-                    value = state.code,
-                    update = {
-                        if (it == null || it in 1..9999) viewModel.state = state.copy(code = it)
-                    },
-                    modifier = Modifier
-                        .weight(2f)
-                        .padding(horizontal = 4.dp)
-                )
-                MyOptionalDropdownMenu(
-                    label = "學分數",
-                    map = creditOptions,
-                    value = state.credit,
-                    update = { viewModel.state = state.copy(credit = it) },
-                    Modifier
-                        .weight(1f)
-                        .padding(horizontal = 4.dp)
-                )
-            }
-            Row(
-                modifier = Modifier.padding(top = 8.dp)
-            ) {
-                MyTextField(
-                    label = "開課單位名稱",
-                    value = state.openerName,
-                    update = { viewModel.state = state.copy(openerName = it) },
-                    modifier = Modifier
-                        .weight(2f)
-                        .padding(horizontal = 4.dp)
-                )
-                MyNumberField(
-                    label = "開放修課人數",
-                    value = state.openNum,
-                    update = {
-                        if (it == null || it in 0..999) viewModel.state = state.copy(openNum = it)
-                    },
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 4.dp)
-                )
-            }
-            Row(
-                modifier = Modifier.padding(top = 8.dp)
-            ) {
-                MyTextField(
-                    "上課地點",
-                    state.location,
-                    update = { viewModel.state = state.copy(location = it) },
-                    modifier = Modifier
-                        .weight(2f)
-                        .padding(horizontal = 4.dp)
-                )
-                MyOptionalDropdownMenu(
-                    "星期",
-                    map = days,
-                    value = state.day,
-                    update = { viewModel.state = state.copy(day = it) },
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 4.dp)
-                )
-            }
-            Column(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(horizontal = 4.dp)
-            ) {
-                Text("節數")
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(4.dp))
-                        .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
-                        .background(MaterialTheme.colors.surface)
-                ) {
-                    Row {
-                        (1..7).forEach { index ->
-                            SectionButton(
-                                index = index,
-                                value = state.sections,
-                                update = { viewModel.state = state.copy(sections = it) },
-                                Modifier.weight(1f)
-                            )
-                        }
-                    }
-                    Row {
-                        (8..14).forEach { index ->
-                            SectionButton(
-                                index = index,
-                                value = state.sections,
-                                update = { viewModel.state = state.copy(sections = it) },
-                                Modifier.weight(1f)
-                            )
-                        }
-                    }
+            Row {
+                for (index in 8..14) {
+                    SectionButton(
+                        index = index,
+                        value = state.sections,
+                        update = { viewModel.state = state.copy(sections = it) },
+                        Modifier.weight(1f)
+                    )
                 }
             }
         }
@@ -248,12 +140,163 @@ fun CourseSearchView(viewModel: CourseSearchViewModel) {
 }
 
 @Composable
-private fun MyTextField(
+private fun DayOfWeekInputField(
+    state: SearchFilter,
+    viewModel: CourseSearchViewModel,
+    modifier: Modifier
+) {
+    MyOptionalDropdownMenu(
+        "星期",
+        map = day2str,
+        value = state.day,
+        update = { viewModel.state = state.copy(day = it) },
+        modifier = modifier.padding(horizontal = 4.dp)
+    )
+}
+
+@Composable
+private fun LocationInputField(
+    state: SearchFilter,
+    viewModel: CourseSearchViewModel,
+    modifier: Modifier
+) {
+    MyTextInputField(
+        "上課地點",
+        state.location,
+        update = { viewModel.state = state.copy(location = it) },
+        modifier = modifier.padding(horizontal = 4.dp)
+    )
+}
+
+@Composable
+private fun AcceptStudentInputField(
+    state: SearchFilter,
+    viewModel: CourseSearchViewModel,
+    modifier: Modifier
+) {
+    MyNumberInputField(
+        label = "開放修課人數",
+        value = state.openNum,
+        update = {
+            if (it == null || it in 0..999) viewModel.state = state.copy(openNum = it)
+        },
+        modifier = modifier
+            .padding(horizontal = 4.dp)
+    )
+}
+
+@Composable
+private fun OpenerNameInputField(
+    state: SearchFilter,
+    viewModel: CourseSearchViewModel,
+    modifier: Modifier
+) {
+    MyTextInputField(
+        label = "開課單位名稱",
+        value = state.openerName,
+        update = { viewModel.state = state.copy(openerName = it) },
+        modifier = modifier.padding(horizontal = 4.dp)
+    )
+}
+
+@Composable
+private fun CreditInputField(
+    state: SearchFilter,
+    viewModel: CourseSearchViewModel,
+    modifier: Modifier
+) {
+    MyOptionalDropdownMenu(
+        label = "學分數",
+        map = creditOptions,
+        value = state.credit,
+        update = { viewModel.state = state.copy(credit = it) },
+        modifier = modifier
+            .padding(horizontal = 4.dp)
+    )
+}
+
+@Composable
+private fun CodeInputField(
+    state: SearchFilter,
+    viewModel: CourseSearchViewModel,
+    modifier: Modifier
+) {
+    MyNumberInputField(
+        "選課代碼",
+        value = state.code,
+        update = {
+            if (it == null || it in 1..9999) viewModel.state = state.copy(code = it)
+        },
+        modifier = modifier
+            .padding(horizontal = 4.dp)
+    )
+}
+
+@Composable
+private fun TeacherNameInputField(
+    state: SearchFilter,
+    viewModel: CourseSearchViewModel,
+    modifier: Modifier
+) {
+    MyTextInputField(
+        label = "教師名稱",
+        value = state.teacher,
+        update = { viewModel.state = state.copy(teacher = it) },
+        modifier = modifier.padding(horizontal = 4.dp)
+    )
+}
+
+@Composable
+private fun CourseNameInputField(
+    state: SearchFilter,
+    viewModel: CourseSearchViewModel,
+    modifier: Modifier
+) {
+    MyTextInputField(
+        label = "科目名稱",
+        value = state.name,
+        update = { viewModel.state = state.copy(name = it) },
+        modifier = modifier.padding(horizontal = 4.dp)
+    )
+}
+
+@Composable
+private fun SemesterInputField(
+    state: SearchFilter,
+    viewModel: CourseSearchViewModel,
+    modifier: Modifier
+) {
+    MyDropdownMenu(
+        label = "學期",
+        map = semesterOptions,
+        value = state.semester,
+        update = { viewModel.state = state.copy(semester = it) },
+        modifier = modifier.padding(horizontal = 4.dp)
+    )
+}
+
+@Composable
+private fun YearInputField(
+    state: SearchFilter,
+    viewModel: CourseSearchViewModel,
+    modifier: Modifier
+) {
+    MyDropdownMenu(
+        label = "學年度",
+        map = yearOptions,
+        value = state.year,
+        update = { viewModel.state = state.copy(year = it) },
+        modifier = modifier.padding(horizontal = 4.dp)
+    )
+}
+
+@Composable
+private fun MyTextInputField(
     label: String,
     value: String?,
     update: (String) -> Unit,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     modifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 ) {
     Column(
         modifier = modifier
@@ -269,13 +312,13 @@ private fun MyTextField(
 }
 
 @Composable
-private fun MyNumberField(
+private fun MyNumberInputField(
     label: String,
     value: Int?,
     update: (Int?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    MyTextField(
+    MyTextInputField(
         label = label,
         value = value?.toString(10) ?: "",
         update = { if (it.isDigitsOnly()) update(it.toIntOrNull()) },
@@ -294,9 +337,7 @@ fun MyOptionalDropdownMenu(
     modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    Column(
-        modifier = modifier
-    ) {
+    Column(modifier = modifier) {
         Text(label)
         ExposedDropdownMenuBox(
             expanded = expanded,
@@ -349,9 +390,7 @@ fun MyDropdownMenu(
     modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    Column(
-        modifier = modifier
-    ) {
+    Column(modifier = modifier) {
         Text(label)
         ExposedDropdownMenuBox(
             expanded = expanded,
@@ -422,17 +461,5 @@ fun SectionButton(
             style = MaterialTheme.typography.body1.copy(fontSize = 18.sp, color = textColor),
             textAlign = TextAlign.Center,
         )
-    }
-}
-
-@Composable
-fun CourseSearchFAB(ctrl: NavHostController, viewModel: CourseSearchViewModel) {
-    FloatingActionButton(onClick = {
-        viewModel.search()
-        ctrl.navigate(CourseGraph.Result.route) {
-            popUpTo(CourseGraph.Search.route)
-        }
-    }) {
-        Icon(Icons.Outlined.Search, "Search")
     }
 }

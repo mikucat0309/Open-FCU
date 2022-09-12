@@ -38,9 +38,9 @@ class UserPreferencesRepository @Inject constructor(
     suspend fun <T> set(key: Preferences.Key<T>, value: T) = dataStore.edit { it[key] = value }
 
     suspend fun getCredential(): Credential? {
-        val id = get(KEY_ID) ?: return null
-        val password = get(KEY_PASSWORD) ?: return null
-        return Credential(id, password)
+        val id = get(KEY_ID)
+        val password = get(KEY_PASSWORD)
+        return if (id != null && password != null) Credential(id, password) else null
     }
 
     companion object {

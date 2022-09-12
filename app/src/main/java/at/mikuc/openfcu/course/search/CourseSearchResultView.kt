@@ -25,6 +25,7 @@ import at.mikuc.openfcu.course.Course
 import at.mikuc.openfcu.course.Opener
 import at.mikuc.openfcu.course.Period
 import at.mikuc.openfcu.theme.OpenFCUTheme
+import at.mikuc.openfcu.util.day2str
 
 @Composable
 fun CourseSearchResultView(viewModel: CourseSearchViewModel) {
@@ -48,8 +49,7 @@ private fun CourseLazyColumnView(courses: List<Course>) {
 private fun CourseRow(course: Course) {
     Card(
         elevation = 2.dp,
-        modifier = Modifier
-            .padding(vertical = 4.dp)
+        modifier = Modifier.padding(vertical = 4.dp)
     ) {
         Column(
             modifier = Modifier.padding(8.dp)
@@ -79,9 +79,7 @@ private fun CourseRow(course: Course) {
 
 @Composable
 private fun CodeField(course: Course, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-    ) {
+    Box(modifier = modifier) {
         Text(
             text = course.code.toString().padStart(4, '0'),
             maxLines = 1,
@@ -92,9 +90,7 @@ private fun CodeField(course: Course, modifier: Modifier = Modifier) {
 
 @Composable
 private fun OpenerField(course: Course, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-    ) {
+    Box(modifier = modifier) {
         Text(
             text = course.opener.name,
             maxLines = 1,
@@ -106,9 +102,7 @@ private fun OpenerField(course: Course, modifier: Modifier = Modifier) {
 
 @Composable
 private fun CreditField(course: Course, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-    ) {
+    Box(modifier = modifier) {
         Text(
             text = "${course.credit} 學分",
             maxLines = 1,
@@ -116,11 +110,10 @@ private fun CreditField(course: Course, modifier: Modifier = Modifier) {
         )
     }
 }
+
 @Composable
 private fun CourseNameField(course: Course, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-    ) {
+    Box(modifier = modifier) {
         Text(
             text = course.name,
             maxLines = 2,
@@ -132,9 +125,7 @@ private fun CourseNameField(course: Course, modifier: Modifier = Modifier) {
 
 @Composable
 private fun TeacherField(course: Course, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-    ) {
+    Box(modifier = modifier) {
         Text(
             text = course.teacher,
             maxLines = 2,
@@ -232,13 +223,3 @@ fun CourseSearchResultDarkPreview() {
         }
     }
 }
-
-val day2str = mapOf(
-    1 to "一",
-    2 to "二",
-    3 to "三",
-    4 to "四",
-    5 to "五",
-    6 to "六",
-    7 to "日",
-)

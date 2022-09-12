@@ -10,7 +10,7 @@ import at.mikuc.openfcu.main.Graph
 import at.mikuc.openfcu.main.RootGraph
 import at.mikuc.openfcu.util.Route
 
-sealed class CourseGraph(route: Route) : Graph() {
+sealed class CourseGraph(route: Route) : Graph {
     override val route: Route = "${RootGraph.Course.route}/$route"
 
     object Search : CourseGraph("search")
@@ -22,7 +22,7 @@ sealed class CourseGraph(route: Route) : Graph() {
             Search.route -> Search
             Result.route -> Result
             Detail.route -> Detail
-            else -> throw IllegalArgumentException()
+            else -> throw IllegalArgumentException("Unknown route `$route`")
         }
     }
 }

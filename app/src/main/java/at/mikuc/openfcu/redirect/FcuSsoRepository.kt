@@ -1,6 +1,6 @@
 package at.mikuc.openfcu.redirect
 
-import at.mikuc.openfcu.util.logStackTrace
+import at.mikuc.openfcu.util.catchNetworkException
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
@@ -22,14 +22,11 @@ class FcuSsoRepository @Inject constructor() {
     }
 
     suspend fun singleSignOn(request: SSORequest): SSOResponse? {
-        return try {
+        return catchNetworkException {
             client.post(SSO_URL) {
                 contentType(ContentType.Application.Json)
                 setBody(request)
             }.body()
-        } catch (e: Exception) {
-            e.logStackTrace()
-            null
         }
     }
 }

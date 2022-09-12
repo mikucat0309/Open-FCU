@@ -152,6 +152,7 @@ fun PassCircle1Preview() {
         Circle(ZonedDateTime.now())
     }
 }
+
 @Preview
 @Composable
 fun PassCircle2Preview() {
@@ -159,6 +160,7 @@ fun PassCircle2Preview() {
         Circle(ZonedDateTime.now().plusDays(1))
     }
 }
+
 @Preview
 @Composable
 fun PassCircle3Preview() {
@@ -166,6 +168,7 @@ fun PassCircle3Preview() {
         Circle(ZonedDateTime.now().plusDays(2))
     }
 }
+
 @Preview
 @Composable
 fun PassCircle4Preview() {
@@ -173,6 +176,7 @@ fun PassCircle4Preview() {
         Circle(ZonedDateTime.now().plusDays(3))
     }
 }
+
 @Preview
 @Composable
 fun PassCircle5Preview() {
@@ -180,6 +184,7 @@ fun PassCircle5Preview() {
         Circle(ZonedDateTime.now().plusDays(4))
     }
 }
+
 @Preview
 @Composable
 fun PassCircle6Preview() {
@@ -187,6 +192,7 @@ fun PassCircle6Preview() {
         Circle(ZonedDateTime.now().plusDays(5))
     }
 }
+
 @Preview
 @Composable
 fun PassCircle7Preview() {

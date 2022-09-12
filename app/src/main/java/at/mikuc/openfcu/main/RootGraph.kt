@@ -3,7 +3,7 @@ package at.mikuc.openfcu.main
 import at.mikuc.openfcu.course.CourseGraph
 import at.mikuc.openfcu.util.Route
 
-sealed class RootGraph(override val route: Route) : Graph() {
+sealed class RootGraph(override val route: Route) : Graph {
     object Redirect : RootGraph("redirect")
     object Setting : RootGraph("setting")
     object QrCode : RootGraph("qrcode")
