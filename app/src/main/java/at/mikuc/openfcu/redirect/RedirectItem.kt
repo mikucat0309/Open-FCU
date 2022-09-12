@@ -6,7 +6,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 
 data class RedirectItem(
     val title: String,
-    val service: SsoService,
-    val path: String? = null,
+    val service: String,
     val icon: ImageVector = Icons.Outlined.Public,
 )

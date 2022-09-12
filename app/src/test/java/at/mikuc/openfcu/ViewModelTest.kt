@@ -72,23 +72,24 @@ internal class ViewModelTest : BehaviorSpec() {
             When("single sign-on") {
                 val mockMsg = "mock"
                 val mockUri = mockk<Uri>()
+                val mockService = "mock"
 
                 Then("failed") {
                     val sso = mockk<FcuSsoRepository>()
-                    val resp = SSOResponse(mockMsg, mockk(), mockUri, false)
+                    val resp = SSOResponse(mockMsg, mockService, mockUri, false)
                     coEvery { sso.singleSignOn(any()) } returns resp
                     val vm = RedirectViewModel(pref, sso)
-                    vm.fetchRedirectToken(mockk(), dispatcher = dispatcher)
+                    vm.fetchRedirectToken(mockService, dispatcher)
                     testCoroutineScheduler.advanceUntilIdle()
 
                     vm.event.value.message shouldBe mockMsg
                 }
                 Then("succeed") {
                     val sso = mockk<FcuSsoRepository>()
-                    val resp = SSOResponse(mockMsg, mockk(), mockUri, true)
+                    val resp = SSOResponse(mockMsg, mockService, mockUri, true)
                     coEvery { sso.singleSignOn(any()) } returns resp
                     val vm = RedirectViewModel(pref, sso)
-                    vm.fetchRedirectToken(mockk(), dispatcher = dispatcher)
+                    vm.fetchRedirectToken(mockService, dispatcher)
                     testCoroutineScheduler.advanceUntilIdle()
 
                     vm.event.value.uri shouldBe mockUri
@@ -101,21 +102,21 @@ internal class ViewModelTest : BehaviorSpec() {
                 initialHexStr shouldBe null
                 Then("failed") {
                     unmockkObject(qrcodeRepo)
-                    coEvery { qrcodeRepo.fetchQrcode(any(), any()) } returns null
+                    coEvery { qrcodeRepo.fetchQrcode(any()) } returns null
                     vm.fetchQrcode(dispatcher)
                     testCoroutineScheduler.advanceUntilIdle()
 
-                    coVerify(exactly = 1) { qrcodeRepo.fetchQrcode(any(), any()) }
+                    coVerify(exactly = 1) { qrcodeRepo.fetchQrcode(any()) }
                     vm.state.hexStr shouldBe initialHexStr
                 }
                 Then("succeed") {
                     unmockkObject(qrcodeRepo)
                     val mockHexStr = "1234567890"
-                    coEvery { qrcodeRepo.fetchQrcode(any(), any()) } returns mockHexStr
+                    coEvery { qrcodeRepo.fetchQrcode(any()) } returns mockHexStr
                     vm.fetchQrcode(dispatcher)
                     testCoroutineScheduler.advanceUntilIdle()
 
-                    coVerify(exactly = 1) { qrcodeRepo.fetchQrcode(any(), any()) }
+                    coVerify(exactly = 1) { qrcodeRepo.fetchQrcode(any()) }
                     vm.state.hexStr shouldBe mockHexStr
                 }
             }

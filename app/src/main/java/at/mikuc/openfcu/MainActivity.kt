@@ -17,7 +17,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import at.mikuc.openfcu.main.MainView
 import at.mikuc.openfcu.main.RootGraph
 import at.mikuc.openfcu.redirect.RedirectViewModel
-import at.mikuc.openfcu.redirect.SsoService
 import at.mikuc.openfcu.setting.SettingViewModel
 import at.mikuc.openfcu.theme.OpenFCUTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,10 +70,9 @@ class MainActivity : ComponentActivity() {
         val hasStoredCredential = svm.state.id.isNotBlank() && svm.state.password.isNotBlank()
         val startDest = if (hasStoredCredential) RootGraph.Redirect.route
         else RootGraph.Setting.route
-        val service = SsoService.optionalValueOf(intent.getStringExtra("redirect_service"))
+        val service = intent.getStringExtra("redirect_service")
         if (service != null && hasStoredCredential) {
-            val path = intent.getStringExtra("myfcu_path")
-            rvm.fetchRedirectToken(service, path)
+            rvm.fetchRedirectToken(service)
         }
         setContent {
             OpenFCUTheme {

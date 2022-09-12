@@ -43,7 +43,7 @@ fun RedirectView(viewModel: RedirectViewModel = hiltViewModel()) {
     ) {
         state.redirectItems.forEach {
             RedirectItem(title = it.title, icon = it.icon) {
-                viewModel.fetchRedirectToken(it.service, it.path)
+                viewModel.fetchRedirectToken(it.service)
             }
         }
     }

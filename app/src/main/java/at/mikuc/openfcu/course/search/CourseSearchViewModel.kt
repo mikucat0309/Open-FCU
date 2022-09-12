@@ -9,9 +9,9 @@ import androidx.lifecycle.viewModelScope
 import at.mikuc.openfcu.TAG
 import at.mikuc.openfcu.course.Course
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

@@ -17,7 +17,7 @@ class FcuSsoRepository @Inject constructor() {
 
     private val client = HttpClient(CIO) {
         install(ContentNegotiation) {
-            json(Json { coerceInputValues = true })
+            json()
         }
     }
 

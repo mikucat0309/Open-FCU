@@ -6,8 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import at.mikuc.openfcu.setting.UserPreferencesRepository
-import at.mikuc.openfcu.setting.UserPreferencesRepository.Companion.KEY_ID
-import at.mikuc.openfcu.setting.UserPreferencesRepository.Companion.KEY_PASSWORD
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
@@ -24,9 +22,8 @@ class QrcodeViewModel @Inject constructor(
 
     fun fetchQrcode(dispatcher: CoroutineDispatcher = Dispatchers.IO) {
         viewModelScope.launch(dispatcher) {
-            val id = pref.get(KEY_ID) ?: return@launch
-            val password = pref.get(KEY_PASSWORD) ?: return@launch
-            val hexStr = repo.fetchQrcode(id, password) ?: return@launch
+            val credential = pref.getCredential() ?: return@launch
+            val hexStr = repo.fetchQrcode(credential) ?: return@launch
             state = state.copy(hexStr = hexStr)
         }
     }

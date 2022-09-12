@@ -2,6 +2,7 @@ package at.mikuc.openfcu.qrcode
 
 import android.util.Log
 import at.mikuc.openfcu.TAG
+import at.mikuc.openfcu.setting.Credential
 import at.mikuc.openfcu.util.catchNetworkException
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -28,16 +29,15 @@ class FcuQrcodeRepository @Inject constructor() {
         install(HttpCookies)
     }
 
-    suspend fun fetchQrcode(id: String, password: String): String? {
-        if (!loginQrcode(id, password)) return null
-        return fetchQrcodeData()
+    suspend fun fetchQrcode(credential: Credential): String? {
+        return if (loginQrcode(credential)) fetchQrcodeData() else null
     }
 
-    private suspend fun loginQrcode(id: String, password: String): Boolean {
+    private suspend fun loginQrcode(cred: Credential): Boolean {
         val resp = catchNetworkException {
             client.post(QRCODE_LOGIN_URL) {
                 contentType(ContentType.Application.FormUrlEncoded)
-                setBody("username=$id&password=$password&appversion=2")
+                setBody("username=${cred.id}&password=${cred.password}&appversion=2")
             }
         } ?: return false
         Log.d(TAG, resp.status.value.toString())
