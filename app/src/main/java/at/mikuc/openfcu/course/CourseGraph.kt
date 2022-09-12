@@ -4,20 +4,33 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import at.mikuc.openfcu.Graph
+import at.mikuc.openfcu.RootGraph
 import at.mikuc.openfcu.course.search.CourseSearchResultView
 import at.mikuc.openfcu.course.search.CourseSearchView
 import at.mikuc.openfcu.course.search.CourseSearchViewModel
+import at.mikuc.openfcu.util.Route
 
-sealed class CourseGraph(val route: String) {
-    object Search : CourseGraph(Graph.Course.route + "/search")
-    object Result : CourseGraph(Graph.Course.route + "/result")
-    object Detail : CourseGraph(Graph.Course.route + "/detail")
+sealed class CourseGraph(route: Route) : Graph() {
+    override val route: Route = "${RootGraph.Course.route}/$route"
+
+    object Search : CourseGraph("search")
+    object Result : CourseGraph("result")
+    object Detail : CourseGraph("detail")
+
+    companion object {
+        fun fromRoute(route: Route?): CourseGraph = when (route) {
+            Search.route -> Search
+            Result.route -> Result
+            Detail.route -> Detail
+            else -> throw IllegalArgumentException()
+        }
+    }
 }
 
 fun NavGraphBuilder.courseGraph(viewModel: CourseSearchViewModel) {
     navigation(
         startDestination = CourseGraph.Search.route,
-        route = Graph.Course.route
+        route = RootGraph.Course.route
     ) {
         composable(CourseGraph.Search.route) {
             CourseSearchView(viewModel)

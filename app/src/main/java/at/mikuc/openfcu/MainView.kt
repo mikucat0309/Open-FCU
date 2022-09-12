@@ -14,9 +14,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import at.mikuc.openfcu.course.CourseGraph
 import at.mikuc.openfcu.course.courseGraph
-import at.mikuc.openfcu.course.search.CourseSearchFAB
 import at.mikuc.openfcu.course.search.CourseSearchViewModel
 import at.mikuc.openfcu.pass.passView
 import at.mikuc.openfcu.qrcode.QRCodeView
@@ -28,7 +26,6 @@ import at.mikuc.openfcu.setting.SettingViewModel
 import at.mikuc.openfcu.timetable.TimetableView
 import at.mikuc.openfcu.timetable.TimetableViewModel
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
-import at.mikuc.openfcu.util.currentRoute
 
 @Composable
 fun MainView(
@@ -44,12 +41,10 @@ fun MainView(
     val scope = rememberCoroutineScope()
     Scaffold(
         scaffoldState = scaffoldState,
-        topBar = { MyTopBar(scope, scaffoldState, ctrl.currentRoute()) },
+        topBar = { MyTopBar(ctrl, scope, scaffoldState) },
         drawerContent = { MyDrawer(ctrl, scope, scaffoldState) },
         floatingActionButton = {
-            when (ctrl.currentRoute()) {
-                CourseGraph.Search.route -> CourseSearchFAB(ctrl, csvm)
-            }
+            MyFAB(ctrl, csvm)
         }
     ) {
         Box(
@@ -73,25 +68,25 @@ fun MainView(
 }
 
 private fun NavGraphBuilder.qrcodeView(qvm: QrcodeViewModel) {
-    composable(Graph.QrCode.route) {
+    composable(RootGraph.QrCode.route) {
         QRCodeView(qvm)
     }
 }
 
 private fun NavGraphBuilder.redirectView(rvm: RedirectViewModel) {
-    composable(Graph.Redirect.route) {
+    composable(RootGraph.Redirect.route) {
         RedirectView(rvm)
     }
 }
 
 private fun NavGraphBuilder.settingView(svm: SettingViewModel) {
-    composable(Graph.Setting.route) {
+    composable(RootGraph.Setting.route) {
         SettingView(svm)
     }
 }
 
 private fun NavGraphBuilder.timetableView(ttvm: TimetableViewModel) {
-    composable(Graph.Timetable.route) {
+    composable(RootGraph.Timetable.route) {
         TimetableView(ttvm)
     }
 }
@@ -100,6 +95,6 @@ private fun NavGraphBuilder.timetableView(ttvm: TimetableViewModel) {
 @Composable
 fun MainPreview() {
     OpenFCUTheme {
-        MainView(startDest = Graph.Redirect.route)
+        MainView(startDest = RootGraph.Redirect.route)
     }
 }

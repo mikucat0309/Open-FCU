@@ -31,13 +31,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import at.mikuc.openfcu.Graph
+import at.mikuc.openfcu.RootGraph
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
 fun NavGraphBuilder.passView() {
-    composable(Graph.Pass.route) {
+    composable(RootGraph.Pass.route) {
         PassView()
     }
 }

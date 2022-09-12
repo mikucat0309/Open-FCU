@@ -18,6 +18,13 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.HealthAndSafety
+import androidx.compose.material.icons.filled.Public
+import androidx.compose.material.icons.filled.QrCode
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Public
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,7 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import at.mikuc.openfcu.ui.theme.OpenFCUTheme
-import at.mikuc.openfcu.util.currentRoute
+import at.mikuc.openfcu.util.currentGraph
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -39,14 +46,14 @@ fun MyDrawer(
     scaffoldState: ScaffoldState,
 ) {
     val appGraphs = listOf(
-        Graph.Redirect,
-        Graph.QrCode,
-        Graph.Course,
-        Graph.Timetable,
-        Graph.Pass,
+        DrawerItem("快速跳轉", Icons.Filled.Apps, RootGraph.Redirect),
+        DrawerItem("數位 IC 卡 (QRCode)", Icons.Filled.QrCode, RootGraph.QrCode),
+        DrawerItem("課程查詢", Icons.Filled.Search, RootGraph.Course),
+        DrawerItem("課表", Icons.Filled.CalendarMonth, RootGraph.Timetable),
+        DrawerItem("仿造 PASS", Icons.Filled.HealthAndSafety, RootGraph.Pass),
     )
     val systemGraphs = listOf(
-        Graph.Setting,
+        DrawerItem("設定", Icons.Filled.Settings, RootGraph.Setting),
     )
     Column(
         modifier = Modifier
@@ -63,37 +70,57 @@ fun MyDrawer(
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
         )
-        appGraphs.forEach { graph ->
-            DrawerButton(
-                text = graph.displayName,
-                icon = graph.icon,
-                isSelected = ctrl.currentRoute()?.startsWith(graph.route) ?: false
-            ) {
-                scope.launch {
-                    scaffoldState.drawerState.close()
-                }
-                ctrl.navigate(graph.route) {
-                    popUpTo(Graph.Setting.route)
-                }
-            }
-        }
+        AppDrawerButton(appGraphs, ctrl, scope, scaffoldState)
         Divider(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
         )
-        systemGraphs.forEach { graph ->
-            DrawerButton(
-                text = graph.displayName,
-                icon = graph.icon,
-                isSelected = ctrl.currentRoute()?.startsWith(graph.route) ?: false
-            ) {
-                ctrl.navigate(graph.route) {
-                    popUpTo(Graph.Setting.route)
-                }
-                scope.launch {
-                    scaffoldState.drawerState.close()
-                }
+        SystemDrawerButton(systemGraphs, ctrl, scope, scaffoldState)
+    }
+}
+
+@Composable
+private fun SystemDrawerButton(
+    systemGraphs: List<DrawerItem>,
+    ctrl: NavHostController,
+    scope: CoroutineScope,
+    scaffoldState: ScaffoldState
+) {
+    systemGraphs.forEach { graph ->
+        DrawerButton(
+            text = graph.name,
+            icon = graph.icon,
+            isSelected = ctrl.currentGraph() == graph.graph
+        ) {
+            ctrl.navigate(graph.graph.route) {
+                popUpTo(ctrl.graph.startDestinationRoute!!)
+            }
+            scope.launch {
+                scaffoldState.drawerState.close()
+            }
+        }
+    }
+}
+
+@Composable
+private fun AppDrawerButton(
+    items: List<DrawerItem>,
+    ctrl: NavHostController,
+    scope: CoroutineScope,
+    scaffoldState: ScaffoldState
+) {
+    items.forEach { item ->
+        DrawerButton(
+            text = item.name,
+            icon = item.icon,
+            isSelected = ctrl.currentGraph() == item.graph
+        ) {
+            scope.launch {
+                scaffoldState.drawerState.close()
+            }
+            ctrl.navigate(item.graph.route) {
+                popUpTo(ctrl.graph.startDestinationRoute!!)
             }
         }
     }

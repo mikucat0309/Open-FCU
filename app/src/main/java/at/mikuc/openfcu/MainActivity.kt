@@ -67,7 +67,8 @@ class MainActivity : ComponentActivity() {
         }
 
         val hasStoredCredential = svm.state.id.isNotBlank() && svm.state.password.isNotBlank()
-        val startDest = if (hasStoredCredential) Graph.Redirect.route else Graph.Setting.route
+        val startDest = if (hasStoredCredential) RootGraph.Redirect.route
+        else RootGraph.Setting.route
         val service = SsoService.optionalValueOf(intent.getStringExtra("redirect_service"))
         if (service != null && hasStoredCredential) {
             val path = intent.getStringExtra("myfcu_path")

@@ -1,37 +1,25 @@
 package at.mikuc.openfcu
 
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
-import at.mikuc.openfcu.util.rootRoute
+import androidx.navigation.NavHostController
+import at.mikuc.openfcu.util.currentGraph
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @Composable
 fun MyTopBar(
+    ctrl: NavHostController,
     scope: CoroutineScope,
     scaffoldState: ScaffoldState,
-    currentRoute: String?,
 ) {
+    val graph = ctrl.currentGraph()
     TopAppBar(
         title = {
-            Text(text = Graph.getGraph(currentRoute?.rootRoute())?.displayName ?: "Open FCU")
+            MyTitle(graph)
         },
         navigationIcon = {
-            IconButton(onClick = {
-                scope.launch {
-                    scaffoldState.drawerState.apply {
-                        if (isClosed) open() else close()
-                    }
-                }
-            }) {
-                Icon(Icons.Filled.Menu, "Menu")
-            }
+            MyNavigationIcon(ctrl, scope, scaffoldState)
         },
     )
 }
