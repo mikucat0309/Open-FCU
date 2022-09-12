@@ -14,7 +14,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  scan:
+  test:
+    name: Unit testing
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

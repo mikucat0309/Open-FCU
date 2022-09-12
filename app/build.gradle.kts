@@ -88,7 +88,7 @@ detekt {
     buildUponDefaultConfig = true // preconfigure defaults
     allRules = false // activate all available (even unstable) rules.
     // point to your custom config defining rules to run, overwriting default behavior
-    config = files("$projectDir/config/detekt.yml")
+    config = files("$projectDir/config/detekt-config.yml")
     // a way of suppressing issues before introducing detekt
 //    baseline = file("$projectDir/config/baseline.xml")
 }
