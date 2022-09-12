@@ -3,11 +3,11 @@ package at.mikuc.openfcu.course
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import at.mikuc.openfcu.main.Graph
-import at.mikuc.openfcu.main.RootGraph
 import at.mikuc.openfcu.course.search.CourseSearchResultView
 import at.mikuc.openfcu.course.search.CourseSearchView
 import at.mikuc.openfcu.course.search.CourseSearchViewModel
+import at.mikuc.openfcu.main.Graph
+import at.mikuc.openfcu.main.RootGraph
 import at.mikuc.openfcu.util.Route
 
 sealed class CourseGraph(route: Route) : Graph() {

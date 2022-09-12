@@ -27,9 +27,9 @@ import at.mikuc.openfcu.redirect.RedirectView
 import at.mikuc.openfcu.redirect.RedirectViewModel
 import at.mikuc.openfcu.setting.SettingView
 import at.mikuc.openfcu.setting.SettingViewModel
+import at.mikuc.openfcu.theme.OpenFCUTheme
 import at.mikuc.openfcu.timetable.TimetableView
 import at.mikuc.openfcu.timetable.TimetableViewModel
-import at.mikuc.openfcu.theme.OpenFCUTheme
 
 @Composable
 fun MainView(
