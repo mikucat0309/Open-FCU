@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import at.mikuc.openfcu.TAG
 import at.mikuc.openfcu.course.Course
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
@@ -23,13 +25,13 @@ class CourseSearchViewModel @Inject constructor(
     var result: List<Course> by mutableStateOf(emptyList())
         private set
 
-    fun search() {
+    fun search(dispatcher: CoroutineDispatcher = Dispatchers.IO) {
         val filter = state.copy()
         if (!isValidFilter(filter)) {
             return
         }
         Log.d(TAG, Json.encodeToString(filter))
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             repo.search(filter)?.let { result = it.postFilter(filter) }
         }
     }

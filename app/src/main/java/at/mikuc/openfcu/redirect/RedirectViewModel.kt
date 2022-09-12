@@ -12,6 +12,8 @@ import at.mikuc.openfcu.setting.UserPreferencesRepository.Companion.KEY_ID
 import at.mikuc.openfcu.setting.UserPreferencesRepository.Companion.KEY_PASSWORD
 import at.mikuc.openfcu.util.replaceUriParameter
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -62,8 +64,8 @@ class RedirectViewModel @Inject constructor(
     private val _event = MutableStateFlow(RedirectEvent())
     val event: StateFlow<RedirectEvent> = _event
 
-    fun fetchRedirectToken(service: SsoService, path: String? = null) {
-        viewModelScope.launch {
+    fun fetchRedirectToken(service: SsoService, path: String? = null, dispatcher: CoroutineDispatcher = Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             val id = pref.get(KEY_ID) ?: return@launch
             val password = pref.get(KEY_PASSWORD) ?: return@launch
             val response = repo.singleSignOn(SSORequest(id, password, service)) ?: return@launch

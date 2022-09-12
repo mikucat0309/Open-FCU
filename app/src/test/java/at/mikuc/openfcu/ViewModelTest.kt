@@ -78,7 +78,7 @@ internal class ViewModelTest : BehaviorSpec() {
                     val resp = SSOResponse(mockMsg, mockk(), mockUri, false)
                     coEvery { sso.singleSignOn(any()) } returns resp
                     val vm = RedirectViewModel(pref, sso)
-                    vm.fetchRedirectToken(mockk())
+                    vm.fetchRedirectToken(mockk(), dispatcher = dispatcher)
                     testCoroutineScheduler.advanceUntilIdle()
 
                     vm.event.value.message shouldBe mockMsg
@@ -88,7 +88,7 @@ internal class ViewModelTest : BehaviorSpec() {
                     val resp = SSOResponse(mockMsg, mockk(), mockUri, true)
                     coEvery { sso.singleSignOn(any()) } returns resp
                     val vm = RedirectViewModel(pref, sso)
-                    vm.fetchRedirectToken(mockk())
+                    vm.fetchRedirectToken(mockk(), dispatcher = dispatcher)
                     testCoroutineScheduler.advanceUntilIdle()
 
                     vm.event.value.uri shouldBe mockUri
@@ -102,7 +102,7 @@ internal class ViewModelTest : BehaviorSpec() {
                 Then("failed") {
                     unmockkObject(qrcodeRepo)
                     coEvery { qrcodeRepo.fetchQrcode(any(), any()) } returns null
-                    vm.fetchQrcode()
+                    vm.fetchQrcode(dispatcher)
                     testCoroutineScheduler.advanceUntilIdle()
 
                     coVerify(exactly = 1) { qrcodeRepo.fetchQrcode(any(), any()) }
@@ -112,7 +112,7 @@ internal class ViewModelTest : BehaviorSpec() {
                     unmockkObject(qrcodeRepo)
                     val mockHexStr = "1234567890"
                     coEvery { qrcodeRepo.fetchQrcode(any(), any()) } returns mockHexStr
-                    vm.fetchQrcode()
+                    vm.fetchQrcode(dispatcher)
                     testCoroutineScheduler.advanceUntilIdle()
 
                     coVerify(exactly = 1) { qrcodeRepo.fetchQrcode(any(), any()) }
@@ -199,7 +199,7 @@ internal class ViewModelTest : BehaviorSpec() {
                     Then("get course1") {
                         val vm = CourseSearchViewModel(csRepo)
                         vm.state = filter
-                        vm.search()
+                        vm.search(dispatcher)
                         testCoroutineScheduler.advanceUntilIdle()
 
                         coVerify(exactly = 1) { csRepo.search(any()) }
