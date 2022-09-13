@@ -11,12 +11,14 @@ import at.mikuc.openfcu.course.CourseGraph
 
 @Composable
 fun CourseSearchFAB(ctrl: NavHostController, viewModel: CourseSearchViewModel = hiltViewModel()) {
-    FloatingActionButton(onClick = {
-        viewModel.search()
-        ctrl.navigate(CourseGraph.Result.route) {
-            popUpTo(CourseGraph.Search.route)
+    FloatingActionButton(
+        onClick = {
+            viewModel.search()
+            ctrl.navigate(CourseGraph.Result.route) {
+                popUpTo(CourseGraph.Search.route)
+            }
         }
-    }) {
+    ) {
         Icon(Icons.Outlined.Search, "Search")
     }
 }

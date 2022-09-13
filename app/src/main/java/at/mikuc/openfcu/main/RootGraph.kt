@@ -11,17 +11,20 @@ sealed class RootGraph(override val route: Route) : Graph {
     object Timetable : RootGraph("timetable")
     object Pass : RootGraph("pass")
 
-    object Empty : RootGraph("empty")
+    object Empty : RootGraph("EMPTY")
 
     companion object {
-        fun fromRoute(route: Route?): Graph = when (route) {
-            Redirect.route -> Redirect
-            Setting.route -> Setting
-            QrCode.route -> QrCode
-            Course.route -> CourseGraph.fromRoute(route)
-            Timetable.route -> Timetable
-            Pass.route -> Pass
-            else -> Empty
+        fun fromRoute(route: Route?): Graph {
+            if (route == null) return Empty
+            return when (route.split('/').first()) {
+                Redirect.route -> Redirect
+                Setting.route -> Setting
+                QrCode.route -> QrCode
+                Course.route -> CourseGraph.fromRoute(route)
+                Timetable.route -> Timetable
+                Pass.route -> Pass
+                else -> Empty
+            }
         }
     }
 }

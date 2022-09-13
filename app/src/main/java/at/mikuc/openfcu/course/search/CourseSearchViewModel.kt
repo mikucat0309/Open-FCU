@@ -13,8 +13,6 @@ import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 @HiltViewModel
 class CourseSearchViewModel @Inject constructor(
@@ -22,15 +20,52 @@ class CourseSearchViewModel @Inject constructor(
 ) : ViewModel() {
 
     var state by mutableStateOf(SearchFilter(111, 1))
+        private set
     var result: List<Course> by mutableStateOf(emptyList())
         private set
 
+    fun updateFilter(value: SearchFilter) {
+        state = value
+    }
+
+    fun updateYear(value: Int) {
+        state = state.copy(year = value)
+    }
+    fun updateSemester(value: Int) {
+        state = state.copy(semester = value)
+    }
+    fun updateCourseName(value: String) {
+        state = state.copy(name = value)
+    }
+    fun updateCode(value: Int?) {
+        state = state.copy(code = value)
+    }
+    fun updateTeacher(value: String) {
+        state = state.copy(teacher = value)
+    }
+    fun updateDay(value: Int?) {
+        state = state.copy(day = value)
+    }
+    fun updateSections(value: Set<Int>) {
+        state = state.copy(sections = value)
+    }
+    fun updateLocation(value: String) {
+        state = state.copy(location = value)
+    }
+    fun updateCredit(value: Int?) {
+        state = state.copy(credit = value)
+    }
+    fun updateOpenerName(value: String) {
+        state = state.copy(openerName = value)
+    }
+    fun updateOpenNum(value: Int?) {
+        state = state.copy(openNum = value)
+    }
+
     fun search(dispatcher: CoroutineDispatcher = Dispatchers.IO) {
         val filter = state.copy()
-        if (!isValidFilter(filter)) {
-            return
-        }
-        Log.d(TAG, Json.encodeToString(filter))
+        Log.d(TAG, filter.toString())
+        if (!isValidFilter(filter)) return
         viewModelScope.launch(dispatcher) {
             repo.search(filter)?.let { result = it.postFilter(filter) }
         }

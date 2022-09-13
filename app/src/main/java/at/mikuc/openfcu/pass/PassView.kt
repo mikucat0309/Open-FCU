@@ -36,7 +36,7 @@ import at.mikuc.openfcu.theme.OpenFCUTheme
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-fun NavGraphBuilder.passView() {
+fun NavGraphBuilder.addPassView() {
     composable(RootGraph.Pass.route) {
         PassView()
     }

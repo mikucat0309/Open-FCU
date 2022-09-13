@@ -71,42 +71,80 @@ fun CourseSearchView(viewModel: CourseSearchViewModel = hiltViewModel()) {
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
-            Row(modifier = Modifier.padding(top = 8.dp)) {
-                YearInputField(state, viewModel, Modifier.weight(1f))
-                SemesterInputField(state, viewModel, Modifier.weight(1f))
+            Row(modifier = Modifier.padding(top = 8.dp)) { YearInputField(
+                    year = state.year,
+                    onUpdate = { viewModel.updateYear(it) },
+                    modifier = Modifier.weight(1f)
+                )
+                SemesterInputField(
+                    semester = state.semester,
+                    onUpdate = { viewModel.updateSemester(it) },
+                    modifier = Modifier.weight(1f)
+                )
             }
             Divider(Modifier.fillMaxWidth().padding(top = 16.dp))
             Row(modifier = Modifier.padding(top = 8.dp)) {
-                CourseNameInputField(state, viewModel, Modifier.weight(1f))
-                TeacherNameInputField(state, viewModel, Modifier.weight(1f))
+                CourseNameInputField(
+                    courseName = state.name,
+                    onUpdate = { viewModel.updateCourseName(it) },
+                    modifier = Modifier.weight(1f)
+                )
+                TeacherNameInputField(
+                    teacher = state.teacher,
+                    onUpdate = { viewModel.updateTeacher(it) },
+                    modifier = Modifier.weight(1f)
+                )
             }
             Row(modifier = Modifier.padding(top = 8.dp)) {
-                CodeInputField(state, viewModel, Modifier.weight(2f))
-                CreditInputField(state, viewModel, Modifier.weight(1f))
+                CodeInputField(
+                    code = state.code,
+                    onUpdate = { viewModel.updateCode(it) },
+                    modifier = Modifier.weight(2f)
+                )
+                CreditInputField(
+                    credit = state.credit,
+                    onUpdate = { viewModel.updateCredit(it) },
+                    modifier = Modifier.weight(1f)
+                )
             }
             Row(modifier = Modifier.padding(top = 8.dp)) {
-                OpenerNameInputField(state, viewModel, Modifier.weight(2f))
-                AcceptStudentInputField(state, viewModel, Modifier.weight(1f))
+                OpenerNameInputField(
+                    openerName = state.openerName,
+                    onUpdate = { viewModel.updateOpenerName(it) },
+                    modifier = Modifier.weight(2f)
+                )
+                AcceptStudentInputField(
+                    openNum = state.openNum,
+                    onUpdate = { viewModel.updateOpenNum(it) },
+                    modifier = Modifier.weight(1f)
+                )
             }
             Row(modifier = Modifier.padding(top = 8.dp)) {
-                LocationInputField(state, viewModel, Modifier.weight(2f))
-                DayOfWeekInputField(state, viewModel, Modifier.weight(1f))
+                LocationInputField(
+                    location = state.location,
+                    onUpdate = { viewModel.updateLocation(it) },
+                    modifier = Modifier.weight(2f)
+                )
+                DayOfWeekInputField(
+                    day = state.day,
+                    onUpdate = { viewModel.updateDay(it) },
+                    modifier = Modifier.weight(1f)
+                )
             }
-            SectionInputField(state, viewModel)
+            SectionInputField(
+                sections = state.sections,
+                onUpdate = { viewModel.updateSections(it) }
+            )
         }
     }
 }
 
 @Composable
 private fun SectionInputField(
-    state: SearchFilter,
-    viewModel: CourseSearchViewModel
+    sections: Set<Int>,
+    onUpdate: (Set<Int>) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .padding(top = 8.dp)
-            .padding(horizontal = 4.dp)
-    ) {
+    Column(modifier = Modifier.padding(top = 8.dp, start = 4.dp, end = 4.dp)) {
         Text("節數")
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -120,8 +158,10 @@ private fun SectionInputField(
                 for (index in 1..7) {
                     SectionButton(
                         index = index,
-                        value = state.sections,
-                        update = { viewModel.state = state.copy(sections = it) },
+                        value = index in sections,
+                        onUpdate = {
+                            onUpdate(if (index in sections) sections - it else sections + it)
+                        },
                         Modifier.weight(1f)
                     )
                 }
@@ -130,8 +170,10 @@ private fun SectionInputField(
                 for (index in 8..14) {
                     SectionButton(
                         index = index,
-                        value = state.sections,
-                        update = { viewModel.state = state.copy(sections = it) },
+                        value = index in sections,
+                        onUpdate = {
+                            onUpdate(if (it in sections) sections - it else sections + it)
+                        },
                         Modifier.weight(1f)
                     )
                 }
@@ -142,151 +184,144 @@ private fun SectionInputField(
 
 @Composable
 private fun DayOfWeekInputField(
-    state: SearchFilter,
-    viewModel: CourseSearchViewModel,
+    day: Int?,
+    onUpdate: (Int?) -> Unit,
     modifier: Modifier
 ) {
     MyOptionalDropdownMenu(
         "星期",
         map = day2str,
-        value = state.day,
-        update = { viewModel.state = state.copy(day = it) },
+        value = day,
+        onUpdate = onUpdate,
         modifier = modifier.padding(horizontal = 4.dp)
     )
 }
 
 @Composable
 private fun LocationInputField(
-    state: SearchFilter,
-    viewModel: CourseSearchViewModel,
+    location: String,
+    onUpdate: (String) -> Unit,
     modifier: Modifier
 ) {
     MyTextInputField(
-        "上課地點",
-        state.location,
-        update = { viewModel.state = state.copy(location = it) },
+        label = "上課地點",
+        value = location,
+        onUpdate = onUpdate,
         modifier = modifier.padding(horizontal = 4.dp)
     )
 }
 
 @Composable
 private fun AcceptStudentInputField(
-    state: SearchFilter,
-    viewModel: CourseSearchViewModel,
+    openNum: Int?,
+    onUpdate: (Int?) -> Unit,
     modifier: Modifier
 ) {
     MyNumberInputField(
         label = "開放修課人數",
-        value = state.openNum,
-        update = {
-            if (it == null || it in 0..999) viewModel.state = state.copy(openNum = it)
-        },
-        modifier = modifier
-            .padding(horizontal = 4.dp)
+        value = openNum,
+        onUpdate = { if (it == null || it in 0..999) onUpdate(it) },
+        modifier = modifier.padding(horizontal = 4.dp)
     )
 }
 
 @Composable
 private fun OpenerNameInputField(
-    state: SearchFilter,
-    viewModel: CourseSearchViewModel,
+    openerName: String,
+    onUpdate: (String) -> Unit,
     modifier: Modifier
 ) {
     MyTextInputField(
         label = "開課單位名稱",
-        value = state.openerName,
-        update = { viewModel.state = state.copy(openerName = it) },
+        value = openerName,
+        onUpdate = onUpdate,
         modifier = modifier.padding(horizontal = 4.dp)
     )
 }
 
 @Composable
 private fun CreditInputField(
-    state: SearchFilter,
-    viewModel: CourseSearchViewModel,
+    credit: Int?,
+    onUpdate: (Int?) -> Unit,
     modifier: Modifier
 ) {
     MyOptionalDropdownMenu(
         label = "學分數",
         map = creditOptions,
-        value = state.credit,
-        update = { viewModel.state = state.copy(credit = it) },
-        modifier = modifier
-            .padding(horizontal = 4.dp)
+        value = credit,
+        onUpdate = onUpdate,
+        modifier = modifier.padding(horizontal = 4.dp)
     )
 }
 
 @Composable
 private fun CodeInputField(
-    state: SearchFilter,
-    viewModel: CourseSearchViewModel,
+    code: Int?,
+    onUpdate: (Int?) -> Unit,
     modifier: Modifier
 ) {
     MyNumberInputField(
         "選課代碼",
-        value = state.code,
-        update = {
-            if (it == null || it in 1..9999) viewModel.state = state.copy(code = it)
-        },
-        modifier = modifier
-            .padding(horizontal = 4.dp)
+        value = code,
+        onUpdate = { if (it == null || it in 1..9999) onUpdate(it) },
+        modifier = modifier.padding(horizontal = 4.dp)
     )
 }
 
 @Composable
 private fun TeacherNameInputField(
-    state: SearchFilter,
-    viewModel: CourseSearchViewModel,
+    teacher: String,
+    onUpdate: (String) -> Unit,
     modifier: Modifier
 ) {
     MyTextInputField(
         label = "教師名稱",
-        value = state.teacher,
-        update = { viewModel.state = state.copy(teacher = it) },
+        value = teacher,
+        onUpdate = onUpdate,
         modifier = modifier.padding(horizontal = 4.dp)
     )
 }
 
 @Composable
 private fun CourseNameInputField(
-    state: SearchFilter,
-    viewModel: CourseSearchViewModel,
+    courseName: String,
+    onUpdate: (String) -> Unit,
     modifier: Modifier
 ) {
     MyTextInputField(
         label = "科目名稱",
-        value = state.name,
-        update = { viewModel.state = state.copy(name = it) },
+        value = courseName,
+        onUpdate = onUpdate,
         modifier = modifier.padding(horizontal = 4.dp)
     )
 }
 
 @Composable
 private fun SemesterInputField(
-    state: SearchFilter,
-    viewModel: CourseSearchViewModel,
+    semester: Int,
+    onUpdate: (Int) -> Unit,
     modifier: Modifier
 ) {
     MyDropdownMenu(
         label = "學期",
         map = semesterOptions,
-        value = state.semester,
-        update = { viewModel.state = state.copy(semester = it) },
+        value = semester,
+        onUpdate = onUpdate,
         modifier = modifier.padding(horizontal = 4.dp)
     )
 }
 
 @Composable
 private fun YearInputField(
-    state: SearchFilter,
-    viewModel: CourseSearchViewModel,
+    year: Int,
+    onUpdate: (Int) -> Unit,
     modifier: Modifier
 ) {
     MyDropdownMenu(
         label = "學年度",
         map = yearOptions,
-        value = state.year,
-        update = { viewModel.state = state.copy(year = it) },
+        value = year,
+        onUpdate = onUpdate,
         modifier = modifier.padding(horizontal = 4.dp)
     )
 }
@@ -295,7 +330,7 @@ private fun YearInputField(
 private fun MyTextInputField(
     label: String,
     value: String?,
-    update: (String) -> Unit,
+    onUpdate: (String) -> Unit,
     modifier: Modifier = Modifier,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 ) {
@@ -305,7 +340,7 @@ private fun MyTextInputField(
         Text(label)
         OutlinedTextField(
             value = value ?: "",
-            onValueChange = { update(it) },
+            onValueChange = { onUpdate(it) },
             singleLine = true,
             keyboardOptions = keyboardOptions,
         )
@@ -316,13 +351,13 @@ private fun MyTextInputField(
 private fun MyNumberInputField(
     label: String,
     value: Int?,
-    update: (Int?) -> Unit,
+    onUpdate: (Int?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     MyTextInputField(
         label = label,
         value = value?.toString(10) ?: "",
-        update = { if (it.isDigitsOnly()) update(it.toIntOrNull()) },
+        onUpdate = { if (it.isDigitsOnly()) onUpdate(it.toIntOrNull()) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         modifier = modifier
     )
@@ -334,7 +369,7 @@ fun MyOptionalDropdownMenu(
     label: String,
     map: Map<Int, String>,
     value: Int?,
-    update: (Int?) -> Unit,
+    onUpdate: (Int?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -360,7 +395,7 @@ fun MyOptionalDropdownMenu(
             ) {
                 DropdownMenuItem(
                     onClick = {
-                        update(null)
+                        onUpdate(null)
                         expanded = false
                     }
                 ) {
@@ -369,7 +404,7 @@ fun MyOptionalDropdownMenu(
                 map.entries.forEach { entry ->
                     DropdownMenuItem(
                         onClick = {
-                            update(entry.key)
+                            onUpdate(entry.key)
                             expanded = false
                         }
                     ) {
@@ -387,7 +422,7 @@ fun MyDropdownMenu(
     label: String,
     map: Map<Int, String>,
     value: Int,
-    update: (Int) -> Unit,
+    onUpdate: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -399,7 +434,7 @@ fun MyDropdownMenu(
         ) {
             OutlinedTextField(
                 value = map[value]!!,
-                onValueChange = { },
+                onValueChange = {},
                 readOnly = true,
                 singleLine = true,
                 trailingIcon = {
@@ -414,7 +449,7 @@ fun MyDropdownMenu(
                 map.entries.forEach { entry ->
                     DropdownMenuItem(
                         onClick = {
-                            update(entry.key)
+                            onUpdate(entry.key)
                             expanded = false
                         }
                     ) {
@@ -429,32 +464,26 @@ fun MyDropdownMenu(
 @Preview(showBackground = true)
 @Composable
 fun CourseSearchPreview() {
-    val csvm = CourseSearchViewModel(
-        FcuCourseSearchRepository()
-    )
     OpenFCUTheme {
-        CourseSearchView(csvm)
+        CourseSearchView()
     }
 }
 
 @Composable
 fun SectionButton(
     index: Int,
-    value: Set<Int>,
-    update: (Set<Int>) -> Unit,
+    value: Boolean,
+    onUpdate: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val color = MaterialTheme.colors
-    val textColor = if (index in value) color.primary else color.onSurface.copy(alpha = 0.6f)
-    val buttonColor =
-        if (index in value) color.primary.copy(alpha = 0.2f) else color.surface
+    val textColor = if (value) color.primary else color.onSurface.copy(alpha = 0.6f)
+    val buttonColor = if (value) color.primary.copy(alpha = 0.2f) else color.surface
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .background(buttonColor)
-            .clickable(onClick = {
-                update(if (index in value) value.minusElement(index) else value.plusElement(index))
-            })
+            .clickable(onClick = { onUpdate(index) })
             .padding(4.dp)
     ) {
         Text(

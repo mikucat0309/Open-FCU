@@ -29,8 +29,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import at.mikuc.openfcu.main.RootGraph
 import at.mikuc.openfcu.theme.OpenFCUTheme
 import java.io.File
+
+fun NavGraphBuilder.addSettingView(viewModel: SettingViewModel) {
+    composable(RootGraph.Setting.route) {
+        SettingView(viewModel)
+    }
+}
 
 @Composable
 fun SettingView(viewModel: SettingViewModel = hiltViewModel()) {

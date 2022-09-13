@@ -15,11 +15,7 @@ fun MyTopBar(
 ) {
     val graph = ctrl.currentGraph()
     TopAppBar(
-        title = {
-            MyTitle(graph)
-        },
-        navigationIcon = {
-            MyNavigationIcon(ctrl, scope, scaffoldState)
-        },
+        title = { MyTitle(graph) },
+        navigationIcon = { MyNavigationIcon(ctrl, scope, scaffoldState) },
     )
 }

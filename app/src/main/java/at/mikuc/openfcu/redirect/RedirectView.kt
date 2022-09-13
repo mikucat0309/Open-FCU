@@ -27,7 +27,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import at.mikuc.openfcu.main.RootGraph
 import at.mikuc.openfcu.theme.OpenFCUTheme
+
+fun NavGraphBuilder.addRedirectView(viewModel: RedirectViewModel) {
+    composable(RootGraph.Redirect.route) {
+        RedirectView(viewModel)
+    }
+}
 
 @Composable
 fun RedirectView(viewModel: RedirectViewModel = hiltViewModel()) {

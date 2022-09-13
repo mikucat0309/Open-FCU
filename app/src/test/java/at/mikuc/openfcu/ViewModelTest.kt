@@ -199,7 +199,7 @@ internal class ViewModelTest : BehaviorSpec() {
                     coEvery { csRepo.search(any()) } returns listOf(course1, course1, course2)
                     Then("get course1") {
                         val vm = CourseSearchViewModel(csRepo)
-                        vm.state = filter
+                        vm.updateFilter(filter)
                         vm.search(dispatcher)
                         testCoroutineScheduler.advanceUntilIdle()
 

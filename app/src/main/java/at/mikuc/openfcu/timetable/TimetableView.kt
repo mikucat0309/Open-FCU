@@ -26,6 +26,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import at.mikuc.openfcu.main.RootGraph
 import at.mikuc.openfcu.theme.OpenFCUTheme
 
 private val SECTION_HEIGHT = 90.dp
@@ -61,6 +64,12 @@ private val days = listOf(
     "六",
     "日",
 )
+
+fun NavGraphBuilder.addTimetableView() {
+    composable(RootGraph.Timetable.route) {
+        TimetableView()
+    }
+}
 
 @Composable
 fun TimetableView(viewModel: TimetableViewModel = hiltViewModel()) {
