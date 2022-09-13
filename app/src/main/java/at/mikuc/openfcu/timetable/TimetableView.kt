@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import at.mikuc.openfcu.theme.OpenFCUTheme
 
 private val SECTION_HEIGHT = 90.dp
@@ -62,7 +63,7 @@ private val days = listOf(
 )
 
 @Composable
-fun TimetableView(viewModel: TimetableViewModel) {
+fun TimetableView(viewModel: TimetableViewModel = hiltViewModel()) {
     LaunchedEffect(Unit) {
         viewModel.fetchTimetable()
     }

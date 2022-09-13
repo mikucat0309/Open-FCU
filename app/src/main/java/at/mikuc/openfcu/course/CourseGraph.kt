@@ -5,7 +5,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import at.mikuc.openfcu.course.search.CourseSearchResultView
 import at.mikuc.openfcu.course.search.CourseSearchView
-import at.mikuc.openfcu.course.search.CourseSearchViewModel
 import at.mikuc.openfcu.main.Graph
 import at.mikuc.openfcu.main.RootGraph
 import at.mikuc.openfcu.util.Route
@@ -27,16 +26,16 @@ sealed class CourseGraph(route: Route) : Graph {
     }
 }
 
-fun NavGraphBuilder.courseGraph(viewModel: CourseSearchViewModel) {
+fun NavGraphBuilder.courseGraph() {
     navigation(
         startDestination = CourseGraph.Search.route,
         route = RootGraph.Course.route
     ) {
         composable(CourseGraph.Search.route) {
-            CourseSearchView(viewModel)
+            CourseSearchView()
         }
         composable(CourseGraph.Result.route) {
-            CourseSearchResultView(viewModel)
+            CourseSearchResultView()
         }
         composable(CourseGraph.Detail.route) {
         }

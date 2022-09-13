@@ -17,13 +17,14 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.hilt.navigation.compose.hiltViewModel
 import at.mikuc.openfcu.setting.UserPreferencesRepository
 import at.mikuc.openfcu.theme.OpenFCUTheme
 import io.github.g0dkar.qrcode.QRCode
 import java.io.File
 
 @Composable
-fun QRCodeView(viewModel: QrcodeViewModel) {
+fun QRCodeView(viewModel: QrcodeViewModel = hiltViewModel()) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier

@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import at.mikuc.openfcu.course.Course
 import at.mikuc.openfcu.course.Opener
 import at.mikuc.openfcu.course.Period
@@ -28,7 +29,7 @@ import at.mikuc.openfcu.theme.OpenFCUTheme
 import at.mikuc.openfcu.util.day2str
 
 @Composable
-fun CourseSearchResultView(viewModel: CourseSearchViewModel) {
+fun CourseSearchResultView(viewModel: CourseSearchViewModel = hiltViewModel()) {
     CourseLazyColumnView(courses = viewModel.result)
 }
 

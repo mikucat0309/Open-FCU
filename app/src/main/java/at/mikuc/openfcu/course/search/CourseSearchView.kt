@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
+import androidx.hilt.navigation.compose.hiltViewModel
 import at.mikuc.openfcu.theme.OpenFCUTheme
 import at.mikuc.openfcu.util.day2str
 
@@ -49,7 +50,7 @@ private val semesterOptions = mapOf(
 private val creditOptions = (0..9).associateWith { it.toString() }
 
 @Composable
-fun CourseSearchView(viewModel: CourseSearchViewModel) {
+fun CourseSearchView(viewModel: CourseSearchViewModel = hiltViewModel()) {
     val state = viewModel.state
     Column {
         Box(

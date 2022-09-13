@@ -26,24 +26,30 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.hilt.navigation.compose.hiltViewModel
-import at.mikuc.openfcu.setting.UserPreferencesRepository
 import at.mikuc.openfcu.theme.OpenFCUTheme
-import java.io.File
 
 @Composable
 fun RedirectView(viewModel: RedirectViewModel = hiltViewModel()) {
-    val state = viewModel.state
+    val items = viewModel.state.redirectItems
+    val onClick: (RedirectItem) -> Unit = { viewModel.fetchRedirectToken(it.service) }
+    RedirectView2(items, onClick)
+}
+
+@Composable
+private fun RedirectView2(
+    items: List<RedirectItem>,
+    onClick: (RedirectItem) -> Unit
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .padding(vertical = 16.dp)
             .fillMaxSize()
     ) {
-        state.redirectItems.forEach {
-            RedirectItem(title = it.title, icon = it.icon) {
-                viewModel.fetchRedirectToken(it.service)
+        items.forEach {
+            RedirectRow(title = it.title, icon = it.icon) {
+                onClick(it)
             }
         }
     }
@@ -53,19 +59,18 @@ fun RedirectView(viewModel: RedirectViewModel = hiltViewModel()) {
 @Composable
 fun RedirectPreview() {
     OpenFCUTheme {
-        val pref = UserPreferencesRepository(
-            PreferenceDataStoreFactory.create {
-                return@create File("")
-            }
-        )
-        RedirectView(
-            RedirectViewModel(pref, FcuSsoRepository())
-        )
+        RedirectView2(
+            items = listOf(
+                RedirectItem("快速跳轉", ""),
+                RedirectItem("快速跳轉", ""),
+                RedirectItem("快速跳轉", ""),
+            )
+        ) {}
     }
 }
 
 @Composable
-fun RedirectItem(
+fun RedirectRow(
     title: String,
     icon: ImageVector,
     onClick: () -> Unit,
@@ -92,12 +97,12 @@ fun RedirectItem(
 
 @Preview(showBackground = true)
 @Composable
-fun RedirectCardPreview() {
+fun RedirectRowPreview() {
     OpenFCUTheme {
         Column {
-            RedirectItem("iLearn 2.0", icon = Icons.Outlined.Public) {}
-            RedirectItem("MyFCU", icon = Icons.Outlined.Public) {}
-            RedirectItem("Add custom target", icon = Icons.Outlined.Add) {}
+            RedirectRow("iLearn 2.0", icon = Icons.Outlined.Public) {}
+            RedirectRow("MyFCU", icon = Icons.Outlined.Public) {}
+            RedirectRow("Add custom target", icon = Icons.Outlined.Add) {}
         }
     }
 }

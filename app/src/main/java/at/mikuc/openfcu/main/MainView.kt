@@ -9,33 +9,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import at.mikuc.openfcu.course.courseGraph
-import at.mikuc.openfcu.course.search.CourseSearchViewModel
 import at.mikuc.openfcu.pass.passView
 import at.mikuc.openfcu.qrcode.QRCodeView
-import at.mikuc.openfcu.qrcode.QrcodeViewModel
 import at.mikuc.openfcu.redirect.RedirectView
-import at.mikuc.openfcu.redirect.RedirectViewModel
 import at.mikuc.openfcu.setting.SettingView
-import at.mikuc.openfcu.setting.SettingViewModel
 import at.mikuc.openfcu.theme.OpenFCUTheme
 import at.mikuc.openfcu.timetable.TimetableView
-import at.mikuc.openfcu.timetable.TimetableViewModel
 
 @Composable
-fun MainView(
-    svm: SettingViewModel = hiltViewModel(),
-    rvm: RedirectViewModel = hiltViewModel(),
-    qvm: QrcodeViewModel = hiltViewModel(),
-    csvm: CourseSearchViewModel = hiltViewModel(),
-    ttvm: TimetableViewModel = hiltViewModel(),
-    startDest: String,
-) {
+fun MainView(startDest: String) {
     val ctrl = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
@@ -44,7 +31,7 @@ fun MainView(
         topBar = { MyTopBar(ctrl, scope, scaffoldState) },
         drawerContent = { MyDrawer(ctrl, scope, scaffoldState) },
         floatingActionButton = {
-            MyFAB(ctrl, csvm)
+            MyFAB(ctrl)
         }
     ) {
         Box(
@@ -56,38 +43,38 @@ fun MainView(
                 navController = ctrl,
                 startDestination = startDest,
             ) {
-                settingView(svm)
-                redirectView(rvm)
-                qrcodeView(qvm)
-                courseGraph(csvm)
-                timetableView(ttvm)
+                settingView()
+                redirectView()
+                qrcodeView()
+                courseGraph()
+                timetableView()
                 passView()
             }
         }
     }
 }
 
-private fun NavGraphBuilder.qrcodeView(qvm: QrcodeViewModel) {
+private fun NavGraphBuilder.qrcodeView() {
     composable(RootGraph.QrCode.route) {
-        QRCodeView(qvm)
+        QRCodeView()
     }
 }
 
-private fun NavGraphBuilder.redirectView(rvm: RedirectViewModel) {
+private fun NavGraphBuilder.redirectView() {
     composable(RootGraph.Redirect.route) {
-        RedirectView(rvm)
+        RedirectView()
     }
 }
 
-private fun NavGraphBuilder.settingView(svm: SettingViewModel) {
+private fun NavGraphBuilder.settingView() {
     composable(RootGraph.Setting.route) {
-        SettingView(svm)
+        SettingView()
     }
 }
 
-private fun NavGraphBuilder.timetableView(ttvm: TimetableViewModel) {
+private fun NavGraphBuilder.timetableView() {
     composable(RootGraph.Timetable.route) {
-        TimetableView(ttvm)
+        TimetableView()
     }
 }
 
