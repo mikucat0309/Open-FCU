@@ -8,10 +8,9 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("plugin.serialization") version "1.7.10"
-    kotlin("kapt")
-    id("dagger.hilt.android.plugin")
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
     id("io.gitlab.arturbosch.detekt") version "1.21.0"
+    id("com.google.devtools.ksp") version "1.7.10-1.0.6"
 }
 
 android {
@@ -73,10 +72,13 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-}
-
-hilt {
-    enableAggregatingTask = true
+    applicationVariants.all {
+        kotlin.sourceSets {
+            getByName(name) {
+                kotlin.srcDir("build/generated/ksp/$name/kotlin")
+            }
+        }
+    }
 }
 
 configure<KtlintExtension> {
@@ -85,12 +87,9 @@ configure<KtlintExtension> {
 }
 
 detekt {
-    buildUponDefaultConfig = true // preconfigure defaults
-    allRules = false // activate all available (even unstable) rules.
-    // point to your custom config defining rules to run, overwriting default behavior
+    buildUponDefaultConfig = true
+    allRules = false
     config = files("$projectDir/config/detekt-config.yml")
-    // a way of suppressing issues before introducing detekt
-//    baseline = file("$projectDir/config/baseline.xml")
 }
 
 tasks.withType<Detekt>().configureEach {
@@ -101,17 +100,10 @@ tasks.withType<DetektCreateBaselineTask>().configureEach {
     jvmTarget = "1.8"
 }
 
-val composeVersion = "1.3.0-beta02"
-val ktorVersion = "2.1.1"
-val lifecycleVersion = "2.5.1"
-val navVersion = "2.5.2"
-val hiltVersion = "2.43.2"
-val coroutineVersion = "1.6.4"
-val kotestVersion = "5.4.2"
-val mockkVersion = "1.12.7"
-
 dependencies {
     implementation("androidx.core:core-ktx:1.9.0")
+
+    val composeVersion = "1.2.1"
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.runtime:runtime:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
@@ -120,18 +112,25 @@ dependencies {
     implementation("androidx.compose.material:material-icons-core:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.animation:animation:$composeVersion")
-
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
     implementation("androidx.activity:activity-compose:1.5.1")
 
-    implementation("androidx.navigation:navigation-compose:$navVersion")
-    api("androidx.navigation:navigation-fragment-ktx:$navVersion")
+    val lifecycleVersion = "2.5.1"
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+
+    // Navigation
+    val navVersion = "1.7.21-beta"
+    implementation("io.github.raamcosta.compose-destinations:core:$navVersion")
+    ksp("io.github.raamcosta.compose-destinations:ksp:$navVersion")
 
     // DI
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
-    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    val koinVersion = "3.2.1"
+    implementation("io.insert-koin:koin-core:$koinVersion")
+    implementation("io.insert-koin:koin-android:$koinVersion")
+    implementation("io.insert-koin:koin-androidx-compose:3.2.0")
+    implementation("io.insert-koin:koin-androidx-navigation:$koinVersion")
+    testImplementation("io.insert-koin:koin-test:$koinVersion")
+    testImplementation("io.insert-koin:koin-test-junit5:$koinVersion")
 
     // Preference
     implementation("androidx.datastore:datastore-preferences:1.0.0")
@@ -140,26 +139,29 @@ dependencies {
     implementation("io.github.g0dkar:qrcode-kotlin-android:3.2.0")
 
     // Coroutine
+    val coroutineVersion = "1.6.4"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineVersion")
 
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
 
     // HTTP Client
+    val ktorVersion = "2.1.1"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 
-    // Test
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.10")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineVersion")
-
     // Unit Test
+    val kotestVersion = "5.4.2"
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("io.kotest.extensions:kotest-extensions-koin:1.1.0")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    testImplementation("org.jetbrains.kotlin:kotlin-reflect:1.7.10")
 
     // Mock
+    val mockkVersion = "1.13.1"
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.mockk:mockk-agent-jvm:$mockkVersion")
 }
