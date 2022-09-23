@@ -17,7 +17,7 @@ data class SSORequest(
 
 @Serializable
 data class SSOResponse(
-    @SerialName("Message") val message: String = "",
+    @SerialName("Message") val message: String? = null,
     @SerialName("RedirectService") val redirectSsoService: String,
     @SerialName("RedirectUrl")
     @Serializable(with = UriAsStringSerializer::class)
