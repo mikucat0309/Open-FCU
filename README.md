@@ -11,14 +11,16 @@
 
 歡迎許願、提 issue 或 PR ，也歡迎找我聊天（？）
 
-## Preview
+## UI Design
 
 <p>
-  <img src="img/redirect.png" width="200" />
-  <img src="img/course_search.png" width="200" />
-  <img src="img/timetable.png" width="200" />
-  <img src="img/qrcode.png" width="200" />
+  <img src="img/home.jpg" width="200" />
+  <img src="img/course_search.jpg" width="200" />
+  <img src="img/daily_timetable.jpg" width="200" />
+  <img src="img/qrcode.jpg" width="200" />
 </p>
+
+Figma: [https://www.figma.com/file/aMSNSXjII1Tk0ubtaKlWWg/Open-FCU](https://www.figma.com/file/aMSNSXjII1Tk0ubtaKlWWg/Open-FCU)
 
 ## Feature Planning
 
@@ -35,13 +37,12 @@
 
 ### 0.2
 
-- [ ] (擱置) 快速課堂簽到
+- [ ] 快速課堂簽到
 - [x] 快速 PASS
 - [x] 顯示 QRCode
 
-暑假沒課讓我簽到，沒法模擬  
+~~暑假沒課讓我簽到，沒法模擬~~  
 ~~PASS 等開學再看情況決定是否實裝~~
-看來學校執迷不悟，預計在 0.6.0 實裝
 
 ### 0.3
 
@@ -62,6 +63,15 @@
 - [x] 捷徑 (Shortcut)
 
 按一下開啟 MyFCU 或 iLearn 2.0
+
+### 0.6
+
+- [x] 假 PASS
+
+### 0.7
+
+- [ ] 重新設計 UI
+- [ ] 課堂簽到
 
 ### 1.0
 
