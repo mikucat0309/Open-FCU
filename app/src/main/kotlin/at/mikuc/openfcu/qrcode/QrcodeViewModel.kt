@@ -10,12 +10,11 @@ import at.mikuc.openfcu.setting.UserPreferenceRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.core.component.KoinComponent
 
 class QrcodeViewModel(
     private val pref: UserPreferenceRepository,
     private val repo: FcuRepository,
-) : ViewModel(), KoinComponent {
+) : ViewModel() {
 
     var state by mutableStateOf(QrcodeUiState())
         private set
