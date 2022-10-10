@@ -112,7 +112,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-core:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.animation:animation:$composeVersion")
-    implementation("androidx.activity:activity-compose:1.5.1")
+    implementation("androidx.activity:activity-compose:1.6.0")
 
     val lifecycleVersion = "2.5.1"
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
@@ -124,10 +124,10 @@ dependencies {
     ksp("io.github.raamcosta.compose-destinations:ksp:$navVersion")
 
     // DI
-    val koinVersion = "3.2.1"
+    val koinVersion = "3.2.2"
     implementation("io.insert-koin:koin-core:$koinVersion")
     implementation("io.insert-koin:koin-android:$koinVersion")
-    implementation("io.insert-koin:koin-androidx-compose:3.2.0")
+    implementation("io.insert-koin:koin-androidx-compose:3.2.1")
     implementation("io.insert-koin:koin-androidx-navigation:$koinVersion")
     testImplementation("io.insert-koin:koin-test:$koinVersion")
     testImplementation("io.insert-koin:koin-test-junit5:$koinVersion")
@@ -161,7 +161,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-reflect:1.7.10")
 
     // Mock
-    val mockkVersion = "1.13.1"
+    val mockkVersion = "1.13.2"
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.mockk:mockk-agent-jvm:$mockkVersion")
 }
