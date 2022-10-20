@@ -22,6 +22,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
+import androidx.navigation.compose.rememberNavController
 import at.mikuc.openfcu.destinations.CourseSearchResultViewDestination
 import at.mikuc.openfcu.theme.MixMaterialTheme
 import at.mikuc.openfcu.util.LocalNavHostController
@@ -44,7 +46,6 @@ import at.mikuc.openfcu.util.day2str
 import at.mikuc.openfcu.util.getActivityViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.navigate
-import org.koin.androidx.compose.getViewModel
 import java.util.*
 
 private val yearOptions = (105..111).associateWith { it.toString() }
@@ -227,7 +228,11 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
 @Composable
 fun CourseSearchPreview() {
     MixMaterialTheme {
-        PureCourseSearchView(onSubmit = {})
+        CompositionLocalProvider(
+            LocalNavHostController provides rememberNavController()
+        ) {
+            PureCourseSearchView(onSubmit = {})
+        }
     }
 }
 
