@@ -2,6 +2,7 @@ package at.mikuc.openfcu.main
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.OpenInBrowser
 import androidx.compose.material.icons.outlined.QrCode
 import androidx.compose.material.icons.outlined.Search
@@ -18,7 +19,8 @@ import at.mikuc.openfcu.destinations.DirectionDestination
 import at.mikuc.openfcu.destinations.QRCodeViewDestination
 import at.mikuc.openfcu.destinations.RedirectViewDestination
 import at.mikuc.openfcu.destinations.SettingViewDestination
-import at.mikuc.openfcu.destinations.TimetableViewDestination
+import at.mikuc.openfcu.destinations.DailyTimetableViewDestination
+import at.mikuc.openfcu.destinations.HomeViewDestination
 import at.mikuc.openfcu.util.LocalNavHostController
 import at.mikuc.openfcu.util.currentOrThrow
 
@@ -38,6 +40,12 @@ sealed class MainRoute(
     open fun floatingActionButton() {
     }
 
+    object Home : MainRoute(
+        HomeViewDestination,
+        Icons.Outlined.Home,
+        "首頁",
+    )
+
     object Redirect : MainRoute(
         RedirectViewDestination,
         Icons.Outlined.OpenInBrowser,
@@ -48,12 +56,7 @@ sealed class MainRoute(
         CourseSearchViewDestination,
         Icons.Outlined.Search,
         "課程查詢",
-    ) {
-        @Composable
-        override fun floatingActionButton() {
-            CourseSearchFAB()
-        }
-    }
+    )
 
     object CourseResult : MainRoute(
         CourseSearchResultViewDestination,
@@ -68,7 +71,7 @@ sealed class MainRoute(
     )
 
     object Timetable : MainRoute(
-        TimetableViewDestination,
+        DailyTimetableViewDestination,
         Icons.Outlined.CalendarMonth,
         "課表",
     )
@@ -84,10 +87,11 @@ val NavHostController.mainRoute: MainRoute?
     @Composable get() = appCurrentDestinationAsState().value?.toMainRoute()
 
 fun Destination.toMainRoute(): MainRoute = when (this) {
+    HomeViewDestination -> MainRoute.Home
     CourseSearchViewDestination -> MainRoute.Course
     CourseSearchResultViewDestination -> MainRoute.CourseResult
     QRCodeViewDestination -> MainRoute.QrCode
     RedirectViewDestination -> MainRoute.Redirect
     SettingViewDestination -> MainRoute.Setting
-    TimetableViewDestination -> MainRoute.Timetable
+    DailyTimetableViewDestination -> MainRoute.Timetable
 }

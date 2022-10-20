@@ -66,8 +66,7 @@ internal class CourseSearchViewModelTest : BaseTest() {
                     Then("get course1") {
                         coEvery { repo.search(any()) } returns listOf(course1, course1, course2)
                         val vm = CourseSearchViewModel(repo)
-                        vm.updateFilter(filter)
-                        vm.search(dispatcher)
+                        vm.search(filter, dispatcher)
                         testCoroutineScheduler.advanceUntilIdle()
 
                         coVerify(exactly = 1) { repo.search(any()) }

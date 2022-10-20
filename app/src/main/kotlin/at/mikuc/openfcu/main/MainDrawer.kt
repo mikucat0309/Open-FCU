@@ -19,7 +19,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,8 +29,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import at.mikuc.openfcu.appCurrentDestinationAsState
-import at.mikuc.openfcu.theme.OpenFCUTheme
+import at.mikuc.openfcu.theme.M3
+import at.mikuc.openfcu.theme.MaterialTheme3
+import at.mikuc.openfcu.theme.MixMaterialTheme
 import at.mikuc.openfcu.util.LocalNavHostController
 import at.mikuc.openfcu.util.currentOrThrow
 import com.ramcosta.composedestinations.navigation.navigate
@@ -38,7 +43,6 @@ import kotlinx.coroutines.launch
 fun MainDrawer(
     appRoute: Array<MainRoute>,
     systemRoute: Array<MainRoute>,
-    scaffoldState: ScaffoldState = LocalScaffoldState.currentOrThrow,
 ) {
     Column(
         modifier = Modifier
@@ -55,15 +59,37 @@ fun MainDrawer(
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
         )
-        DrawerButtonList(appRoute, scaffoldState)
+        DrawerButtonList(appRoute)
         Divider(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
         )
-        DrawerButtonList(systemRoute, scaffoldState)
+        DrawerButtonList(systemRoute)
     }
 }
+
+@Preview(showBackground = true, widthDp = 328, heightDp = 640)
+@Composable
+private fun MainDrawerPreview() {
+    val appRoute = arrayOf(
+        MainRoute.Home,
+        MainRoute.Redirect,
+        MainRoute.Timetable,
+    )
+    val systemRoute = arrayOf<MainRoute>(
+        MainRoute.Setting
+    )
+    MixMaterialTheme {
+        CompositionLocalProvider(
+            LocalScaffoldState provides rememberScaffoldState(),
+            LocalNavHostController provides rememberNavController()
+        ) {
+            MainDrawer(appRoute, systemRoute)
+        }
+    }
+}
+
 
 @Composable
 private fun DrawerButtonList(
@@ -93,10 +119,10 @@ fun DrawerButton(
     isSelected: Boolean,
     onClick: () -> Unit,
 ) {
-    val colors = MaterialTheme.colors
+    val colors = MaterialTheme3.colorScheme
     val imageAlpha = if (isSelected) 1f else 0.6f
-    val textIconColor = if (isSelected) colors.primary else colors.onSurface.copy(alpha = 0.8f)
-    val backgroundColor = if (isSelected) colors.primary.copy(alpha = 0.1f) else colors.surface
+    val textIconColor = if (isSelected) colors.primary else colors.onSurface
+    val backgroundColor = if (isSelected) M3.Light.surface5 else colors.surface
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -125,10 +151,10 @@ fun DrawerButton(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, widthDp = 328)
 @Composable
 fun DrawerButtonPreview() {
-    OpenFCUTheme {
+    MixMaterialTheme {
         Column {
             DrawerButton(
                 text = "Selected",

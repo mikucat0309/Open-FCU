@@ -27,12 +27,12 @@ class TimetableViewModelTest : BaseTest() {
                 val vm = TimetableViewModel(pref, repo)
                 Then("login failed") {
                     coEvery { repo.fetchTimetable(any()) } returns null
-                    val initialState = vm.state
+                    val initialState = vm.sections
                     vm.fetchTimetable(dispatcher)
                     testCoroutineScheduler.advanceUntilIdle()
 
                     coVerify(exactly = 1) { repo.fetchTimetable(any()) }
-                    vm.state shouldBe initialState
+                    vm.sections shouldBe initialState
                 }
                 Then("login succeed and received timetable") {
                     val expectedSections = listOf(
@@ -51,7 +51,7 @@ class TimetableViewModelTest : BaseTest() {
                     testCoroutineScheduler.advanceUntilIdle()
 
                     coVerify(exactly = 1) { repo.fetchTimetable(any()) }
-                    vm.state.sections shouldBe expectedSections
+                    vm.sections.sections shouldBe expectedSections
                 }
             }
         }

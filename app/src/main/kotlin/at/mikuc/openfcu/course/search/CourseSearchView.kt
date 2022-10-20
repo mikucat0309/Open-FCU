@@ -36,10 +36,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
-import at.mikuc.openfcu.theme.OpenFCUTheme
+import at.mikuc.openfcu.destinations.CourseSearchResultViewDestination
+import at.mikuc.openfcu.theme.MixMaterialTheme
+import at.mikuc.openfcu.util.LocalNavHostController
+import at.mikuc.openfcu.util.currentOrThrow
 import at.mikuc.openfcu.util.day2str
 import at.mikuc.openfcu.util.getActivityViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.navigate
+import org.koin.androidx.compose.getViewModel
+import java.util.*
 
 private val yearOptions = (105..111).associateWith { it.toString() }
 private val semesterOptions = mapOf(
@@ -50,100 +56,178 @@ private val semesterOptions = mapOf(
 )
 private val creditOptions = (0..9).associateWith { it.toString() }
 
-@Suppress("LongMethod")
 @Destination
 @Composable
 fun CourseSearchView(viewModel: CourseSearchViewModel = getActivityViewModel()) {
-    val state = viewModel.state
-    Column {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Yellow.copy(alpha = 0.4f))
-                .padding(4.dp)
-        ) {
-            Text(
-                text = "此功能資料來源為學校課程檢索 API，故科目名稱、教師名稱、選課代碼、星期、節次必須至少選擇一項",
-                style = MaterialTheme.typography.body1
-            )
-        }
-        Column(
-            horizontalAlignment = Alignment.Start,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
-        ) {
-            Row(modifier = Modifier.padding(top = 8.dp)) {
-                YearInputField(
-                    year = state.year,
-                    onUpdate = { viewModel.updateYear(it) },
-                    modifier = Modifier.weight(1f)
-                )
-                SemesterInputField(
-                    semester = state.semester,
-                    onUpdate = { viewModel.updateSemester(it) },
-                    modifier = Modifier.weight(1f)
-                )
-            }
-            Divider(
-                Modifier
+    PureCourseSearchView(onSubmit = { viewModel.search(it) })
+}
+
+@Suppress("LongMethod")
+@Composable
+fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
+
+    var year by remember { mutableStateOf(111) }
+    var semester by remember { mutableStateOf(1) }
+    var courseName by remember { mutableStateOf("") }
+    var teacherName by remember { mutableStateOf("") }
+    var code by remember { mutableStateOf<Int?>(null) }
+    var credit by remember { mutableStateOf<Int?>(null) }
+    var openerName by remember { mutableStateOf("") }
+    var openNum by remember { mutableStateOf<Int?>(null) }
+    var location by remember { mutableStateOf("") }
+    var day by remember { mutableStateOf<Int?>(null) }
+    var sections by remember { mutableStateOf(emptySet<Int>()) }
+
+    Box(
+        Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomEnd
+    ) {
+        Column(Modifier.fillMaxWidth()) {
+            Box(
+                modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp)
-            )
-            Row(modifier = Modifier.padding(top = 8.dp)) {
-                CourseNameInputField(
-                    courseName = state.name,
-                    onUpdate = { viewModel.updateCourseName(it) },
-                    modifier = Modifier.weight(1f)
-                )
-                TeacherNameInputField(
-                    teacher = state.teacher,
-                    onUpdate = { viewModel.updateTeacher(it) },
-                    modifier = Modifier.weight(1f)
+                    .background(Color.Yellow.copy(alpha = 0.4f))
+                    .padding(4.dp)
+            ) {
+                Text(
+                    text = "此功能資料來源為學校課程檢索 API，故科目名稱、教師名稱、選課代碼、星期、節次必須至少選擇一項",
+                    style = MaterialTheme.typography.subtitle2
                 )
             }
-            Row(modifier = Modifier.padding(top = 8.dp)) {
-                CodeInputField(
-                    code = state.code,
-                    onUpdate = { viewModel.updateCode(it) },
-                    modifier = Modifier.weight(2f)
+            Column(
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState()),
+            ) {
+                Row(modifier = Modifier.padding(top = 8.dp)) {
+                    val modifier = Modifier
+                        .weight(1.0f)
+                        .padding(horizontal = 4.dp)
+                    MyDropdownMenu(
+                        label = "學年度",
+                        map = yearOptions,
+                        value = year,
+                        onUpdate = { year = it },
+                        modifier = modifier
+                    )
+                    MyDropdownMenu(
+                        label = "學期",
+                        map = semesterOptions,
+                        value = semester,
+                        onUpdate = { semester = it },
+                        modifier = modifier.padding(horizontal = 4.dp)
+                    )
+                }
+                Divider(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
                 )
-                CreditInputField(
-                    credit = state.credit,
-                    onUpdate = { viewModel.updateCredit(it) },
-                    modifier = Modifier.weight(1f)
+                Row(modifier = Modifier.padding(top = 8.dp)) {
+                    val modifier = Modifier
+                        .weight(1.0f)
+                        .padding(horizontal = 4.dp)
+                    MyTextInputField(
+                        label = "科目名稱",
+                        value = courseName,
+                        onUpdate = { courseName = it },
+                        modifier = modifier
+                    )
+                    MyTextInputField(
+                        label = "教師名稱",
+                        value = teacherName,
+                        onUpdate = { teacherName = it },
+                        modifier = modifier
+                    )
+                }
+                Row(modifier = Modifier.padding(top = 8.dp)) {
+                    val modifier = Modifier
+                        .weight(1.0f)
+                        .padding(horizontal = 4.dp)
+                    MyNumberInputField(
+                        "選課代碼",
+                        value = code,
+                        onUpdate = { if (it == null || it in 1..9999) code = it },
+                        modifier = modifier
+                    )
+                    MyOptionalDropdownMenu(
+                        label = "學分數",
+                        map = creditOptions,
+                        value = credit,
+                        onUpdate = { credit = it },
+                        modifier = modifier
+                    )
+                }
+                Row(modifier = Modifier.padding(top = 8.dp)) {
+                    val modifier = Modifier
+                        .weight(1.0f)
+                        .padding(horizontal = 4.dp)
+                    MyTextInputField(
+                        label = "開課單位名稱",
+                        value = openerName,
+                        onUpdate = { openerName = it },
+                        modifier = modifier
+                    )
+                    MyNumberInputField(
+                        label = "開放修課人數",
+                        value = openNum,
+                        onUpdate = { if (it == null || it in 0..999) openNum = it },
+                        modifier = modifier
+                    )
+                }
+                Row(modifier = Modifier.padding(top = 8.dp)) {
+                    val modifier = Modifier
+                        .weight(1.0f)
+                        .padding(horizontal = 4.dp)
+                    MyTextInputField(
+                        label = "上課地點",
+                        value = location,
+                        onUpdate = { location = it },
+                        modifier = modifier
+                    )
+                    MyOptionalDropdownMenu(
+                        "星期",
+                        map = day2str,
+                        value = day,
+                        onUpdate = { day = it },
+                        modifier = modifier
+                    )
+                }
+                SectionInputField(
+                    sections = sections,
+                    onUpdate = { sections = it }
                 )
             }
-            Row(modifier = Modifier.padding(top = 8.dp)) {
-                OpenerNameInputField(
-                    openerName = state.openerName,
-                    onUpdate = { viewModel.updateOpenerName(it) },
-                    modifier = Modifier.weight(2f)
-                )
-                AcceptStudentInputField(
-                    openNum = state.openNum,
-                    onUpdate = { viewModel.updateOpenNum(it) },
-                    modifier = Modifier.weight(1f)
-                )
-            }
-            Row(modifier = Modifier.padding(top = 8.dp)) {
-                LocationInputField(
-                    location = state.location,
-                    onUpdate = { viewModel.updateLocation(it) },
-                    modifier = Modifier.weight(2f)
-                )
-                DayOfWeekInputField(
-                    day = state.day,
-                    onUpdate = { viewModel.updateDay(it) },
-                    modifier = Modifier.weight(1f)
-                )
-            }
-            SectionInputField(
-                sections = state.sections,
-                onUpdate = { viewModel.updateSections(it) }
-            )
         }
+        val controller = LocalNavHostController.currentOrThrow
+        CourseSearchFAB {
+            val filter = SearchFilter(
+                year = year,
+                semester = semester,
+                name = courseName,
+                code = code,
+                teacher = teacherName,
+                day = day,
+                sections = sections,
+                location = location,
+                credit = credit,
+                openerName = openerName,
+                openNum = openNum
+            )
+            if (filter.isValid())
+                onSubmit(filter)
+            controller.navigate(CourseSearchResultViewDestination)
+        }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 360, heightDp = 584)
+@Composable
+fun CourseSearchPreview() {
+    MixMaterialTheme {
+        PureCourseSearchView(onSubmit = {})
     }
 }
 
@@ -188,150 +272,6 @@ private fun SectionInputField(
             }
         }
     }
-}
-
-@Composable
-private fun DayOfWeekInputField(
-    day: Int?,
-    onUpdate: (Int?) -> Unit,
-    modifier: Modifier
-) {
-    MyOptionalDropdownMenu(
-        "星期",
-        map = day2str,
-        value = day,
-        onUpdate = onUpdate,
-        modifier = modifier.padding(horizontal = 4.dp)
-    )
-}
-
-@Composable
-private fun LocationInputField(
-    location: String,
-    onUpdate: (String) -> Unit,
-    modifier: Modifier
-) {
-    MyTextInputField(
-        label = "上課地點",
-        value = location,
-        onUpdate = onUpdate,
-        modifier = modifier.padding(horizontal = 4.dp)
-    )
-}
-
-@Composable
-private fun AcceptStudentInputField(
-    openNum: Int?,
-    onUpdate: (Int?) -> Unit,
-    modifier: Modifier
-) {
-    MyNumberInputField(
-        label = "開放修課人數",
-        value = openNum,
-        onUpdate = { if (it == null || it in 0..999) onUpdate(it) },
-        modifier = modifier.padding(horizontal = 4.dp)
-    )
-}
-
-@Composable
-private fun OpenerNameInputField(
-    openerName: String,
-    onUpdate: (String) -> Unit,
-    modifier: Modifier
-) {
-    MyTextInputField(
-        label = "開課單位名稱",
-        value = openerName,
-        onUpdate = onUpdate,
-        modifier = modifier.padding(horizontal = 4.dp)
-    )
-}
-
-@Composable
-private fun CreditInputField(
-    credit: Int?,
-    onUpdate: (Int?) -> Unit,
-    modifier: Modifier
-) {
-    MyOptionalDropdownMenu(
-        label = "學分數",
-        map = creditOptions,
-        value = credit,
-        onUpdate = onUpdate,
-        modifier = modifier.padding(horizontal = 4.dp)
-    )
-}
-
-@Composable
-private fun CodeInputField(
-    code: Int?,
-    onUpdate: (Int?) -> Unit,
-    modifier: Modifier
-) {
-    MyNumberInputField(
-        "選課代碼",
-        value = code,
-        onUpdate = { if (it == null || it in 1..9999) onUpdate(it) },
-        modifier = modifier.padding(horizontal = 4.dp)
-    )
-}
-
-@Composable
-private fun TeacherNameInputField(
-    teacher: String,
-    onUpdate: (String) -> Unit,
-    modifier: Modifier
-) {
-    MyTextInputField(
-        label = "教師名稱",
-        value = teacher,
-        onUpdate = onUpdate,
-        modifier = modifier.padding(horizontal = 4.dp)
-    )
-}
-
-@Composable
-private fun CourseNameInputField(
-    courseName: String,
-    onUpdate: (String) -> Unit,
-    modifier: Modifier
-) {
-    MyTextInputField(
-        label = "科目名稱",
-        value = courseName,
-        onUpdate = onUpdate,
-        modifier = modifier.padding(horizontal = 4.dp)
-    )
-}
-
-@Composable
-private fun SemesterInputField(
-    semester: Int,
-    onUpdate: (Int) -> Unit,
-    modifier: Modifier
-) {
-    MyDropdownMenu(
-        label = "學期",
-        map = semesterOptions,
-        value = semester,
-        onUpdate = onUpdate,
-        modifier = modifier.padding(horizontal = 4.dp)
-    )
-}
-
-@Composable
-private fun YearInputField(
-    year: Int,
-    onUpdate: (Int) -> Unit,
-    modifier: Modifier
-) {
-    MyDropdownMenu(
-        label = "學年度",
-        map = yearOptions,
-        value = year,
-        onUpdate = onUpdate,
-        modifier = modifier.padding(horizontal = 4.dp)
-    )
 }
 
 @Composable
@@ -466,14 +406,6 @@ fun MyDropdownMenu(
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun CourseSearchPreview() {
-    OpenFCUTheme {
-//        CourseSearchView()
     }
 }
 

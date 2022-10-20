@@ -21,6 +21,14 @@ data class SearchFilter(
     val openerName: String = "",
     val openNum: Int? = null,
 ) {
+    fun isValid(): Boolean {
+        return name.isNotBlank() ||
+                teacher.isNotBlank() ||
+                code != null ||
+                day != null ||
+                sections.isNotEmpty()
+    }
+
     fun toDTO(): JsonObject {
         return buildJsonObject {
             putJsonObject("baseOptions") {

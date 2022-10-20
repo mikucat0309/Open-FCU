@@ -8,7 +8,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import at.mikuc.openfcu.main.MainView
-import at.mikuc.openfcu.theme.OpenFCUTheme
+import at.mikuc.openfcu.theme.MaterialTheme3
+import at.mikuc.openfcu.theme.MixMaterialTheme
 
 const val TAG = "OpenFCU"
 
@@ -17,10 +18,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            OpenFCUTheme {
+            MixMaterialTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                    color = MaterialTheme3.colorScheme.background
                 ) {
                     MainView()
                 }

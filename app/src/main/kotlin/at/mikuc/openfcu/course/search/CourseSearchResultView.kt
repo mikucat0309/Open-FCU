@@ -24,10 +24,11 @@ import androidx.compose.ui.unit.dp
 import at.mikuc.openfcu.course.Course
 import at.mikuc.openfcu.course.Opener
 import at.mikuc.openfcu.course.Period
-import at.mikuc.openfcu.theme.OpenFCUTheme
+import at.mikuc.openfcu.theme.MixMaterialTheme
 import at.mikuc.openfcu.util.day2str
 import at.mikuc.openfcu.util.getActivityViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import org.koin.androidx.compose.getViewModel
 
 @Destination
 @Composable
@@ -184,7 +185,7 @@ fun CourseSearchResultPreview() {
         acceptNum = 70,
         remark = "This is a REMARK This is a REMARK This is a REMARK"
     )
-    OpenFCUTheme {
+    MixMaterialTheme {
         Surface {
             CourseLazyColumnView(
                 courses = listOf(c, c)
@@ -218,7 +219,7 @@ fun CourseSearchResultDarkPreview() {
         acceptNum = 70,
         remark = "This is a REMARK This is a REMARK This is a REMARK"
     )
-    OpenFCUTheme(darkTheme = true) {
+    MixMaterialTheme(darkTheme = true) {
         Surface {
             CourseLazyColumnView(
                 courses = listOf(c, c)

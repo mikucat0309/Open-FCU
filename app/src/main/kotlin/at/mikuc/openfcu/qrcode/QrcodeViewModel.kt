@@ -16,14 +16,14 @@ class QrcodeViewModel(
     private val repo: FcuRepository,
 ) : ViewModel() {
 
-    var state by mutableStateOf(QrcodeUiState())
+    var hexStr by mutableStateOf<String?>(null)
         private set
 
     fun fetchQrcode(dispatcher: CoroutineDispatcher = Dispatchers.IO) {
         viewModelScope.launch(dispatcher) {
             val credential = pref.getCredential().nonBlanked() ?: return@launch
-            val hexStr = repo.fetchQrcode(credential) ?: return@launch
-            state = state.copy(hexStr = hexStr)
+            val hexStr2 = repo.fetchQrcode(credential) ?: return@launch
+            hexStr = hexStr2
         }
     }
 }

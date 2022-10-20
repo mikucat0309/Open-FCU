@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import at.mikuc.openfcu.theme.OpenFCUTheme
+import at.mikuc.openfcu.theme.MixMaterialTheme
 import at.mikuc.openfcu.util.getActivity
 import at.mikuc.openfcu.util.getActivityViewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -90,11 +90,11 @@ fun SettingView(viewModel: SettingViewModel = getActivityViewModel()) {
         }
     }
     val activity = LocalContext.current.getActivity() ?: return
-    callback(activity, viewModel)
+    toastCallback(activity, viewModel)
 }
 
 @Composable
-private fun callback(
+private fun toastCallback(
     activity: ComponentActivity,
     viewModel: SettingViewModel
 ) {
@@ -113,7 +113,7 @@ private fun callback(
 @Preview(showBackground = true)
 @Composable
 private fun SettingPreview() {
-    OpenFCUTheme {
+    MixMaterialTheme {
         SettingView()
     }
 }

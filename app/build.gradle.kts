@@ -111,8 +111,12 @@ dependencies {
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.material:material-icons-core:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
+    implementation("androidx.compose.material3:material3:1.0.0-rc01")
     implementation("androidx.compose.animation:animation:$composeVersion")
     implementation("androidx.activity:activity-compose:1.6.0")
+
+    // Constraint Layout
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
     val lifecycleVersion = "2.5.1"
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")

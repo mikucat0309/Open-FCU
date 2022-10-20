@@ -24,7 +24,7 @@ class QrcodeViewModelTest : BaseTest() {
 
             When("login QRCode system") {
                 val vm = QrcodeViewModel(pref, repo)
-                val initialHexStr = vm.state.hexStr
+                val initialHexStr = vm.hexStr.hexStr
                 initialHexStr shouldBe null
                 Then("failed") {
                     coEvery { repo.fetchQrcode(any()) } returns null
@@ -32,7 +32,7 @@ class QrcodeViewModelTest : BaseTest() {
                     testCoroutineScheduler.advanceUntilIdle()
 
                     coVerify(exactly = 1) { repo.fetchQrcode(any()) }
-                    vm.state.hexStr shouldBe initialHexStr
+                    vm.hexStr.hexStr shouldBe initialHexStr
                 }
                 Then("succeed") {
                     val mockHexStr = "1234567890"
@@ -41,7 +41,7 @@ class QrcodeViewModelTest : BaseTest() {
                     testCoroutineScheduler.advanceUntilIdle()
 
                     coVerify(exactly = 1) { repo.fetchQrcode(any()) }
-                    vm.state.hexStr shouldBe mockHexStr
+                    vm.hexStr.hexStr shouldBe mockHexStr
                 }
             }
         }

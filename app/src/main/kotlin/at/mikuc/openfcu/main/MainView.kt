@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import at.mikuc.openfcu.NavGraphs
-import at.mikuc.openfcu.theme.OpenFCUTheme
+import at.mikuc.openfcu.theme.MixMaterialTheme
 import at.mikuc.openfcu.util.LocalNavHostController
 import at.mikuc.openfcu.util.currentOrThrow
 import com.ramcosta.composedestinations.DestinationsNavHost
@@ -19,6 +19,7 @@ import com.ramcosta.composedestinations.DestinationsNavHost
 @Composable
 fun MainView() {
     val appRoute = arrayOf(
+        MainRoute.Home,
         MainRoute.Redirect,
         MainRoute.QrCode,
         MainRoute.Course,
@@ -52,10 +53,10 @@ fun MainView() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, widthDp = 360, heightDp = 640)
 @Composable
-fun MainPreview() {
-    OpenFCUTheme {
+private fun MainPreview() {
+    MixMaterialTheme {
         MainView()
     }
 }
