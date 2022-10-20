@@ -1,10 +1,10 @@
 package at.mikuc.openfcu.course.search
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -28,7 +28,6 @@ import at.mikuc.openfcu.theme.MixMaterialTheme
 import at.mikuc.openfcu.util.day2str
 import at.mikuc.openfcu.util.getActivityViewModel
 import com.ramcosta.composedestinations.annotation.Destination
-import org.koin.androidx.compose.getViewModel
 
 @Destination
 @Composable
@@ -40,42 +39,42 @@ fun CourseSearchResultView(viewModel: CourseSearchViewModel = getActivityViewMod
 private fun CourseLazyColumnView(courses: List<Course>) {
     SelectionContainer {
         LazyColumn(
-            modifier = Modifier
+            Modifier
                 .background(MaterialTheme.colors.background)
-                .padding(16.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(courses) { CourseRow(it) }
+            items(courses) { CourseCard(it) }
         }
     }
 }
 
 @Composable
-private fun CourseRow(course: Course) {
+private fun CourseCard(course: Course) {
     Card(
         elevation = 2.dp,
-        modifier = Modifier.padding(vertical = 4.dp)
     ) {
         Column(
-            modifier = Modifier.padding(8.dp)
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp, 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 CodeField(course = course)
-                Spacer(Modifier.padding(4.dp))
-                CreditField(course = course)
-                Spacer(Modifier.padding(4.dp))
-                OpenerField(course = course)
+                CourseNameField(course)
             }
-            Divider(Modifier.padding(vertical = 4.dp))
+            Divider()
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                CourseNameField(course, Modifier.weight(4f, fill = true))
-                Spacer(Modifier.width(8.dp))
-                TeacherField(course, Modifier.weight(3f, fill = true))
-                Spacer(Modifier.width(8.dp))
-                PeriodField(course, modifier = Modifier.weight(3f))
+                OpenerField(course = course, Modifier.width(70.dp))
+                TeacherField(course, Modifier.weight(1.0f))
+                PeriodField(course, Modifier.width(130.dp))
             }
         }
     }
@@ -97,19 +96,8 @@ private fun OpenerField(course: Course, modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
         Text(
             text = course.opener.name,
-            maxLines = 1,
+            maxLines = 2,
             overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.subtitle1,
-        )
-    }
-}
-
-@Composable
-private fun CreditField(course: Course, modifier: Modifier = Modifier) {
-    Box(modifier = modifier) {
-        Text(
-            text = "${course.credit} 學分",
-            maxLines = 1,
             style = MaterialTheme.typography.subtitle1,
         )
     }
@@ -120,7 +108,7 @@ private fun CourseNameField(course: Course, modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
         Text(
             text = course.name,
-            maxLines = 2,
+            maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.subtitle1,
         )
@@ -142,34 +130,31 @@ private fun TeacherField(course: Course, modifier: Modifier = Modifier) {
 @Composable
 private fun PeriodField(course: Course, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
-        course.periods.forEach { PeriodLine(it) }
+        val text = course.periods.take(2).joinToString("\n") { period ->
+            val rangeStr =
+                if (period.range.first == period.range.last) period.range.first.toString()
+                else "${period.range.first}-${period.range.last}"
+            "(${day2str[period.day] ?: "N/A"}) $rangeStr"
+        }
+        Text(
+            text = text,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            style = MaterialTheme.typography.subtitle1
+        )
     }
-}
-
-@Composable
-private fun PeriodLine(period: Period) {
-    val rangeStr =
-        if (period.range.first == period.range.last) period.range.first.toString()
-        else "${period.range.first}-${period.range.last}"
-    Text(
-        text = "(${day2str[period.day] ?: "N/A"}) $rangeStr",
-        maxLines = 1,
-        softWrap = false,
-        overflow = TextOverflow.Ellipsis,
-        style = MaterialTheme.typography.subtitle1
-    )
 }
 
 @Preview(showBackground = true, widthDp = 380)
 @Composable
 fun CourseSearchResultPreview() {
     val c = Course(
-        name = "中文思辨與表達中文思辨與表達(一)",
+        name = "中文思辨與表達(一)",
         id = "ID",
         code = 1,
         teacher = "王小明、王中明",
         periods = listOf(
-            Period(4, (9..14), "布宜諾斯艾利斯是個很長的地名"),
+            Period(4, (9..14), "布宜諾斯艾利斯"),
             Period(5, (12..14), "躲貓貓社辦")
         ),
         credit = 3,
