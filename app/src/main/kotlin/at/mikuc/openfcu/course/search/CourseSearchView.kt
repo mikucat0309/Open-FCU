@@ -3,24 +3,28 @@ package at.mikuc.openfcu.course.search
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuBox
 import androidx.compose.material.ExposedDropdownMenuDefaults
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Book
+import androidx.compose.material.icons.rounded.Business
+import androidx.compose.material.icons.rounded.CalendarToday
+import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -36,9 +40,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.core.text.isDigitsOnly
 import androidx.navigation.compose.rememberNavController
 import at.mikuc.openfcu.destinations.CourseSearchResultViewDestination
+import at.mikuc.openfcu.theme.MaterialTheme3
 import at.mikuc.openfcu.theme.MixMaterialTheme
 import at.mikuc.openfcu.util.LocalNavHostController
 import at.mikuc.openfcu.util.currentOrThrow
@@ -56,6 +62,7 @@ private val semesterOptions = mapOf(
     4 to "暑修下",
 )
 private val creditOptions = (0..9).associateWith { it.toString() }
+private val sectionsOptions = (1..14).associateWith { it.toString() }
 
 @Destination
 @Composable
@@ -79,22 +86,53 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
     var day by remember { mutableStateOf<Int?>(null) }
     var sections by remember { mutableStateOf(emptySet<Int>()) }
 
+    var locationFieldCount by remember { mutableStateOf<Int>(0) }
+    var openerNameFieldCount by remember { mutableStateOf<Int>(0) }
+    var creditFieldCount by remember { mutableStateOf<Int>(0) }
+    var dayFieldCount by remember { mutableStateOf<Int>(0) }
+    var sectionsFieldCount by remember { mutableStateOf<Int>(0) }
+
+
+    var showDialog by remember { mutableStateOf(false) }
+
+    if (showDialog) {
+        ExtraConditionDialog(
+            setShowDialog = {
+                showDialog = it
+            },
+            addLocationField = {
+                locationFieldCount += it
+            },
+            addCreditField = {
+                creditFieldCount += it
+            },
+            addDayField = {
+                dayFieldCount += it
+            },
+            addOpenerNameField = {
+                openerNameFieldCount += it
+            },
+            addSectionsField = {
+                sectionsFieldCount += it
+            })
+    }
+
     Box(
         Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomEnd
     ) {
         Column(Modifier.fillMaxWidth()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.Yellow.copy(alpha = 0.4f))
-                    .padding(4.dp)
-            ) {
-                Text(
-                    text = "此功能資料來源為學校課程檢索 API，故科目名稱、教師名稱、選課代碼、星期、節次必須至少選擇一項",
-                    style = MaterialTheme.typography.subtitle2
-                )
-            }
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .background(Color.Yellow.copy(alpha = 0.4f))
+//                    .padding(4.dp)
+//            ) {
+//                Text(
+//                    text = "此功能資料來源為學校課程檢索 API，故科目名稱、教師名稱、選課代碼、星期、節次必須至少選擇一項",
+//                    style = MaterialTheme.typography.subtitle2
+//                )
+//            }
             Column(
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier
@@ -103,103 +141,208 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
                     .verticalScroll(rememberScrollState()),
             ) {
                 Row(modifier = Modifier.padding(top = 8.dp)) {
-                    val modifier = Modifier
-                        .weight(1.0f)
-                        .padding(horizontal = 4.dp)
-                    MyDropdownMenu(
-                        label = "學年度",
-                        map = yearOptions,
-                        value = year,
-                        onUpdate = { year = it },
-                        modifier = modifier
-                    )
-                    MyDropdownMenu(
-                        label = "學期",
-                        map = semesterOptions,
-                        value = semester,
-                        onUpdate = { semester = it },
-                        modifier = modifier.padding(horizontal = 4.dp)
-                    )
+                    Text("基本條件", fontSize = 24.sp)
                 }
-                Divider(
-                    Modifier
+                // 基本條件
+                Row(
+                    modifier = Modifier
+                        .padding(top = 8.dp)
                         .fillMaxWidth()
-                        .padding(top = 16.dp)
-                )
-                Row(modifier = Modifier.padding(top = 8.dp)) {
-                    val modifier = Modifier
-                        .weight(1.0f)
-                        .padding(horizontal = 4.dp)
+                ) {
                     MyTextInputField(
-                        label = "科目名稱",
+                        label = "課程名稱",
                         value = courseName,
                         onUpdate = { courseName = it },
-                        modifier = modifier
+                        modifier = Modifier
+//                            .padding(horizontal = 4.dp)
+//                            .width(328.dp)
+                            .fillMaxWidth(),
+                        textFieldModifier = Modifier.fillMaxWidth()
                     )
+                }
+                Row(
+                    modifier = Modifier.padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+//                    val modifier = Modifier
+//                        .weight(3.0f)
+//                        .padding(horizontal = 4.dp)
                     MyTextInputField(
                         label = "教師名稱",
                         value = teacherName,
                         onUpdate = { teacherName = it },
-                        modifier = modifier
+                        modifier = Modifier
+//                            .padding(horizontal = 4.dp)
+//                            .width(192.dp)
+                            .weight(3.0f)
                     )
-                }
-                Row(modifier = Modifier.padding(top = 8.dp)) {
-                    val modifier = Modifier
-                        .weight(1.0f)
-                        .padding(horizontal = 4.dp)
                     MyNumberInputField(
                         "選課代碼",
                         value = code,
                         onUpdate = { if (it == null || it in 1..9999) code = it },
-                        modifier = modifier
-                    )
-                    MyOptionalDropdownMenu(
-                        label = "學分數",
-                        map = creditOptions,
-                        value = credit,
-                        onUpdate = { credit = it },
-                        modifier = modifier
+                        modifier = Modifier
+//                            .padding(horizontal = 4.dp)
+//                            .width(120.dp)
+                            .weight(2.0f)
                     )
                 }
-                Row(modifier = Modifier.padding(top = 8.dp)) {
-                    val modifier = Modifier
-                        .weight(1.0f)
-                        .padding(horizontal = 4.dp)
-                    MyTextInputField(
-                        label = "開課單位名稱",
-                        value = openerName,
-                        onUpdate = { openerName = it },
-                        modifier = modifier
-                    )
-                    MyNumberInputField(
-                        label = "開放修課人數",
-                        value = openNum,
-                        onUpdate = { if (it == null || it in 0..999) openNum = it },
-                        modifier = modifier
-                    )
-                }
-                Row(modifier = Modifier.padding(top = 8.dp)) {
-                    val modifier = Modifier
-                        .weight(1.0f)
-                        .padding(horizontal = 4.dp)
-                    MyTextInputField(
-                        label = "上課地點",
-                        value = location,
-                        onUpdate = { location = it },
-                        modifier = modifier
-                    )
+                Row(
+                    modifier = Modifier.padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+//                    val modifier = Modifier
+//                        .weight(1.0f)
+//                        .padding(horizontal = 4.dp)
                     MyOptionalDropdownMenu(
                         "星期",
                         map = day2str,
                         value = day,
                         onUpdate = { day = it },
-                        modifier = modifier
+                        modifier = Modifier
+//                            .width(192.dp)
+                            .weight(3.0f)
+                    )
+                    MyOptionalDropdownMenu(
+                        "節次",
+                        map = sectionsOptions,
+                        value = day,
+                        onUpdate = { day = it },
+                        modifier = Modifier
+//                            .width(120.dp)
+                            .weight(2.0f)
                     )
                 }
-                SectionInputField(
-                    sections = sections,
-                    onUpdate = { sections = it }
-                )
+                // 額外條件
+                Row(modifier = Modifier.padding(top = 8.dp)) {
+                    Text("額外條件", fontSize = 24.sp)
+                }
+//                Row(modifier = Modifier.padding(top = 8.dp)) {
+//                    val modifier = Modifier
+////                        .weight(1.0f)
+//                        .padding(horizontal = 4.dp)
+//                    MyDropdownMenu(
+//                        label = "學年度",
+//                        map = yearOptions,
+//                        value = year,
+//                        onUpdate = { year = it },
+//                        modifier = modifier
+//                    )
+//                    MyDropdownMenu(
+//                        label = "學期",
+//                        map = semesterOptions,
+//                        value = semester,
+//                        onUpdate = { semester = it },
+//                        modifier = modifier.padding(horizontal = 4.dp)
+//                    )
+//                }
+                repeat(locationFieldCount) {
+                    Row(modifier = Modifier.padding(top = 8.dp)) {
+                        val modifier = Modifier
+//                        .weight(1.0f)
+                            .padding(horizontal = 4.dp)
+                            .fillMaxWidth()
+                        MyTextInputField(
+                            label = "上課地點",
+                            value = location,
+                            onUpdate = { location = it },
+                            modifier = modifier,
+                            textFieldModifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+                repeat(openerNameFieldCount) {
+                    Row(modifier = Modifier.padding(top = 8.dp)) {
+                        val modifier = Modifier
+//                        .weight(1.0f)
+                            .padding(horizontal = 4.dp)
+                            .fillMaxWidth()
+                        MyTextInputField(
+                            label = "開課單位",
+                            value = openerName,
+                            onUpdate = { openerName = it },
+                            modifier = modifier,
+                            textFieldModifier = Modifier.fillMaxWidth()
+                        )
+//                    MyNumberInputField(
+//                        label = "開放修課人數",
+//                        value = openNum,
+//                        onUpdate = { if (it == null || it in 0..999) openNum = it },
+//                        modifier = modifier
+//                    )
+                    }
+                }
+
+                repeat(creditFieldCount) {
+                    Row(modifier = Modifier.padding(top = 8.dp)) {
+                        val modifier = Modifier
+//                        .weight(1.0f)
+                            .padding(horizontal = 4.dp)
+                            .fillMaxWidth()
+                        MyOptionalDropdownMenu(
+                            label = "學分數",
+                            map = creditOptions,
+                            value = credit,
+                            onUpdate = { credit = it },
+                            modifier = modifier,
+                            textFieldModifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+                repeat(dayFieldCount) {
+                    Row(
+                        modifier = Modifier.padding(top = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        val modifier = Modifier
+                            .weight(1.0f)
+                            .padding(horizontal = 4.dp)
+                            .fillMaxWidth()
+                        MyOptionalDropdownMenu(
+                            "星期",
+                            map = day2str,
+                            value = day,
+                            onUpdate = { day = it },
+                            modifier = modifier,
+                            textFieldModifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+                repeat(sectionsFieldCount) {
+                    Row(
+                        modifier = Modifier.padding(top = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        val modifier = Modifier
+                            .weight(1.0f)
+                            .padding(horizontal = 4.dp)
+                            .fillMaxWidth()
+                        MyOptionalDropdownMenu(
+                            "節次",
+                            map = sectionsOptions,
+                            value = day,
+                            onUpdate = { day = it },
+                            modifier = modifier,
+                            textFieldModifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+
+//                SectionInputField(
+//                    sections = sections,
+//                    onUpdate = { sections = it }
+//                )
+                Button(
+                    onClick = { showDialog = true },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(MaterialTheme3.colorScheme.surface)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Start,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("新增額外條件...")
+                    }
+                }
             }
         }
         val controller = LocalNavHostController.currentOrThrow
@@ -232,6 +375,184 @@ fun CourseSearchPreview() {
             LocalNavHostController provides rememberNavController()
         ) {
             PureCourseSearchView(onSubmit = {})
+        }
+    }
+}
+
+@Composable
+fun ExtraConditionDialog(
+    setShowDialog: (Boolean) -> Unit,
+    addLocationField: (Int) -> Unit,
+    addOpenerNameField: (Int) -> Unit,
+    addCreditField: (Int) -> Unit,
+    addDayField: (Int) -> Unit,
+    addSectionsField: (Int) -> Unit
+) {
+    Dialog(onDismissRequest = { setShowDialog(false) }) {
+        Surface(shape = RoundedCornerShape(8.dp)) {
+            Box(
+                modifier = Modifier
+                    .width(280.dp)
+                    .height(260.dp)
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.spacedBy(0.dp),
+                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
+                ) {
+                    Row() {
+                        Text("新增額外條件", fontSize = 20.sp)
+                    }
+                    Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
+                        Row(
+                            modifier = Modifier
+                                .width(248.dp)
+                                .height(40.dp)
+                        ) {
+                            Button(
+                                onClick = {
+                                    setShowDialog(false)
+                                    addLocationField(1)
+                                },
+                                colors = ButtonDefaults.buttonColors(MaterialTheme3.colorScheme.surface),
+                                modifier = Modifier.fillMaxWidth(),
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    Icon(Icons.Rounded.LocationOn, contentDescription = "")
+                                    Text("上課地點")
+                                }
+                            }
+                        }
+                        Row(
+                            modifier = Modifier
+                                .width(248.dp)
+                                .height(40.dp)
+                        ) {
+                            Button(
+                                onClick = {
+                                    setShowDialog(false)
+                                    addOpenerNameField(1)
+                                },
+                                colors = ButtonDefaults.buttonColors(MaterialTheme3.colorScheme.surface),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    Icon(Icons.Rounded.Business, contentDescription = "")
+                                    Text("開課單位")
+                                }
+                            }
+                        }
+                        Row(
+                            modifier = Modifier
+                                .width(248.dp)
+                                .height(40.dp)
+                        ) {
+                            Button(
+                                onClick = {
+                                    setShowDialog(false)
+                                    addCreditField(1)
+                                },
+                                colors = ButtonDefaults.buttonColors(MaterialTheme3.colorScheme.surface),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    Icon(Icons.Rounded.Book, contentDescription = "")
+                                    Text("學分數")
+                                }
+                            }
+                        }
+                        Row(
+                            modifier = Modifier
+                                .width(248.dp)
+                                .height(40.dp)
+                        ) {
+                            Button(
+                                onClick = {
+                                    setShowDialog(false)
+                                    addDayField(1)
+                                },
+                                colors = ButtonDefaults.buttonColors(MaterialTheme3.colorScheme.surface),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    Icon(Icons.Rounded.CalendarToday, contentDescription = "")
+                                    Text("星期")
+                                }
+                            }
+                        }
+                        Row(
+                            modifier = Modifier
+                                .width(248.dp)
+                                .height(40.dp)
+                        ) {
+                            Button(
+                                onClick = {
+                                    setShowDialog(false)
+                                    addSectionsField(1)
+                                },
+                                colors = ButtonDefaults.buttonColors(MaterialTheme3.colorScheme.surface),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                    Icon(Icons.Rounded.CalendarToday, contentDescription = "")
+                                    Text("節次")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 360, heightDp = 584)
+@Composable
+fun ExtraConditionDialogPreview() {
+    MixMaterialTheme {
+        CompositionLocalProvider(
+            LocalNavHostController provides rememberNavController()
+        ) {
+            ExtraConditionDialog(
+                setShowDialog = {
+                    1
+                },
+                addLocationField = {
+                    1
+                },
+                addCreditField = {
+                    1
+                },
+                addDayField = {
+                    1
+                },
+                addOpenerNameField = {
+                    1
+                },
+                addSectionsField = {
+                    1
+                }
+            )
         }
     }
 }
@@ -285,17 +606,21 @@ private fun MyTextInputField(
     value: String?,
     onUpdate: (String) -> Unit,
     modifier: Modifier = Modifier,
+    textFieldModifier: Modifier = Modifier,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 ) {
     Column(
         modifier = modifier
     ) {
-        Text(label)
-        OutlinedTextField(
+//        Text(label)
+        TextField(
+            label = { Text(label ?: "") },
             value = value ?: "",
             onValueChange = { onUpdate(it) },
             singleLine = true,
             keyboardOptions = keyboardOptions,
+            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme3.colorScheme.surface),
+            modifier = textFieldModifier
         )
     }
 }
@@ -324,15 +649,17 @@ fun MyOptionalDropdownMenu(
     value: Int?,
     onUpdate: (Int?) -> Unit,
     modifier: Modifier = Modifier,
+    textFieldModifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
     Column(modifier = modifier) {
-        Text(label)
+//        Text(label)
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = { expanded = !expanded }
         ) {
-            OutlinedTextField(
+            TextField(
+                label = { Text(label ?: "") },
                 value = value?.let { map[it] } ?: "",
                 onValueChange = { },
                 readOnly = true,
@@ -341,6 +668,7 @@ fun MyOptionalDropdownMenu(
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                 },
                 colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+                modifier = textFieldModifier
             )
             ExposedDropdownMenu(
                 expanded = expanded,
@@ -385,7 +713,7 @@ fun MyDropdownMenu(
             expanded = expanded,
             onExpandedChange = { expanded = !expanded }
         ) {
-            OutlinedTextField(
+            TextField(
                 value = map[value]!!,
                 onValueChange = {},
                 readOnly = true,
