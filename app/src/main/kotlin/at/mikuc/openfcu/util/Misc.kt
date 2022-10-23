@@ -1,5 +1,7 @@
 package at.mikuc.openfcu.util
 
+import kotlinx.serialization.Serializable
+
 val day2str = mapOf(
     0 to "日",
     1 to "一",
@@ -39,6 +41,46 @@ val section2str = listOf(
     "21:20 - 22:10",
 )
 
-fun section2duration(intRange: IntRange) {
+val startTime = listOf(
+    " 8:10",
+    " 9:10",
+    "10:10",
+    "11:10",
+    "12:10",
+    "13:10",
+    "14:10",
+    "15:10",
+    "16:10",
+    "17:10",
+    "18:30",
+    "19:25",
+    "20:25",
+    "21:20",
+)
 
+val endTime = listOf(
+    " 9:00",
+    "10:00",
+    "11:00",
+    "12:00",
+    "13:00",
+    "14:00",
+    "15:00",
+    "16:00",
+    "17:00",
+    "18:00",
+    "19:20",
+    "20:15",
+    "21:15",
+    "22:10",
+)
+
+fun IntRange.toTimeRangeString(): String {
+    return startTime[first] + " - " + endTime[last]
 }
+
+@Serializable
+data class MagicDTO(val d: String)
+
+@Serializable
+data class MagicDTO2<T>(val d: List<T>)

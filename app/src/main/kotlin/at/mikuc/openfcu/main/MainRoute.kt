@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
 import at.mikuc.openfcu.appCurrentDestinationAsState
 import at.mikuc.openfcu.course.search.CourseSearchFAB
+import at.mikuc.openfcu.destinations.CourseDetailViewDestination
 import at.mikuc.openfcu.destinations.CourseSearchResultViewDestination
 import at.mikuc.openfcu.destinations.CourseSearchViewDestination
 import at.mikuc.openfcu.destinations.Destination
@@ -32,8 +33,7 @@ sealed class MainRoute(
 
     @Composable
     open fun topBar() {
-        val route = LocalNavHostController.currentOrThrow.mainRoute
-        MainTopAppBar(route?.label ?: "Open FCU")
+        MainTopAppBar(label)
     }
 
     @Composable
@@ -43,7 +43,7 @@ sealed class MainRoute(
     object Home : MainRoute(
         HomeViewDestination,
         Icons.Outlined.Home,
-        "首頁",
+        "Open FCU",
     )
 
     object Redirect : MainRoute(
@@ -94,4 +94,5 @@ fun Destination.toMainRoute(): MainRoute = when (this) {
     RedirectViewDestination -> MainRoute.Redirect
     SettingViewDestination -> MainRoute.Setting
     DailyTimetableViewDestination -> MainRoute.Timetable
+    else -> MainRoute.Home
 }

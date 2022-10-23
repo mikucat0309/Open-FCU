@@ -1,6 +1,7 @@
 package at.mikuc.openfcu.course.search
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,19 +25,31 @@ import androidx.compose.ui.unit.dp
 import at.mikuc.openfcu.course.Course
 import at.mikuc.openfcu.course.Opener
 import at.mikuc.openfcu.course.Period
+import at.mikuc.openfcu.course.detail.CourseDetailViewModel
+import at.mikuc.openfcu.destinations.CourseDetailViewDestination
 import at.mikuc.openfcu.theme.MixMaterialTheme
+import at.mikuc.openfcu.util.LocalNavHostController
+import at.mikuc.openfcu.util.currentOrThrow
 import at.mikuc.openfcu.util.day2str
 import at.mikuc.openfcu.util.getActivityViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.navigate
 
 @Destination
 @Composable
-fun CourseSearchResultView(viewModel: CourseSearchViewModel = getActivityViewModel()) {
-    CourseLazyColumnView(courses = viewModel.result)
+fun CourseSearchResultView(
+    csVM: CourseSearchViewModel = getActivityViewModel(),
+    cdVM: CourseDetailViewModel = getActivityViewModel(),
+) {
+    val controller = LocalNavHostController.currentOrThrow
+    CourseLazyColumnView(courses = csVM.result) { fullID ->
+        cdVM.updateFullID(fullID)
+        controller.navigate(CourseDetailViewDestination)
+    }
 }
 
 @Composable
-private fun CourseLazyColumnView(courses: List<Course>) {
+private fun CourseLazyColumnView(courses: List<Course>, onClick: (String) -> Unit) {
     SelectionContainer {
         LazyColumn(
             Modifier
@@ -44,14 +57,17 @@ private fun CourseLazyColumnView(courses: List<Course>) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(courses) { CourseCard(it) }
+            items(courses) { course ->
+                CourseCard(course) { onClick(course.fullID) }
+            }
         }
     }
 }
 
 @Composable
-private fun CourseCard(course: Course) {
+private fun CourseCard(course: Course, onClick: () -> Unit) {
     Card(
+        Modifier.clickable(onClick = onClick),
         elevation = 2.dp,
     ) {
         Column(
@@ -72,9 +88,9 @@ private fun CourseCard(course: Course) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                OpenerField(course = course, Modifier.width(70.dp))
-                TeacherField(course, Modifier.weight(1.0f))
-                PeriodField(course, Modifier.width(130.dp))
+                OpenerField(course = course, Modifier.width(100.dp))
+                TeacherField(course, Modifier.weight(1.0f, fill = true))
+                PeriodField(course, Modifier.width(80.dp))
             }
         }
     }
@@ -130,27 +146,28 @@ private fun TeacherField(course: Course, modifier: Modifier = Modifier) {
 @Composable
 private fun PeriodField(course: Course, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
-        val text = course.periods.take(2).joinToString("\n") { period ->
+        course.periods.take(2).forEach { period ->
             val rangeStr =
                 if (period.range.first == period.range.last) period.range.first.toString()
                 else "${period.range.first}-${period.range.last}"
-            "(${day2str[period.day] ?: "N/A"}) $rangeStr"
+            val text = "(${day2str[period.day] ?: "N/A"}) $rangeStr"
+            Text(
+                text = text,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.subtitle1
+            )
         }
-        Text(
-            text = text,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.subtitle1
-        )
     }
 }
 
-@Preview(showBackground = true, widthDp = 380)
+@Preview(showBackground = true, widthDp = 360)
 @Composable
 fun CourseSearchResultPreview() {
     val c = Course(
         name = "中文思辨與表達(一)",
         id = "ID",
+        fullID = "1111CE0712359660001",
         code = 1,
         teacher = "王小明、王中明",
         periods = listOf(
@@ -174,7 +191,7 @@ fun CourseSearchResultPreview() {
         Surface {
             CourseLazyColumnView(
                 courses = listOf(c, c)
-            )
+            ) {}
         }
     }
 }
@@ -185,6 +202,7 @@ fun CourseSearchResultDarkPreview() {
     val c = Course(
         name = "中文思辨與表達中文思辨與表達(一)",
         id = "ID",
+        fullID = "1111CE0712359660001",
         code = 1,
         teacher = "王小明、王中明",
         periods = listOf(
@@ -208,7 +226,7 @@ fun CourseSearchResultDarkPreview() {
         Surface {
             CourseLazyColumnView(
                 courses = listOf(c, c)
-            )
+            ) {}
         }
     }
 }
