@@ -43,9 +43,16 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.core.text.isDigitsOnly
 import androidx.navigation.compose.rememberNavController
+import at.mikuc.openfcu.course.search.options.CreditExtraOption
+import at.mikuc.openfcu.course.search.options.DayExtraOption
+import at.mikuc.openfcu.course.search.options.ExtraOptions
+import at.mikuc.openfcu.course.search.options.LocationExtraOption
+import at.mikuc.openfcu.course.search.options.OpenerNameExtraOption
+import at.mikuc.openfcu.course.search.options.SectionsExtraOption
 import at.mikuc.openfcu.destinations.CourseSearchResultViewDestination
 import at.mikuc.openfcu.theme.MaterialTheme3
 import at.mikuc.openfcu.theme.MixMaterialTheme
+import at.mikuc.openfcu.timetable.Section
 import at.mikuc.openfcu.util.LocalNavHostController
 import at.mikuc.openfcu.util.currentOrThrow
 import at.mikuc.openfcu.util.day2str
@@ -85,12 +92,7 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
     var location by remember { mutableStateOf("") }
     var day by remember { mutableStateOf<Int?>(null) }
     var sections by remember { mutableStateOf(emptySet<Int>()) }
-
-    var locationFieldCount by remember { mutableStateOf<Int>(0) }
-    var openerNameFieldCount by remember { mutableStateOf<Int>(0) }
-    var creditFieldCount by remember { mutableStateOf<Int>(0) }
-    var dayFieldCount by remember { mutableStateOf<Int>(0) }
-    var sectionsFieldCount by remember { mutableStateOf<Int>(0) }
+    var extraField by remember { mutableStateOf(emptyList<ExtraOptions>()) }
 
 
     var showDialog by remember { mutableStateOf(false) }
@@ -99,22 +101,10 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
         ExtraConditionDialog(
             setShowDialog = {
                 showDialog = it
-            },
-            addLocationField = {
-                locationFieldCount += it
-            },
-            addCreditField = {
-                creditFieldCount += it
-            },
-            addDayField = {
-                dayFieldCount += it
-            },
-            addOpenerNameField = {
-                openerNameFieldCount += it
-            },
-            addSectionsField = {
-                sectionsFieldCount += it
-            })
+            }
+        ) {
+            extraField = extraField + it
+        }
     }
 
     Box(
@@ -235,96 +225,101 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
 //                        modifier = modifier.padding(horizontal = 4.dp)
 //                    )
 //                }
-                repeat(locationFieldCount) {
-                    Row(modifier = Modifier.padding(top = 8.dp)) {
-                        val modifier = Modifier
+
+                extraField.forEach { item ->
+                    when (item) {
+                        is LocationExtraOption -> {
+                            Row(modifier = Modifier.padding(top = 8.dp)) {
+                                val modifier = Modifier
 //                        .weight(1.0f)
-                            .padding(horizontal = 4.dp)
-                            .fillMaxWidth()
-                        MyTextInputField(
-                            label = "上課地點",
-                            value = location,
-                            onUpdate = { location = it },
-                            modifier = modifier,
-                            textFieldModifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                }
-                repeat(openerNameFieldCount) {
-                    Row(modifier = Modifier.padding(top = 8.dp)) {
-                        val modifier = Modifier
+                                    .padding(horizontal = 4.dp)
+                                    .fillMaxWidth()
+                                MyTextInputField(
+                                    label = "上課地點",
+                                    value = item.text,
+                                    onUpdate = { item.text = it },
+                                    modifier = modifier,
+                                    textFieldModifier = Modifier.fillMaxWidth()
+                                )
+                            }
+                        }
+                        is OpenerNameExtraOption -> {
+                            Row(modifier = Modifier.padding(top = 8.dp)) {
+                                val modifier = Modifier
 //                        .weight(1.0f)
-                            .padding(horizontal = 4.dp)
-                            .fillMaxWidth()
-                        MyTextInputField(
-                            label = "開課單位",
-                            value = openerName,
-                            onUpdate = { openerName = it },
-                            modifier = modifier,
-                            textFieldModifier = Modifier.fillMaxWidth()
-                        )
+                                    .padding(horizontal = 4.dp)
+                                    .fillMaxWidth()
+                                MyTextInputField(
+                                    label = "開課單位",
+                                    value = item.text,
+                                    onUpdate = { item.text = it },
+                                    modifier = modifier,
+                                    textFieldModifier = Modifier.fillMaxWidth()
+                                )
 //                    MyNumberInputField(
 //                        label = "開放修課人數",
 //                        value = openNum,
 //                        onUpdate = { if (it == null || it in 0..999) openNum = it },
 //                        modifier = modifier
 //                    )
-                    }
-                }
-
-                repeat(creditFieldCount) {
-                    Row(modifier = Modifier.padding(top = 8.dp)) {
-                        val modifier = Modifier
+                            }
+                        }
+                        is CreditExtraOption -> {
+                            Row(modifier = Modifier.padding(top = 8.dp)) {
+                                val modifier = Modifier
 //                        .weight(1.0f)
-                            .padding(horizontal = 4.dp)
-                            .fillMaxWidth()
-                        MyOptionalDropdownMenu(
-                            label = "學分數",
-                            map = creditOptions,
-                            value = credit,
-                            onUpdate = { credit = it },
-                            modifier = modifier,
-                            textFieldModifier = Modifier.fillMaxWidth()
-                        )
+                                    .padding(horizontal = 4.dp)
+                                    .fillMaxWidth()
+                                MyOptionalDropdownMenu(
+                                    label = "學分數",
+                                    map = creditOptions,
+                                    value = item.value,
+                                    onUpdate = { item.value = it },
+                                    modifier = modifier,
+                                    textFieldModifier = Modifier.fillMaxWidth()
+                                )
+                            }
+                        }
+                        is DayExtraOption ->{
+                            Row(
+                                modifier = Modifier.padding(top = 8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                val modifier = Modifier
+                                    .weight(1.0f)
+                                    .padding(horizontal = 4.dp)
+                                    .fillMaxWidth()
+                                MyOptionalDropdownMenu(
+                                    "星期",
+                                    map = day2str,
+                                    value = item.value,
+                                    onUpdate = { item.value = it },
+                                    modifier = modifier,
+                                    textFieldModifier = Modifier.fillMaxWidth()
+                                )
+                            }
+                        }
+                        is SectionsExtraOption -> {
+                            Row(
+                                modifier = Modifier.padding(top = 8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                val modifier = Modifier
+                                    .weight(1.0f)
+                                    .padding(horizontal = 4.dp)
+                                    .fillMaxWidth()
+                                MyOptionalDropdownMenu(
+                                    "節次",
+                                    map = sectionsOptions,
+                                    value = item.value,
+                                    onUpdate = { item.value = it },
+                                    modifier = modifier,
+                                    textFieldModifier = Modifier.fillMaxWidth()
+                                )
+                            }
+                        }
                     }
-                }
-                repeat(dayFieldCount) {
-                    Row(
-                        modifier = Modifier.padding(top = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        val modifier = Modifier
-                            .weight(1.0f)
-                            .padding(horizontal = 4.dp)
-                            .fillMaxWidth()
-                        MyOptionalDropdownMenu(
-                            "星期",
-                            map = day2str,
-                            value = day,
-                            onUpdate = { day = it },
-                            modifier = modifier,
-                            textFieldModifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                }
-                repeat(sectionsFieldCount) {
-                    Row(
-                        modifier = Modifier.padding(top = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        val modifier = Modifier
-                            .weight(1.0f)
-                            .padding(horizontal = 4.dp)
-                            .fillMaxWidth()
-                        MyOptionalDropdownMenu(
-                            "節次",
-                            map = sectionsOptions,
-                            value = day,
-                            onUpdate = { day = it },
-                            modifier = modifier,
-                            textFieldModifier = Modifier.fillMaxWidth()
-                        )
-                    }
+
                 }
 
 //                SectionInputField(
@@ -382,11 +377,7 @@ fun CourseSearchPreview() {
 @Composable
 fun ExtraConditionDialog(
     setShowDialog: (Boolean) -> Unit,
-    addLocationField: (Int) -> Unit,
-    addOpenerNameField: (Int) -> Unit,
-    addCreditField: (Int) -> Unit,
-    addDayField: (Int) -> Unit,
-    addSectionsField: (Int) -> Unit
+    extraField: (ExtraOptions) -> Unit
 ) {
     Dialog(onDismissRequest = { setShowDialog(false) }) {
         Surface(shape = RoundedCornerShape(8.dp)) {
@@ -412,7 +403,7 @@ fun ExtraConditionDialog(
                             Button(
                                 onClick = {
                                     setShowDialog(false)
-                                    addLocationField(1)
+                                    extraField(LocationExtraOption(""))
                                 },
                                 colors = ButtonDefaults.buttonColors(MaterialTheme3.colorScheme.surface),
                                 modifier = Modifier.fillMaxWidth(),
@@ -435,7 +426,7 @@ fun ExtraConditionDialog(
                             Button(
                                 onClick = {
                                     setShowDialog(false)
-                                    addOpenerNameField(1)
+                                    extraField(OpenerNameExtraOption(""))
                                 },
                                 colors = ButtonDefaults.buttonColors(MaterialTheme3.colorScheme.surface),
                                 modifier = Modifier.fillMaxWidth()
@@ -458,7 +449,7 @@ fun ExtraConditionDialog(
                             Button(
                                 onClick = {
                                     setShowDialog(false)
-                                    addCreditField(1)
+                                    extraField(CreditExtraOption(null))
                                 },
                                 colors = ButtonDefaults.buttonColors(MaterialTheme3.colorScheme.surface),
                                 modifier = Modifier.fillMaxWidth()
@@ -481,7 +472,7 @@ fun ExtraConditionDialog(
                             Button(
                                 onClick = {
                                     setShowDialog(false)
-                                    addDayField(1)
+                                    extraField(DayExtraOption(null))
                                 },
                                 colors = ButtonDefaults.buttonColors(MaterialTheme3.colorScheme.surface),
                                 modifier = Modifier.fillMaxWidth()
@@ -504,7 +495,7 @@ fun ExtraConditionDialog(
                             Button(
                                 onClick = {
                                     setShowDialog(false)
-                                    addSectionsField(1)
+                                    extraField(SectionsExtraOption(null))
                                 },
                                 colors = ButtonDefaults.buttonColors(MaterialTheme3.colorScheme.surface),
                                 modifier = Modifier.fillMaxWidth()
@@ -537,20 +528,8 @@ fun ExtraConditionDialogPreview() {
                 setShowDialog = {
                     1
                 },
-                addLocationField = {
-                    1
-                },
-                addCreditField = {
-                    1
-                },
-                addDayField = {
-                    1
-                },
-                addOpenerNameField = {
-                    1
-                },
-                addSectionsField = {
-                    1
+                extraField = {
+                    listOf<ExtraOptions>()
                 }
             )
         }
