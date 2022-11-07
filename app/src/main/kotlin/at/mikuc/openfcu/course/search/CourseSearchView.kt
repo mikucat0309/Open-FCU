@@ -28,6 +28,7 @@ import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -52,7 +53,6 @@ import at.mikuc.openfcu.course.search.options.SectionsExtraOption
 import at.mikuc.openfcu.destinations.CourseSearchResultViewDestination
 import at.mikuc.openfcu.theme.MaterialTheme3
 import at.mikuc.openfcu.theme.MixMaterialTheme
-import at.mikuc.openfcu.timetable.Section
 import at.mikuc.openfcu.util.LocalNavHostController
 import at.mikuc.openfcu.util.currentOrThrow
 import at.mikuc.openfcu.util.day2str
@@ -92,7 +92,7 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
     var location by remember { mutableStateOf("") }
     var day by remember { mutableStateOf<Int?>(null) }
     var sections by remember { mutableStateOf(emptySet<Int>()) }
-    var extraField by remember { mutableStateOf(emptyList<ExtraOptions>()) }
+    var extraField = remember { mutableStateListOf<ExtraOptions>() }
 
 
     var showDialog by remember { mutableStateOf(false) }
@@ -103,7 +103,7 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
                 showDialog = it
             }
         ) {
-            extraField = extraField + it
+            extraField.add(it)
         }
     }
 
@@ -226,7 +226,7 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
 //                    )
 //                }
 
-                extraField.forEach { item ->
+                extraField.forEachIndexed { index, item ->
                     when (item) {
                         is LocationExtraOption -> {
                             Row(modifier = Modifier.padding(top = 8.dp)) {
@@ -237,7 +237,9 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
                                 MyTextInputField(
                                     label = "上課地點",
                                     value = item.text,
-                                    onUpdate = { item.text = it },
+                                    onUpdate = {
+                                        extraField[index] = item.copy(it)
+                                    },
                                     modifier = modifier,
                                     textFieldModifier = Modifier.fillMaxWidth()
                                 )
@@ -252,7 +254,9 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
                                 MyTextInputField(
                                     label = "開課單位",
                                     value = item.text,
-                                    onUpdate = { item.text = it },
+                                    onUpdate = {
+                                        extraField[index] = item.copy(it)
+                                    },
                                     modifier = modifier,
                                     textFieldModifier = Modifier.fillMaxWidth()
                                 )
@@ -274,13 +278,15 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
                                     label = "學分數",
                                     map = creditOptions,
                                     value = item.value,
-                                    onUpdate = { item.value = it },
+                                    onUpdate = {
+                                        extraField[index] = item.copy(it)
+                                    },
                                     modifier = modifier,
                                     textFieldModifier = Modifier.fillMaxWidth()
                                 )
                             }
                         }
-                        is DayExtraOption ->{
+                        is DayExtraOption -> {
                             Row(
                                 modifier = Modifier.padding(top = 8.dp),
                                 horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -293,7 +299,9 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
                                     "星期",
                                     map = day2str,
                                     value = item.value,
-                                    onUpdate = { item.value = it },
+                                    onUpdate = {
+                                        extraField[index] = item.copy(it)
+                                    },
                                     modifier = modifier,
                                     textFieldModifier = Modifier.fillMaxWidth()
                                 )
@@ -312,7 +320,9 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
                                     "節次",
                                     map = sectionsOptions,
                                     value = item.value,
-                                    onUpdate = { item.value = it },
+                                    onUpdate = {
+                                        extraField[index] = item.copy(it)
+                                    },
                                     modifier = modifier,
                                     textFieldModifier = Modifier.fillMaxWidth()
                                 )
