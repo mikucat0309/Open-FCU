@@ -1,10 +1,12 @@
 package at.mikuc.openfcu.course.detail
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ExposedDropdownMenuBox
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -22,6 +24,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import at.mikuc.openfcu.destinations.CourseAssessmentViewDestination
@@ -50,6 +53,7 @@ fun CourseDetailTAB(title: String) {
     PureCourseDetailTAB(expanded, onClick, title, controller)
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun PureCourseDetailTAB(
     expanded: MutableState<Boolean>,
@@ -59,34 +63,40 @@ private fun PureCourseDetailTAB(
 ) {
     TopAppBar(
         title = {
-            DropdownMenu(
+            ExposedDropdownMenuBox(
                 expanded.value,
-                onDismissRequest = { expanded.value = false }
-            ) {
-                DropdownMenuItem(onClick = { onClick(CourseInfoViewDestination) }) {
-                    Text("課程資訊")
+                onExpandedChange = { expanded.value = !expanded.value }
+            ){
+                Row(
+                    Modifier
+                        .fillMaxHeight()
+                        .padding(start = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(title)
+                    Icon(Icons.Filled.ArrowDropDown, "detail menu")
                 }
-                DropdownMenuItem(onClick = { onClick(CoursePreCourseViewDestination) }) {
-                    Text("前置課程")
-                }
-                DropdownMenuItem(onClick = { onClick(CourseAssessmentViewDestination) }) {
-                    Text("評量方式")
-                }
+                DropdownMenu(
+                    expanded.value,
+                    onDismissRequest = { expanded.value = false },
+                    Modifier.exposedDropdownSize()
+                ) {
+                    DropdownMenuItem(onClick = { onClick(CourseInfoViewDestination) }) {
+                        Text("課程資訊")
+                    }
+                    DropdownMenuItem(onClick = { onClick(CoursePreCourseViewDestination) }) {
+                        Text("前置課程")
+                    }
+                    DropdownMenuItem(onClick = { onClick(CourseAssessmentViewDestination) }) {
+                        Text("評量方式")
+                    }
 //                DropdownMenuItem(onClick = { onClick(CourseInfoViewDestination) }) {
 //                    Text("教材")
 //                }
 //                DropdownMenuItem(onClick = { onClick(CourseInfoViewDestination) }) {
 //                    Text("授課進度")
 //                }
-            }
-            Row(
-                Modifier
-                    .fillMaxHeight()
-                    .clickable { expanded.value = !expanded.value },
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(title)
-                Icon(Icons.Filled.ArrowDropDown, "detail menu")
+                }
             }
         },
         navigationIcon = {
