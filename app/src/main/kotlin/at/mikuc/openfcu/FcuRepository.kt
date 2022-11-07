@@ -9,18 +9,19 @@ import at.mikuc.openfcu.setting.Credential
 import at.mikuc.openfcu.timetable.Section
 import at.mikuc.openfcu.timetable.TimetableResponseDTO
 import at.mikuc.openfcu.util.catchNetworkException
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.cookies.*
-import io.ktor.client.request.*
-import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 private const val COURSE_SEARCH_URL =
     "https://coursesearch04.fcu.edu.tw/Service/Search.asmx/GetType2Result"
@@ -32,12 +33,9 @@ private const val SSO_URL =
 private const val TIMETABLE_DATA_URL =
     "https://service206-sds.fcu.edu.tw/mobileservice/CourseService.svc/Timetable2"
 
-class FcuRepository {
+class FcuRepository : KoinComponent {
 
-    private val client = HttpClient(CIO) {
-        install(ContentNegotiation) { json() }
-        install(HttpCookies)
-    }
+    private val client by inject<HttpClient>()
 
     suspend fun search(filter: SearchFilter): List<Course>? {
         return catchNetworkException {

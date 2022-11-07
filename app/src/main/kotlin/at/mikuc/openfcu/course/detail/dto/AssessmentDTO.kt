@@ -23,6 +23,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AssessmentDTO(
+    val __type: String = "",
     val tpa_score_new: String = "",
     val tpa_score_new_en: String = "",
     val tpa_url: String = "",
@@ -34,6 +35,3 @@ data class AssessmentDTO(
     val sub_id: String = "",
     val scr_dup: String = "",
 )
-
-
-

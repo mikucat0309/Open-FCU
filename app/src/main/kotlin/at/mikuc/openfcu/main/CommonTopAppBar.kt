@@ -6,9 +6,11 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import at.mikuc.openfcu.util.LocalNavHostController
 import at.mikuc.openfcu.util.currentOrThrow
 import kotlinx.coroutines.launch
 
@@ -32,3 +34,17 @@ fun MainTopAppBar(
     )
 }
 
+
+@Composable
+fun BackTopAppBar(title: String) {
+    val controller = LocalNavHostController.currentOrThrow
+    TopAppBar(
+        title = { Text(title) },
+        navigationIcon = {
+            val scope = rememberCoroutineScope()
+            IconButton(onClick = { scope.launch { controller.popBackStack() } }) {
+                Icon(Icons.Outlined.ArrowBack, "back")
+            }
+        }
+    )
+}

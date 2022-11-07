@@ -1,7 +1,7 @@
 package at.mikuc.openfcu.course.detail
 
-import kotlinx.serialization.Serializable
 import at.mikuc.openfcu.course.Period
+import kotlinx.serialization.Serializable
 
 // TODO change naming
 @Serializable

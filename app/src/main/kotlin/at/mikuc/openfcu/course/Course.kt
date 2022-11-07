@@ -1,7 +1,5 @@
 package at.mikuc.openfcu.course
 
-import android.util.Log
-import at.mikuc.openfcu.TAG
 import at.mikuc.openfcu.util.IntRangeSerializer
 import at.mikuc.openfcu.util.str2day
 import kotlinx.serialization.SerialName
@@ -47,7 +45,6 @@ data class Course(
                         .trim(',').replace(',', '、')
                     if (periods.map { it.location }.any { loc -> teacher in loc })
                         teacher = ""
-                    Log.d(TAG, "Course: $name Code: $code Class ID: $classId")
                     Course(
                         name = name,
                         id = id,
@@ -101,13 +98,13 @@ data class Period(
                 .findAll(period)
                 .map {
                     val (week, st, loc) = it.destructured
-                    Period(str2day[week] ?: 0, IntRange(st.toInt()-1, st.toInt()-1), loc)
+                    Period(str2day[week] ?: 0, IntRange(st.toInt() - 1, st.toInt() - 1), loc)
                 }.toMutableList()
             periods += Regex("""\((.)\)(\d{2})-(\d{2}) +(\S+)""")
                 .findAll(period)
                 .map {
                     val (week, st, ed, loc) = it.destructured
-                    Period(str2day[week] ?: 0, IntRange(st.toInt()-1, ed.toInt()-1), loc)
+                    Period(str2day[week] ?: 0, IntRange(st.toInt() - 1, ed.toInt() - 1), loc)
                 }
             var teacher = period.substringAfterLast(" ").trim(',').replace(',', '、')
             if (periods.map { it.location }.any { loc -> teacher in loc })

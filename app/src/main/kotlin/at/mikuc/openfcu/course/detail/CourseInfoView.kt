@@ -24,12 +24,12 @@ import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination
 @Composable
-fun CourseDetailView(viewModel: CourseDetailViewModel = getActivityViewModel()) {
-    PureCourseDetailView(viewModel.info, viewModel.description)
+fun CourseInfoView(viewModel: CourseDetailViewModel = getActivityViewModel()) {
+    PureCourseInfoView(viewModel.info, viewModel.description)
 }
 
 @Composable
-fun PureCourseDetailView(info: CourseInfo, description: String) {
+fun PureCourseInfoView(info: CourseInfo, description: String) {
     Column(
         Modifier
             .fillMaxSize()
@@ -40,7 +40,7 @@ fun PureCourseDetailView(info: CourseInfo, description: String) {
         ListItem("教師名稱", info.teacher)
         Row {
             ListItem("開課單位", info.clsName, Modifier.weight(1.0f))
-            ListItem("學分數", info.scrCredit.toInt().toString(), Modifier.weight(1.0f))
+            ListItem("學分數", info.scrCredit.toString(), Modifier.weight(1.0f))
         }
         Column(
             Modifier.padding(vertical = 8.dp)
@@ -73,9 +73,9 @@ fun PureCourseDetailView(info: CourseInfo, description: String) {
 
 @Preview(showBackground = true, widthDp = 360, heightDp = 584)
 @Composable
-fun PureCourseDetailPreview() {
+fun PureCourseInfoPreview() {
     MixMaterialTheme {
-        PureCourseDetailView(
+        PureCourseInfoView(
             info = CourseInfo(
                 "1234567890abcdef123",
                 "Lorem ipsum",

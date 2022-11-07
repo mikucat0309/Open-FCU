@@ -31,7 +31,6 @@ import at.mikuc.openfcu.theme.MixMaterialTheme
 import at.mikuc.openfcu.util.getActivityViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import io.github.g0dkar.qrcode.QRCode
-import org.koin.androidx.compose.getViewModel
 
 @Destination
 @Composable
@@ -73,8 +72,8 @@ private fun PureQRCodeView(
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            MyTextButton(Icons.Filled.Refresh,"Refresh", onRefresh)
-            MyTextButton(Icons.Filled.ContentCopy,"Copy", onCopy)
+            MyTextButton(Icons.Filled.Refresh, "Refresh", onRefresh)
+            MyTextButton(Icons.Filled.ContentCopy, "Copy", onCopy)
         }
     }
 }

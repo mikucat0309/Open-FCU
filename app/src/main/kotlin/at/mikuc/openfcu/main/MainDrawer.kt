@@ -41,8 +41,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MainDrawer(
-    appRoute: Array<MainRoute>,
-    systemRoute: Array<MainRoute>,
+    appRoute: Array<DrawerItem>,
+    systemRoute: Array<DrawerItem>,
 ) {
     Column(
         modifier = Modifier
@@ -73,12 +73,12 @@ fun MainDrawer(
 @Composable
 private fun MainDrawerPreview() {
     val appRoute = arrayOf(
-        MainRoute.Home,
-        MainRoute.Redirect,
-        MainRoute.Timetable,
+        DrawerItem.Home,
+        DrawerItem.Redirect,
+        DrawerItem.Timetable,
     )
-    val systemRoute = arrayOf<MainRoute>(
-        MainRoute.Setting
+    val systemRoute = arrayOf<DrawerItem>(
+        DrawerItem.Setting
     )
     MixMaterialTheme {
         CompositionLocalProvider(
@@ -93,7 +93,7 @@ private fun MainDrawerPreview() {
 
 @Composable
 private fun DrawerButtonList(
-    items: Array<MainRoute>,
+    items: Array<DrawerItem>,
     scaffoldState: ScaffoldState = LocalScaffoldState.currentOrThrow
 ) {
     val scope = rememberCoroutineScope()

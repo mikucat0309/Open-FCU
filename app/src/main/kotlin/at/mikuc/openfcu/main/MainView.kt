@@ -19,14 +19,14 @@ import com.ramcosta.composedestinations.DestinationsNavHost
 @Composable
 fun MainView() {
     val appRoute = arrayOf(
-        MainRoute.Home,
-        MainRoute.Redirect,
-        MainRoute.QrCode,
-        MainRoute.Course,
-        MainRoute.Timetable,
+        DrawerItem.Home,
+        DrawerItem.Redirect,
+        DrawerItem.QrCode,
+        DrawerItem.CourseSearch,
+        DrawerItem.Timetable,
     )
-    val systemRoute = arrayOf<MainRoute>(
-        MainRoute.Setting
+    val systemRoute = arrayOf<DrawerItem>(
+        DrawerItem.Setting
     )
     CompositionLocalProvider(
         LocalScaffoldState provides rememberScaffoldState(),
@@ -35,9 +35,9 @@ fun MainView() {
         val route = LocalNavHostController.currentOrThrow.mainRoute
         Scaffold(
             scaffoldState = LocalScaffoldState.currentOrThrow,
-            topBar = { route?.topBar() },
+            topBar = { route?.TAB() },
             drawerContent = { MainDrawer(appRoute, systemRoute) },
-            floatingActionButton = { route?.floatingActionButton() }
+            floatingActionButton = { route?.FAB() }
         ) {
             Box(
                 modifier = Modifier

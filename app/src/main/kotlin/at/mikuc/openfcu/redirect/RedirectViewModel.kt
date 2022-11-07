@@ -22,32 +22,34 @@ class RedirectViewModel(
     private val repo: FcuRepository,
 ) : ViewModel(), KoinComponent {
 
-    var links by mutableStateOf(listOf(
-        RedirectItem(
-            title = "iLearn 2.0",
-            service = "iLearn 2.0",
-        ),
-        RedirectItem(
-            title = "MyFCU",
-            service = "https://myfcu.fcu.edu.tw/main/webClientMyFcuMain.aspx",
-        ),
-        RedirectItem(
-            title = "自主健康管理",
-            service = "https://myfcu.fcu.edu.tw/main/S4301/S430101_temperature_record.aspx",
-        ),
-        RedirectItem(
-            title = "空間借用",
-            service = "https://myfcu.fcu.edu.tw/main/S5672/S5672_mainApply.aspx",
-        ),
-        RedirectItem(
-            title = "學生請假",
-            service = "https://myfcu.fcu.edu.tw/main/S3401/s3401_leave.aspx",
-        ),
-        RedirectItem(
-            title = "課程查詢",
-            service = "https://myfcu.fcu.edu.tw/main/coursesearch.aspx?sso",
-        ),
-    ))
+    var links by mutableStateOf(
+        listOf(
+            RedirectItem(
+                title = "iLearn 2.0",
+                service = "iLearn 2.0",
+            ),
+            RedirectItem(
+                title = "MyFCU",
+                service = "https://myfcu.fcu.edu.tw/main/webClientMyFcuMain.aspx",
+            ),
+            RedirectItem(
+                title = "自主健康管理",
+                service = "https://myfcu.fcu.edu.tw/main/S4301/S430101_temperature_record.aspx",
+            ),
+            RedirectItem(
+                title = "空間借用",
+                service = "https://myfcu.fcu.edu.tw/main/S5672/S5672_mainApply.aspx",
+            ),
+            RedirectItem(
+                title = "學生請假",
+                service = "https://myfcu.fcu.edu.tw/main/S3401/s3401_leave.aspx",
+            ),
+            RedirectItem(
+                title = "課程查詢",
+                service = "https://myfcu.fcu.edu.tw/main/coursesearch.aspx?sso",
+            ),
+        )
+    )
         private set
 
     private val _uri = MutableStateFlow<Uri?>(null)
@@ -72,7 +74,11 @@ class RedirectViewModel(
         }
     }
 
-    fun receivedMsg() { _msg.value = null }
+    fun receivedMsg() {
+        _msg.value = null
+    }
 
-    fun receivedUri() { _uri.value = null }
+    fun receivedUri() {
+        _uri.value = null
+    }
 }

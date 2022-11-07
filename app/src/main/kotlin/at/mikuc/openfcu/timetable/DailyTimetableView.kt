@@ -289,7 +289,7 @@ fun CurrentSectionCard(
 @Composable
 private fun CurrentSectionCardPreview() {
     MixMaterialTheme {
-        CurrentSectionCard("纖維染色學", "語206", 3, false,{} , null)
+        CurrentSectionCard("纖維染色學", "語206", 3, false, {}, null)
     }
 }
 

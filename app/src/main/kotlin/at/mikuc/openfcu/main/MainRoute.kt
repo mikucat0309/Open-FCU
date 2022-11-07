@@ -1,86 +1,100 @@
 package at.mikuc.openfcu.main
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CalendarMonth
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.OpenInBrowser
-import androidx.compose.material.icons.outlined.QrCode
-import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
 import at.mikuc.openfcu.appCurrentDestinationAsState
-import at.mikuc.openfcu.course.search.CourseSearchFAB
-import at.mikuc.openfcu.destinations.CourseDetailViewDestination
+import at.mikuc.openfcu.course.detail.CourseDetailTAB
+import at.mikuc.openfcu.destinations.CourseAssessmentViewDestination
+import at.mikuc.openfcu.destinations.CourseInfoViewDestination
+import at.mikuc.openfcu.destinations.CoursePreCourseViewDestination
 import at.mikuc.openfcu.destinations.CourseSearchResultViewDestination
 import at.mikuc.openfcu.destinations.CourseSearchViewDestination
+import at.mikuc.openfcu.destinations.DailyTimetableViewDestination
 import at.mikuc.openfcu.destinations.Destination
-import at.mikuc.openfcu.destinations.DirectionDestination
+import at.mikuc.openfcu.destinations.HomeViewDestination
 import at.mikuc.openfcu.destinations.QRCodeViewDestination
 import at.mikuc.openfcu.destinations.RedirectViewDestination
 import at.mikuc.openfcu.destinations.SettingViewDestination
-import at.mikuc.openfcu.destinations.DailyTimetableViewDestination
-import at.mikuc.openfcu.destinations.HomeViewDestination
-import at.mikuc.openfcu.util.LocalNavHostController
-import at.mikuc.openfcu.util.currentOrThrow
 
-sealed class MainRoute(
-    val dest: DirectionDestination,
-    val icon: ImageVector,
-    val label: String
-) {
+sealed class MainRoute(val destination: Destination) {
 
     @Composable
-    open fun topBar() {
-        MainTopAppBar(label)
+    open fun TAB() {
     }
 
     @Composable
-    open fun floatingActionButton() {
+    open fun FAB() {
     }
 
-    object Home : MainRoute(
-        HomeViewDestination,
-        Icons.Outlined.Home,
-        "Open FCU",
-    )
+    object Home : MainRoute(HomeViewDestination) {
+        @Composable
+        override fun TAB() {
+            MainTopAppBar("Open FCU")
+        }
+    }
 
-    object Redirect : MainRoute(
-        RedirectViewDestination,
-        Icons.Outlined.OpenInBrowser,
-        "快速跳轉",
-    )
+    object Redirect : MainRoute(RedirectViewDestination) {
+        @Composable
+        override fun TAB() {
+            MainTopAppBar("快速跳轉")
+        }
+    }
 
-    object Course : MainRoute(
-        CourseSearchViewDestination,
-        Icons.Outlined.Search,
-        "課程查詢",
-    )
+    object CourseSearch : MainRoute(CourseSearchViewDestination) {
+        @Composable
+        override fun TAB() {
+            MainTopAppBar("課程查詢")
+        }
+    }
 
-    object CourseResult : MainRoute(
-        CourseSearchResultViewDestination,
-        Icons.Outlined.Search,
-        "查詢結果",
-    )
+    object CourseSearchResult : MainRoute(CourseSearchResultViewDestination) {
+        @Composable
+        override fun TAB() {
+            BackTopAppBar("查詢結果")
+        }
+    }
 
-    object QrCode : MainRoute(
-        QRCodeViewDestination,
-        Icons.Outlined.QrCode,
-        "QR Code",
-    )
+    object CourseInfo : MainRoute(CourseInfoViewDestination) {
+        @Composable
+        override fun TAB() {
+            CourseDetailTAB("課程資訊")
+        }
+    }
 
-    object Timetable : MainRoute(
-        DailyTimetableViewDestination,
-        Icons.Outlined.CalendarMonth,
-        "課表",
-    )
+    object CoursePreCourse : MainRoute(CoursePreCourseViewDestination) {
+        @Composable
+        override fun TAB() {
+            CourseDetailTAB("前置課程")
+        }
+    }
 
-    object Setting : MainRoute(
-        SettingViewDestination,
-        Icons.Outlined.Settings,
-        "設定"
-    )
+    object CourseAssessment : MainRoute(CourseAssessmentViewDestination) {
+        @Composable
+        override fun TAB() {
+            CourseDetailTAB("評量方式")
+        }
+    }
+
+    object QrCode : MainRoute(QRCodeViewDestination) {
+        @Composable
+        override fun TAB() {
+            MainTopAppBar("QR Code")
+        }
+    }
+
+    object Timetable : MainRoute(DailyTimetableViewDestination) {
+        @Composable
+        override fun TAB() {
+            MainTopAppBar("課表")
+        }
+    }
+
+    object Setting : MainRoute(SettingViewDestination) {
+        @Composable
+        override fun TAB() {
+            MainTopAppBar("設定")
+        }
+    }
 }
 
 val NavHostController.mainRoute: MainRoute?
@@ -88,11 +102,13 @@ val NavHostController.mainRoute: MainRoute?
 
 fun Destination.toMainRoute(): MainRoute = when (this) {
     HomeViewDestination -> MainRoute.Home
-    CourseSearchViewDestination -> MainRoute.Course
-    CourseSearchResultViewDestination -> MainRoute.CourseResult
+    CourseSearchViewDestination -> MainRoute.CourseSearch
+    CourseSearchResultViewDestination -> MainRoute.CourseSearchResult
     QRCodeViewDestination -> MainRoute.QrCode
     RedirectViewDestination -> MainRoute.Redirect
     SettingViewDestination -> MainRoute.Setting
     DailyTimetableViewDestination -> MainRoute.Timetable
-    else -> MainRoute.Home
+    CourseInfoViewDestination -> MainRoute.CourseInfo
+    CoursePreCourseViewDestination -> MainRoute.CoursePreCourse
+    CourseAssessmentViewDestination -> MainRoute.CourseAssessment
 }

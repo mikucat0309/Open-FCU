@@ -140,7 +140,7 @@ fun MixMaterialTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Compo
         shapes = Shapes,
         content = {
             androidx.compose.material3.MaterialTheme(
-                colorScheme = if (darkTheme)  M3DarkColors else M3LightColors,
+                colorScheme = if (darkTheme) M3DarkColors else M3LightColors,
                 typography = AppTypography,
                 content = content
             )

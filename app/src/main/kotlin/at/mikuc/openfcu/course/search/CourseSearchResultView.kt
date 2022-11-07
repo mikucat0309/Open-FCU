@@ -26,7 +26,7 @@ import at.mikuc.openfcu.course.Course
 import at.mikuc.openfcu.course.Opener
 import at.mikuc.openfcu.course.Period
 import at.mikuc.openfcu.course.detail.CourseDetailViewModel
-import at.mikuc.openfcu.destinations.CourseDetailViewDestination
+import at.mikuc.openfcu.destinations.CourseInfoViewDestination
 import at.mikuc.openfcu.theme.MixMaterialTheme
 import at.mikuc.openfcu.util.LocalNavHostController
 import at.mikuc.openfcu.util.currentOrThrow
@@ -42,9 +42,11 @@ fun CourseSearchResultView(
     cdVM: CourseDetailViewModel = getActivityViewModel(),
 ) {
     val controller = LocalNavHostController.currentOrThrow
-    CourseLazyColumnView(courses = csVM.result) { fullID ->
-        cdVM.updateFullID(fullID)
-        controller.navigate(CourseDetailViewDestination)
+    Column {
+        CourseLazyColumnView(courses = csVM.result) { fullID ->
+            cdVM.updateFullID(fullID)
+            controller.navigate(CourseInfoViewDestination)
+        }
     }
 }
 

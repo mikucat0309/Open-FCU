@@ -34,7 +34,7 @@ class CourseDetailViewModel(
         fetchCourseDetail()
     }
 
-    fun fetchCourseDetail(dispatcher: CoroutineDispatcher = Dispatchers.IO) {
+    private fun fetchCourseDetail(dispatcher: CoroutineDispatcher = Dispatchers.IO) {
         require(fullID.length == 19) { "Invalid length of course full ID" }
         viewModelScope.launch(dispatcher) {
             val hashID = repo.getHashID(fullID)
