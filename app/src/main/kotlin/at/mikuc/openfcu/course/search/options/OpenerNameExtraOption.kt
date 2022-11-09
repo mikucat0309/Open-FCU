@@ -1,4 +1,8 @@
 package at.mikuc.openfcu.course.search.options
 
-data class OpenerNameExtraOption(var text: String): ExtraOptions() {
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class OpenerNameExtraOption(@Contextual var text: String): ExtraOptions() {
 }

@@ -1,5 +1,8 @@
 package at.mikuc.openfcu.course.search
 
+import at.mikuc.openfcu.course.search.options.CreditExtraOption
+import at.mikuc.openfcu.course.search.options.ExtraOptions
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonObjectBuilder
@@ -15,18 +18,15 @@ data class SearchFilter(
     val code: Int? = null,
     val teacher: String = "",
     val day: Int? = null,
-    val sections: Set<Int> = emptySet(),
-    val location: String = "",
-    val credit: Int? = null,
-    val openerName: String = "",
-    val openNum: Int? = null,
+    val sections: Int? = null,
+    val extraField: List<ExtraOptions>? = emptyList()
 ) {
     fun isValid(): Boolean {
         return name.isNotBlank() ||
                 teacher.isNotBlank() ||
                 code != null ||
                 day != null ||
-                sections.isNotEmpty()
+                sections != null
     }
 
     fun toDTO(): JsonObject {
@@ -67,10 +67,10 @@ data class SearchFilter(
     }
 
     private fun JsonObjectBuilder.putPeriodFilter() {
-        if (day != null || sections.isNotEmpty()) putJsonObject("weekPeriod") {
+        if (day != null || sections != null) putJsonObject("weekPeriod") {
             put("enabled", true)
             put("week", day?.toString() ?: "*")
-            put("period", if (sections.isNotEmpty()) sections.first().toString() else "*")
+            put("period", sections?.toString() ?: "*")
         }
     }
 }
