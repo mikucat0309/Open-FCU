@@ -68,7 +68,7 @@ class CourseDetailRepository(private val client: HttpClient) : KoinComponent {
                 scr_teacher,
                 cls_name,
                 scr_credit,
-                Period.parse(scr_period),
+                Period.parse(scr_period).first,
             )
         }
     }

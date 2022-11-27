@@ -4,11 +4,7 @@ import at.mikuc.openfcu.util.IntRangeSerializer
 import at.mikuc.openfcu.util.str2day
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.jsonPrimitive
-import kotlin.math.roundToInt
+import org.koin.core.component.KoinComponent
 
 data class Course(
     val name: String,
@@ -22,54 +18,7 @@ data class Course(
     val openNum: Int,
     val acceptNum: Int,
     val remark: String?,
-) {
-    companion object {
-        fun fromDTO(year: Int, semester: Int, json: JsonObject): List<Course> {
-            val d = json["d"]!!.jsonPrimitive.content
-            val coursesDTO = Json.decodeFromString<CoursesDTO>(d)
-            return coursesDTO.items.map { courseDTO ->
-                courseDTO.run {
-                    var periods = Regex("""\((.)\)(\d{2}) +(\S+)""")
-                        .findAll(period)
-                        .map {
-                            val (week, st, loc) = it.destructured
-                            Period(str2day[week] ?: 0, IntRange(st.toInt(), st.toInt()), loc)
-                        }
-                    periods += Regex("""\((.)\)(\d{2})-(\d{2}) +(\S+)""")
-                        .findAll(period)
-                        .map {
-                            val (week, st, ed, loc) = it.destructured
-                            Period(str2day[week] ?: 0, IntRange(st.toInt(), ed.toInt()), loc)
-                        }
-                    var teacher = period.substringAfterLast(" ")
-                        .trim(',').replace(',', '、')
-                    if (periods.map { it.location }.any { loc -> teacher in loc })
-                        teacher = ""
-                    Course(
-                        name = name,
-                        id = id,
-                        fullID = "$year$semester$classId$oldId$duplicate",
-                        code = code.toInt(),
-                        teacher = teacher,
-                        periods = periods.toList(),
-                        credit = credit.roundToInt(),
-                        opener = Opener(
-                            name = className,
-                            academyId = classId.substring(0, 2),
-                            departId = classId.substring(2, 4),
-                            idk = classId[4],
-                            grade = classId[5],
-                            clazz = classId[6],
-                        ),
-                        openNum = openNum.roundToInt(),
-                        acceptNum = acceptNum.roundToInt(),
-                        remark = remark
-                    )
-                }
-            }
-        }
-    }
-}
+) : KoinComponent
 
 // CE 電資學院
 // 07 資訊系
@@ -93,7 +42,7 @@ data class Period(
     val location: String,
 ) {
     companion object {
-        fun parse(period: String): List<Period> {
+        fun parse(period: String): Pair<List<Period>, String> {
             val periods = Regex("""\((.)\)(\d{2}) +(\S+)""")
                 .findAll(period)
                 .map {
@@ -109,7 +58,7 @@ data class Period(
             var teacher = period.substringAfterLast(" ").trim(',').replace(',', '、')
             if (periods.map { it.location }.any { loc -> teacher in loc })
                 teacher = ""
-            return periods
+            return periods to teacher
         }
     }
 }
