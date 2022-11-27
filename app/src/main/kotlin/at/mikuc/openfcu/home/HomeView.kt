@@ -33,7 +33,6 @@ import at.mikuc.openfcu.util.getActivity
 import at.mikuc.openfcu.util.getActivityViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
-import org.koin.androidx.compose.getViewModel
 import java.time.LocalDateTime
 
 @RootNavGraph(start = true)

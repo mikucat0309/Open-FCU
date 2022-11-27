@@ -37,7 +37,6 @@ import at.mikuc.openfcu.util.getActivity
 import at.mikuc.openfcu.util.getActivityViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
 
 @Destination
 @Composable

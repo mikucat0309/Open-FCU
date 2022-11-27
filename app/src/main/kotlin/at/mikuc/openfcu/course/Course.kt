@@ -1,7 +1,6 @@
 package at.mikuc.openfcu.course
 
-import android.util.Log
-import at.mikuc.openfcu.TAG
+import at.mikuc.openfcu.util.IntRangeSerializer
 import at.mikuc.openfcu.util.str2day
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -14,6 +13,7 @@ import kotlin.math.roundToInt
 data class Course(
     val name: String,
     val id: String,
+    val fullID: String,
     val code: Int,
     val teacher: String,
     val periods: List<Period>,
@@ -24,7 +24,7 @@ data class Course(
     val remark: String?,
 ) {
     companion object {
-        fun fromDTO(json: JsonObject): List<Course> {
+        fun fromDTO(year: Int, semester: Int, json: JsonObject): List<Course> {
             val d = json["d"]!!.jsonPrimitive.content
             val coursesDTO = Json.decodeFromString<CoursesDTO>(d)
             return coursesDTO.items.map { courseDTO ->
@@ -45,10 +45,10 @@ data class Course(
                         .trim(',').replace(',', '、')
                     if (periods.map { it.location }.any { loc -> teacher in loc })
                         teacher = ""
-                    Log.d(TAG, "Course: $name Code: $code Class ID: $classId")
                     Course(
                         name = name,
                         id = id,
+                        fullID = "$year$semester$classId$oldId$duplicate",
                         code = code.toInt(),
                         teacher = teacher,
                         periods = periods.toList(),
@@ -85,11 +85,34 @@ data class Opener(
     val clazz: Char,
 )
 
+@Serializable
 data class Period(
     val day: Int,
+    @Serializable(with = IntRangeSerializer::class)
     val range: IntRange,
     val location: String,
-)
+) {
+    companion object {
+        fun parse(period: String): List<Period> {
+            val periods = Regex("""\((.)\)(\d{2}) +(\S+)""")
+                .findAll(period)
+                .map {
+                    val (week, st, loc) = it.destructured
+                    Period(str2day[week] ?: 0, IntRange(st.toInt() - 1, st.toInt() - 1), loc)
+                }.toMutableList()
+            periods += Regex("""\((.)\)(\d{2})-(\d{2}) +(\S+)""")
+                .findAll(period)
+                .map {
+                    val (week, st, ed, loc) = it.destructured
+                    Period(str2day[week] ?: 0, IntRange(st.toInt() - 1, ed.toInt() - 1), loc)
+                }
+            var teacher = period.substringAfterLast(" ").trim(',').replace(',', '、')
+            if (periods.map { it.location }.any { loc -> teacher in loc })
+                teacher = ""
+            return periods
+        }
+    }
+}
 
 @Serializable
 data class CoursesDTO(
