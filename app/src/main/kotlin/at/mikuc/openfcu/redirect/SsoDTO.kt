@@ -8,14 +8,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SSORequest(
-    val credential: Credential,
-    @SerialName("RedirectService") val redirectSsoService: String,
+    @SerialName("Account") val account: String,
+    @SerialName("Password") val password: String,
+    @SerialName("RedirectService") val service: String,
 ) {
-    @SerialName("Account")
-    val account: String = credential.id
-
-    @SerialName("Password")
-    val password: String = credential.password
+    constructor(cred: Credential, service: String) : this(cred.id, cred.password, service)
 }
 
 @Serializable
