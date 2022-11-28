@@ -10,7 +10,6 @@ import at.mikuc.openfcu.qrcode.QrcodeViewModel
 import at.mikuc.openfcu.redirect.RedirectViewModel
 import at.mikuc.openfcu.setting.SettingViewModel
 import at.mikuc.openfcu.setting.UserPreferenceRepository
-import at.mikuc.openfcu.timetable.ClockRepository
 import at.mikuc.openfcu.timetable.TimetableViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -55,7 +54,6 @@ private val myModule = module {
     singleOf(::UserPreferenceRepository)
     singleOf(::FcuRepository)
     singleOf(::CourseDetailRepository)
-    singleOf(::ClockRepository)
 
     viewModelOf(::CourseSearchViewModel)
     viewModelOf(::QrcodeViewModel)
