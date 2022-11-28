@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.mikuc.openfcu.course.Period
-import at.mikuc.openfcu.theme.MaterialTheme3
 import at.mikuc.openfcu.theme.MixMaterialTheme
 import at.mikuc.openfcu.util.day2str
 import at.mikuc.openfcu.util.getActivityViewModel
@@ -53,7 +52,7 @@ fun PureCourseInfoView(info: CourseInfo, description: String) {
                 Text(
                     "上課時間與地點",
                     style = MaterialTheme.typography.subtitle1,
-                    color = MaterialTheme3.colorScheme.onSurface
+                    color = MaterialTheme.colors.onSurface
                 )
             }
             Column(
@@ -115,17 +114,17 @@ private fun PeriodRow(period: Period) {
         Text(
             "星期" + day2str[period.day],
             style = MaterialTheme.typography.subtitle2,
-            color = MaterialTheme3.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colors.onSurface
         )
         Text(
             period.range.toTimeRangeString(),
             style = MaterialTheme.typography.subtitle2,
-            color = MaterialTheme3.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colors.onSurface
         )
         Text(
             period.location,
             style = MaterialTheme.typography.subtitle2,
-            color = MaterialTheme3.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colors.onSurface
         )
     }
 }
@@ -146,7 +145,7 @@ fun ListItem(
             Text(
                 title,
                 style = MaterialTheme.typography.subtitle1,
-                color = MaterialTheme3.colorScheme.onSurface
+                color = MaterialTheme.colors.onSurface
             )
         }
         Row(
@@ -156,7 +155,7 @@ fun ListItem(
             Text(
                 subtitle,
                 style = MaterialTheme.typography.subtitle2,
-                color = MaterialTheme3.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colors.onSurface
             )
         }
     }

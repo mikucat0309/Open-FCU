@@ -41,7 +41,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.text.isDigitsOnly
 import at.mikuc.openfcu.theme.M3
-import at.mikuc.openfcu.theme.MaterialTheme3
 import at.mikuc.openfcu.theme.MixMaterialTheme
 import at.mikuc.openfcu.util.currentSection
 import at.mikuc.openfcu.util.day2str
@@ -190,7 +189,7 @@ private fun TimetablePreview() {
 @Composable
 private fun DayButton(dayOfWeek: Int, dayOfMonth: Int, currentDay: MutableState<Int>) {
     val isSelected = dayOfWeek == currentDay.value
-    val color = MaterialTheme3.colorScheme.run { if (isSelected) primary else onSurface }
+    val color = MaterialTheme.colors.run { if (isSelected) primary else onSurface }
     Column(
         Modifier
             .fillMaxHeight()
@@ -225,7 +224,7 @@ fun SectionCard(
             .fillMaxWidth()
             .height(72.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(MaterialTheme3.colorScheme.surface)
+            .background(MaterialTheme.colors.surface)
             .background(M3.Light.surface3)
     ) {
         val centerLine = createGuidelineFromTop(0.5f)
@@ -313,7 +312,7 @@ private fun ClockDialog(
         Column(
             Modifier
                 .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme3.colorScheme.surface)
+                .background(MaterialTheme.colors.surface)
                 .padding(24.dp, 16.dp, 8.dp, 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically)
         ) {
@@ -371,7 +370,7 @@ private fun ClockDialog(
 private fun ClockDialogPreview() {
     MixMaterialTheme {
         Surface(
-            Modifier.background(MaterialTheme3.colorScheme.surface)
+            Modifier.background(MaterialTheme.colors.surface)
         ) {
             ClockDialog({}, {}, null)
         }

@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import at.mikuc.openfcu.appCurrentDestinationAsState
 import at.mikuc.openfcu.theme.M3
-import at.mikuc.openfcu.theme.MaterialTheme3
 import at.mikuc.openfcu.theme.MixMaterialTheme
 import at.mikuc.openfcu.util.LocalNavHostController
 import at.mikuc.openfcu.util.currentOrThrow
@@ -119,7 +118,7 @@ fun DrawerButton(
     isSelected: Boolean,
     onClick: () -> Unit,
 ) {
-    val colors = MaterialTheme3.colorScheme
+    val colors = MaterialTheme.colors
     val imageAlpha = if (isSelected) 1f else 0.6f
     val textIconColor = if (isSelected) colors.primary else colors.onSurface
     val backgroundColor = if (isSelected) M3.Light.surface5 else colors.surface

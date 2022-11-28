@@ -66,7 +66,7 @@ private fun PureCourseDetailTAB(
             ExposedDropdownMenuBox(
                 expanded.value,
                 onExpandedChange = { expanded.value = !expanded.value }
-            ){
+            ) {
                 Row(
                     Modifier
                         .fillMaxHeight()

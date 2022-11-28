@@ -111,7 +111,6 @@ dependencies {
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.material:material-icons-core:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.0.0-rc01")
     implementation("androidx.compose.animation:animation:$composeVersion")
     implementation("androidx.activity:activity-compose:1.6.1")
 
