@@ -7,4 +7,4 @@ import org.koin.androidx.compose.getViewModel
 
 @Composable
 inline fun <reified T : ViewModel> getActivityViewModel(): T =
-    getViewModel(owner = LocalContext.current.getActivity()!!)
+    getViewModel(viewModelStoreOwner = LocalContext.current.getActivity()!!)

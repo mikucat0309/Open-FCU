@@ -103,7 +103,7 @@ tasks.withType<DetektCreateBaselineTask>().configureEach {
 dependencies {
     implementation("androidx.core:core-ktx:1.9.0")
 
-    val composeVersion = "1.2.1"
+    val composeVersion = "1.3.1"
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.runtime:runtime:$composeVersion")
     implementation("androidx.compose.ui:ui:$composeVersion")
@@ -113,7 +113,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.material3:material3:1.0.0-rc01")
     implementation("androidx.compose.animation:animation:$composeVersion")
-    implementation("androidx.activity:activity-compose:1.6.0")
+    implementation("androidx.activity:activity-compose:1.6.1")
 
     // Constraint Layout
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
@@ -123,16 +123,16 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
 
     // Navigation
-    val navVersion = "1.7.21-beta"
+    val navVersion = "1.7.27-beta"
     implementation("io.github.raamcosta.compose-destinations:core:$navVersion")
     ksp("io.github.raamcosta.compose-destinations:ksp:$navVersion")
 
     // DI
     val koinVersion = "3.2.2"
     implementation("io.insert-koin:koin-core:$koinVersion")
-    implementation("io.insert-koin:koin-android:$koinVersion")
-    implementation("io.insert-koin:koin-androidx-compose:3.2.1")
-    implementation("io.insert-koin:koin-androidx-navigation:$koinVersion")
+    implementation("io.insert-koin:koin-android:3.3.0")
+    implementation("io.insert-koin:koin-androidx-compose:3.3.0")
+    implementation("io.insert-koin:koin-androidx-navigation:3.3.0")
     testImplementation("io.insert-koin:koin-test:$koinVersion")
     testImplementation("io.insert-koin:koin-test-junit5:$koinVersion")
 
@@ -148,10 +148,10 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineVersion")
 
     // Serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 
     // HTTP Client
-    val ktorVersion = "2.1.1"
+    val ktorVersion = "2.1.3"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
@@ -162,7 +162,7 @@ dependencies {
     implementation("org.slf4j:slf4j-android:1.7.36")
 
     // Unit Test
-    val kotestVersion = "5.4.2"
+    val kotestVersion = "5.5.4"
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest.extensions:kotest-extensions-koin:1.1.0")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
