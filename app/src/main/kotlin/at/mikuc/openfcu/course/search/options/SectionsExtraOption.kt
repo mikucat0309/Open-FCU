@@ -1,4 +1,6 @@
 package at.mikuc.openfcu.course.search.options
 
-data class SectionsExtraOption(var value: Int?): ExtraOptions() {
+import kotlinx.serialization.Contextual
+
+data class SectionsExtraOption(@Contextual var value: Int?): ExtraOptions() {
 }

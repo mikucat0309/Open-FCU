@@ -86,12 +86,12 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
     var courseName by remember { mutableStateOf("") }
     var teacherName by remember { mutableStateOf("") }
     var code by remember { mutableStateOf<Int?>(null) }
-    var credit by remember { mutableStateOf<Int?>(null) }
-    var openerName by remember { mutableStateOf("") }
-    var openNum by remember { mutableStateOf<Int?>(null) }
-    var location by remember { mutableStateOf("") }
+//    var credit by remember { mutableStateOf<Int?>(null) }
+//    var openerName by remember { mutableStateOf("") }
+//    var openNum by remember { mutableStateOf<Int?>(null) }
+//    var location by remember { mutableStateOf("") }
     var day by remember { mutableStateOf<Int?>(null) }
-    var sections by remember { mutableStateOf(emptySet<Int>()) }
+    var sections by remember { mutableStateOf<Int?>(null) }
     var extraField = remember { mutableStateListOf<ExtraOptions>() }
 
 
@@ -195,8 +195,8 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
                     MyOptionalDropdownMenu(
                         "節次",
                         map = sectionsOptions,
-                        value = day,
-                        onUpdate = { day = it },
+                        value = sections,
+                        onUpdate = { sections = it },
                         modifier = Modifier
 //                            .width(120.dp)
                             .weight(2.0f)
@@ -360,10 +360,7 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
                 teacher = teacherName,
                 day = day,
                 sections = sections,
-                location = location,
-                credit = credit,
-                openerName = openerName,
-                openNum = openNum
+                extraField = extraField
             )
             if (filter.isValid())
                 onSubmit(filter)

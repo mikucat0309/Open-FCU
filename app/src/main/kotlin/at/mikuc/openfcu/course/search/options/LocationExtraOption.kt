@@ -1,4 +1,8 @@
 package at.mikuc.openfcu.course.search.options
 
-data class LocationExtraOption(var text: String): ExtraOptions() {
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class LocationExtraOption(@Contextual var text: String): ExtraOptions() {
 }
