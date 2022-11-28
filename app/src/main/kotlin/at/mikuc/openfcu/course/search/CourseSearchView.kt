@@ -51,7 +51,6 @@ import at.mikuc.openfcu.course.search.options.LocationExtraOption
 import at.mikuc.openfcu.course.search.options.OpenerNameExtraOption
 import at.mikuc.openfcu.course.search.options.SectionsExtraOption
 import at.mikuc.openfcu.destinations.CourseSearchResultViewDestination
-import at.mikuc.openfcu.theme.MaterialTheme3
 import at.mikuc.openfcu.theme.MixMaterialTheme
 import at.mikuc.openfcu.util.LocalNavHostController
 import at.mikuc.openfcu.util.currentOrThrow
@@ -339,7 +338,7 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
                 Button(
                     onClick = { showDialog = true },
                     modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(MaterialTheme3.colorScheme.surface)
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface)
                 ) {
                     Row(
                         horizontalArrangement = Arrangement.Start,
@@ -412,7 +411,7 @@ fun ExtraConditionDialog(
                                     setShowDialog(false)
                                     extraField(LocationExtraOption(""))
                                 },
-                                colors = ButtonDefaults.buttonColors(MaterialTheme3.colorScheme.surface),
+                                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
                                 Row(
@@ -435,7 +434,7 @@ fun ExtraConditionDialog(
                                     setShowDialog(false)
                                     extraField(OpenerNameExtraOption(""))
                                 },
-                                colors = ButtonDefaults.buttonColors(MaterialTheme3.colorScheme.surface),
+                                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Row(
@@ -458,7 +457,7 @@ fun ExtraConditionDialog(
                                     setShowDialog(false)
                                     extraField(CreditExtraOption(null))
                                 },
-                                colors = ButtonDefaults.buttonColors(MaterialTheme3.colorScheme.surface),
+                                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Row(
@@ -481,7 +480,7 @@ fun ExtraConditionDialog(
                                     setShowDialog(false)
                                     extraField(DayExtraOption(null))
                                 },
-                                colors = ButtonDefaults.buttonColors(MaterialTheme3.colorScheme.surface),
+                                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Row(
@@ -504,7 +503,7 @@ fun ExtraConditionDialog(
                                     setShowDialog(false)
                                     extraField(SectionsExtraOption(null))
                                 },
-                                colors = ButtonDefaults.buttonColors(MaterialTheme3.colorScheme.surface),
+                                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Row(
@@ -605,7 +604,7 @@ private fun MyTextInputField(
             onValueChange = { onUpdate(it) },
             singleLine = true,
             keyboardOptions = keyboardOptions,
-            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme3.colorScheme.surface),
+            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface),
             modifier = textFieldModifier
         )
     }

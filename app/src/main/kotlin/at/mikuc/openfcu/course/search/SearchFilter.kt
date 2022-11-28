@@ -1,8 +1,6 @@
 package at.mikuc.openfcu.course.search
 
-import at.mikuc.openfcu.course.search.options.CreditExtraOption
 import at.mikuc.openfcu.course.search.options.ExtraOptions
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonObjectBuilder

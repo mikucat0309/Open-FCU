@@ -42,7 +42,7 @@ class CourseSearchViewModel(
                 }
             }
 
-            if (day != null){
+            if (day != null) {
                 list = list.filter { course -> course.periods.any { period -> day == period.day } }
             }
 

@@ -23,7 +23,6 @@ import at.mikuc.openfcu.redirect.LinkButton
 import at.mikuc.openfcu.redirect.RedirectItem
 import at.mikuc.openfcu.redirect.RedirectViewModel
 import at.mikuc.openfcu.redirect.redirectCallback
-import at.mikuc.openfcu.theme.MaterialTheme3
 import at.mikuc.openfcu.theme.MixMaterialTheme
 import at.mikuc.openfcu.timetable.Section
 import at.mikuc.openfcu.timetable.SectionList
@@ -78,7 +77,7 @@ private fun PureHomeView(
     Box(
         Modifier
             .fillMaxSize()
-            .background(MaterialTheme3.colorScheme.surface)
+            .background(MaterialTheme.colors.surface)
             .padding(16.dp)
     ) {
         Column(
