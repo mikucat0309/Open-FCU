@@ -1,26 +1,13 @@
 package at.mikuc.openfcu.course.search
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ExposedDropdownMenuBox
-import androidx.compose.material.ExposedDropdownMenuDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.rounded.Book
 import androidx.compose.material.icons.rounded.Business
 import androidx.compose.material.icons.rounded.CalendarToday
@@ -228,11 +215,13 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
                 extraField.forEachIndexed { index, item ->
                     when (item) {
                         is LocationExtraOption -> {
-                            Row(modifier = Modifier.padding(top = 8.dp)) {
+                            Row(modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween) {
                                 val modifier = Modifier
 //                        .weight(1.0f)
                                     .padding(horizontal = 4.dp)
-                                    .fillMaxWidth()
+                                    .weight(2f)
                                 MyTextInputField(
                                     label = "上課地點",
                                     value = item.text,
@@ -240,16 +229,21 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
                                         extraField[index] = item.copy(it)
                                     },
                                     modifier = modifier,
-                                    textFieldModifier = Modifier.fillMaxWidth()
+//                                    textFieldModifier = Modifier.fillMaxWidth()
                                 )
+                                Icon(imageVector = Icons.Outlined.Delete,
+                                    contentDescription = "Delete Option",
+                                    modifier = Modifier.clickable { extraField.remove(item) })
                             }
                         }
                         is OpenerNameExtraOption -> {
-                            Row(modifier = Modifier.padding(top = 8.dp)) {
+                            Row(modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween) {
                                 val modifier = Modifier
 //                        .weight(1.0f)
                                     .padding(horizontal = 4.dp)
-                                    .fillMaxWidth()
+                                    .weight(2f)
                                 MyTextInputField(
                                     label = "開課單位",
                                     value = item.text,
@@ -257,8 +251,10 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
                                         extraField[index] = item.copy(it)
                                     },
                                     modifier = modifier,
-                                    textFieldModifier = Modifier.fillMaxWidth()
                                 )
+                                Icon(imageVector = Icons.Outlined.Delete,
+                                    contentDescription = "Delete Option",
+                                    modifier = Modifier.clickable { extraField.remove(item) })
 //                    MyNumberInputField(
 //                        label = "開放修課人數",
 //                        value = openNum,
@@ -268,11 +264,13 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
                             }
                         }
                         is CreditExtraOption -> {
-                            Row(modifier = Modifier.padding(top = 8.dp)) {
+                            Row(modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween) {
                                 val modifier = Modifier
 //                        .weight(1.0f)
                                     .padding(horizontal = 4.dp)
-                                    .fillMaxWidth()
+                                    .weight(2f)
                                 MyOptionalDropdownMenu(
                                     label = "學分數",
                                     map = creditOptions,
@@ -281,19 +279,21 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
                                         extraField[index] = item.copy(it)
                                     },
                                     modifier = modifier,
-                                    textFieldModifier = Modifier.fillMaxWidth()
                                 )
+                                Icon(imageVector = Icons.Outlined.Delete,
+                                    contentDescription = "Delete Option",
+                                    modifier = Modifier.clickable { extraField.remove(item) })
                             }
                         }
                         is DayExtraOption -> {
                             Row(
-                                modifier = Modifier.padding(top = 8.dp),
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 val modifier = Modifier
-                                    .weight(1.0f)
                                     .padding(horizontal = 4.dp)
-                                    .fillMaxWidth()
+                                    .weight(2f)
                                 MyOptionalDropdownMenu(
                                     "星期",
                                     map = day2str,
@@ -302,19 +302,21 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
                                         extraField[index] = item.copy(it)
                                     },
                                     modifier = modifier,
-                                    textFieldModifier = Modifier.fillMaxWidth()
                                 )
+                                Icon(imageVector = Icons.Outlined.Delete,
+                                    contentDescription = "Delete Option",
+                                    modifier = Modifier.clickable { extraField.remove(item) })
                             }
                         }
                         is SectionsExtraOption -> {
                             Row(
-                                modifier = Modifier.padding(top = 8.dp),
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 val modifier = Modifier
-                                    .weight(1.0f)
                                     .padding(horizontal = 4.dp)
-                                    .fillMaxWidth()
+                                    .weight(2f)
                                 MyOptionalDropdownMenu(
                                     "節次",
                                     map = sectionsOptions,
@@ -323,8 +325,10 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
                                         extraField[index] = item.copy(it)
                                     },
                                     modifier = modifier,
-                                    textFieldModifier = Modifier.fillMaxWidth()
                                 )
+                                Icon(imageVector = Icons.Outlined.Delete,
+                                    contentDescription = "Delete Option",
+                                    modifier = Modifier.clickable { extraField.remove(item) })
                             }
                         }
                     }
@@ -335,16 +339,22 @@ fun PureCourseSearchView(onSubmit: (SearchFilter) -> Unit) {
 //                    sections = sections,
 //                    onUpdate = { sections = it }
 //                )
-                Button(
+                TextButton(
                     onClick = { showDialog = true },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface)
                 ) {
                     Row(
-                        horizontalArrangement = Arrangement.Start,
-                        modifier = Modifier.fillMaxWidth()
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text("新增額外條件...")
+                        Icon(imageVector = Icons.Outlined.Add, contentDescription = "Add Extra Options")
                     }
                 }
             }
@@ -406,7 +416,7 @@ fun ExtraConditionDialog(
                                 .width(248.dp)
                                 .height(40.dp)
                         ) {
-                            Button(
+                            TextButton(
                                 onClick = {
                                     setShowDialog(false)
                                     extraField(LocationExtraOption(""))
@@ -429,7 +439,7 @@ fun ExtraConditionDialog(
                                 .width(248.dp)
                                 .height(40.dp)
                         ) {
-                            Button(
+                            TextButton(
                                 onClick = {
                                     setShowDialog(false)
                                     extraField(OpenerNameExtraOption(""))
@@ -452,7 +462,7 @@ fun ExtraConditionDialog(
                                 .width(248.dp)
                                 .height(40.dp)
                         ) {
-                            Button(
+                            TextButton(
                                 onClick = {
                                     setShowDialog(false)
                                     extraField(CreditExtraOption(null))
@@ -475,7 +485,7 @@ fun ExtraConditionDialog(
                                 .width(248.dp)
                                 .height(40.dp)
                         ) {
-                            Button(
+                            TextButton(
                                 onClick = {
                                     setShowDialog(false)
                                     extraField(DayExtraOption(null))
@@ -498,7 +508,7 @@ fun ExtraConditionDialog(
                                 .width(248.dp)
                                 .height(40.dp)
                         ) {
-                            Button(
+                            TextButton(
                                 onClick = {
                                     setShowDialog(false)
                                     extraField(SectionsExtraOption(null))
@@ -605,7 +615,7 @@ private fun MyTextInputField(
             singleLine = true,
             keyboardOptions = keyboardOptions,
             colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface),
-            modifier = textFieldModifier
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
@@ -653,7 +663,7 @@ fun MyOptionalDropdownMenu(
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                 },
                 colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                modifier = textFieldModifier
+                modifier = Modifier.fillMaxWidth()
             )
             ExposedDropdownMenu(
                 expanded = expanded,
